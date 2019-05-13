@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <title>index</title>
+  <meta name='author' content=''>
+  <meta name='keywords' content=''>
+  <meta name='description' content=''>
+  <style>
+    * {
+      margin: 0;
+      padding: 0
+    }
+
+    li {
+      list-style-type: none;
+    }
+  </style>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <div id="wrap">index的路由</div>
+  <div id="cookie">cookie</div>
+  <script>
+    $('#wrap').on('click', () => {
+      setCookie("JSESSIONID", "EDA75B9FAC4CD7E5C0CF8FB38FADEB24", { path: '/' });
+      $.ajax({
+        url: 'http://www.ghjhhyuyuy.xin:8080/v1/nonpub/publish/getuseridbyrequest',
+        method: 'POST',
+        xhrFields: {
+          withCredentials: true
+        },
+        success: function (msg) {
+          console.log(msg);
+        }
+      });
+    });
+
+    $('#cookie').on('click', () => {
+      $.ajax({
+        url: 'http://47.96.180.9:3000/login',
+        method: 'POST',
+        xhrFields: {
+          withCredentials: true
+        },
+        data: {
+          name: 'fany',
+          age: 30
+        },
+        success: function (msg) {
+          console.log(msg);
+        }
+      });
+    });
+
+    const setCookie = (name, value, options) => {
+
+      options = options || {};
+
+      var cookie = name + "=" + escape(value);
+
+      // 设置有效时间
+      if (options.expires == undefined) {
+        options.expires = "30d"
+      }
+      var strsec = getsec(options.expires);
+      var exp = new Date();
+      exp.setTime(exp.getTime() + strsec * 1);
+      cookie += ";expires=" + exp.toGMTString();
+      // 路径
+      if (typeof options.path !== "undefined")
+        cookie += ";path=" + options.path;
+      // 域名
+      if (typeof options.domain !== "undefined")
+        cookie += ";domain=" + options.domain;
+      // 安全连接
+      if (options.secure)
+        cookie += ";secure";
+
+      document.cookie = cookie;
+    }
+
+    function getsec(str) {
+      var str1 = str.slice(0, -1) * 1;
+      var str2 = str.slice(-1);
+      if (str2 == "s") {
+        return str1 * 1000;
+      }
+      else if (str2 == "h") {
+        return str1 * 60 * 60 * 1000;
+      }
+      else if (str2 == "d") {
+        return str1 * 24 * 60 * 60 * 1000;
+      }
+    }
+
+
+  </script>
+</body>
+
+</html>
