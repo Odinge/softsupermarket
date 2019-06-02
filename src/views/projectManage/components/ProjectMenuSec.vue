@@ -1,4 +1,4 @@
-<!-- 菜单 -->
+<!-- 子菜单 -->
 <template>
   <ul class="menu">
     <router-link v-for="(menu, key) in menuList" :key="key" :to="{name:menu.path}" tag="li">

@@ -1,11 +1,5 @@
 <template>
-  <el-form
-    inline
-    label-position="top"
-    class="table-expand"
-    v-loading="isloading"
-    element-loading-background="rgba(0, 0, 0, 0.3)"
-  >
+  <el-form inline label-position="top" class="table-expand" v-loading="isloading" element-loading-background="rgba(0, 0, 0, 0.3)">
     <el-form-item class="table-item">
       <template slot="label">
         <span class="table-item-label">项目名称</span>
@@ -42,6 +36,7 @@
   </el-form>
 </template>
 <script>
+// 项目详情组件
 import { getProject } from "../../../api/project";
 export default {
   props: ["props", "projectId"],
@@ -60,6 +55,7 @@ export default {
     }
   },
   methods: {
+    // 获取项目数据
     getProjectData(projectId) {
       getProject(projectId)
         .then(res => {
@@ -112,7 +108,7 @@ export default {
   /* text-align: left !important; */
 }
 /* .table-expand .item-text .el-form-item__content { */
-  /* text-align: left !important; */
+/* text-align: left !important; */
 /* } */
 /* .split-line-right {
   border-right: 1px solid #ccc;

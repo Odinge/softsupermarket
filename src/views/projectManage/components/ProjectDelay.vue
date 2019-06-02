@@ -1,30 +1,13 @@
 <template>
   <!-- 延期对话框 -->
-  <el-dialog
-    center
-    width="440px"
-    title="申请延期"
-    :visible.sync="isDelay"
-    :before-close="handleClose"
-    @open="openDelay"
-    v-loading="isLoading"
-    element-loading-text="拼命申请中"
-  >
+  <el-dialog center width="440px" title="申请延期" :visible.sync="isDelay" :before-close="handleClose" @open="openDelay" v-loading="isLoading" element-loading-text="拼命申请中">
     <el-form ref="form" :model="delayForm" :rules="rules" label-width="80px">
       <el-form-item label="延期时间" prop="delayTime">
         <el-date-picker type="date" placeholder="选择日期" v-model="delayForm.delayTime"></el-date-picker>
       </el-form-item>
       <i class="el-icon-sort cont-icon"></i>
       <el-form-item label="延期天数" prop="delayDay">
-        <el-autocomplete
-          clearable
-          placeholder="数字"
-          v-model="delayForm.delayDay"
-          :fetch-suggestions="querySearch"
-          class="inline-input day"
-          prefix-icon="el-icon-time"
-          @select="handleSelectDay"
-        >
+        <el-autocomplete clearable placeholder="数字" v-model="delayForm.delayDay" :fetch-suggestions="querySearch" class="inline-input day" prefix-icon="el-icon-time" @select="handleSelectDay">
           <el-select v-model="selectDay" slot="append" placeholder="请选择">
             <el-option label="天" value="天"></el-option>
             <el-option label="周" value="周"></el-option>
@@ -101,6 +84,7 @@ export default {
   computed: {
     // 当前的延期天数
     delayTime() {
+      // 对时间做处理，将日期处理为天数
       const date = new Date(this.activeTime);
       const oldDate = date.getDate();
       const delayDay = this.delayForm.delayDay * 1;

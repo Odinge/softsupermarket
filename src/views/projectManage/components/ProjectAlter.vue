@@ -1,34 +1,14 @@
 <template>
-  <el-dialog
-    center
-    title="修改项目"
-    width="540px"
-    custom-class="edit"
-    @open="open"
-    :visible.sync="check"
-    :before-close="close"
-    v-loading="isLoading"
-    element-loading-text="拼命申请中"
-  >
+  <el-dialog center title="修改项目" width="540px" custom-class="edit" @open="open" :visible.sync="check" :before-close="close" v-loading="isLoading" element-loading-text="拼命申请中">
     <el-form ref="form" status-icon :rules="rules" :model="origin" label-width="80px">
       <el-form-item label="项目名称" prop="projectName">
         <el-input v-model="target.projectName"></el-input>
       </el-form-item>
-      <!-- <el-form-item label="项目方向" prop="projectName">
-          <el-input v-model="form.projectDirection"></el-input>
-      </el-form-item>-->
       <el-form-item label="项目需求" prop="projectRequirement">
         <el-input type="textarea" v-model="target.projectRequirement"></el-input>
       </el-form-item>
       <el-form-item label="项目时间" prop="projectTime">
-        <el-date-picker
-          v-model="target.projectTime"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          value-format="yyyy.MM.dd"
-        ></el-date-picker>
+        <el-date-picker v-model="target.projectTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy.MM.dd"></el-date-picker>
       </el-form-item>
       <el-form-item label="项目描述" prop="projectDescribe">
         <el-input type="textarea" v-model="target.projectDescribe"></el-input>
@@ -40,10 +20,6 @@
           </el-input>
         </el-col>
       </el-form-item>
-      <!-- <el-form-item> -->
-      <!-- <el-button type="primary" @click="publish">修改项目</el-button>
-      <el-button @click="resetForm">重置</el-button>-->
-      <!-- </el-form-item> -->
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button round icon="el-icon-edit" type="primary" @click="publish" :disabled="disabled">修改</el-button>
@@ -70,6 +46,7 @@ export default {
         callback();
       }
     };
+    // 价格验证
     let validatePrice = (rule, value, callback) => {
       if (value < 0) {
         callback(new Error("资金不能小于0"));
@@ -80,6 +57,7 @@ export default {
       }
     };
     return {
+      // 表单验证
       rules: {
         projectName: [
           { required: true, message: "项目名称不能为空", trigger: "blur" },
@@ -147,7 +125,10 @@ export default {
       this.disabled = true;
     },
     open() {
+      // 初始化信息
+      // 拷贝原信息
       this.origin = { ...this.form };
+      // 操作对象
       this.target = { ...this.form };
       this.alterInfo = {
         projectId: this.form.projectId,
@@ -166,6 +147,7 @@ export default {
       this.$refs.form.resetFields();
     },
     getAlterInfo() {
+      // 判断信息是否被修改
       for (let key in this.target) {
         if (this.target.hasOwnProperty(key)) {
           let target = this.target[key];
@@ -183,6 +165,7 @@ export default {
           }
         }
       }
+      // 处理被修改的信息，用于发送修改请求
       const split = ",";
       this.alterInfo.modificationContent = this.alterInfo.modificationContent.join(
         split

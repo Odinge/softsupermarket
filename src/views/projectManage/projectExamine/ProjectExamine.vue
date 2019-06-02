@@ -1,9 +1,9 @@
-<!-- 开发团队 -->
+<!-- 开发团队导航容器 -->
 <template>
   <div class="project-examine">
     <project-menu-sec :menu-list="menuList"></project-menu-sec>
-      <!-- <router-view class="project-list" v-if="cache"></router-view> -->
-      <router-view class="project-list"></router-view>
+    <!-- <router-view class="project-list" v-if="cache"></router-view> -->
+    <router-view class="project-list"></router-view>
     <!-- <router-view class="project-list" v-if="!cache"></router-view> -->
   </div>
 </template>

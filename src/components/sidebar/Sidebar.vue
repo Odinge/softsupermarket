@@ -1,4 +1,5 @@
 <template>
+  <!-- 渲染导航列表 -->
   <div class="sidebar" :class="{mini}">
     <router-link class="nav" v-for="(router, key) in routers" :key="key" :to="router.path">
       <message-num :menu="{path:router.name}" custom-class="top:-12px;right:-12px">
@@ -21,6 +22,7 @@ export default {
     };
   },
   mounted() {
+    // 切换显示列表
     eventBus.$on("showNav", this.change);
   },
   computed: {
@@ -29,6 +31,7 @@ export default {
     }
   },
   methods: {
+    // 该表导航样式
     change() {
       this.mini = !this.mini;
       if (!this.mini) {

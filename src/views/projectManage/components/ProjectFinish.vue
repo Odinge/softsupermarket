@@ -1,28 +1,12 @@
 <template>
   <div class="finish">
     <div class="expbtn">
-      <el-button
-        circle
-        type="success"
-        icon="el-icon-upload2"
-        size="small"
-        title="导入项目"
-        @click="showUpload = true"
-        class="tag"
-      ></el-button>
+      <el-button circle type="success" icon="el-icon-upload2" size="small" title="导入项目" @click="showUpload = true" class="tag"></el-button>
       <a :href="exportUrl" class="tag">
         <el-button circle type="warning" icon="el-icon-download" size="small" title="导出项目"></el-button>
       </a>
     </div>
-    <el-table
-      stripe
-      v-loading="isLoading"
-      :data="filterData"
-      max-height="500"
-      class="project-table"
-      @row-click="select"
-      :default-sort="{prop: 'state', order: 'ascending'}"
-    >
+    <el-table stripe v-loading="isLoading" :data="filterData" max-height="500" class="project-table" @row-click="select" :default-sort="{prop: 'state', order: 'ascending'}">
       <el-table-column type="expand">
         <template slot-scope="props">
           <project-detail :projectId="props.row.projectId"></project-detail>
@@ -38,22 +22,13 @@
       </el-table-column>x
       <el-table-column prop="score" sortable label="状态" :filters="tags" :filter-method="filterTag">
         <template slot-scope="scope">
-          <el-tag
-            disable-transitions
-            style="font-size:12px"
-            :type="stateColor(scope.row.score)"
-          >{{scope.row.score | filterState}}</el-tag>
+          <el-tag disable-transitions style="font-size:12px" :type="stateColor(scope.row.score)">{{scope.row.score | filterState}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="score" sortable label="评分">
         <template slot-scope="scope">
           <rate :score="scope.row.score"></rate>
-          <el-button
-            class="tag"
-            type="text"
-            :class="{'btn-select': scope.row.isSelectx}"
-            @click="openEvaluate(scope.row.runId, scope.row)"
-          >查看</el-button>
+          <el-button class="tag" type="text" :class="{'btn-select': scope.row.isSelectx}" @click="openEvaluate(scope.row.runId, scope.row)">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -121,6 +96,7 @@ export default {
     },
     // 获取加载的数据
     getLoadData() {
+      // 获取已完成的项目
       getProjectByProgress("已完成")
         .then(res => {
           if (res.status == 0) {
@@ -128,6 +104,7 @@ export default {
               item.score = +item.score;
               return item;
             });
+            // 获取未处理消息数
             this.getMsgNum();
           } else {
             this.$message({
@@ -161,11 +138,13 @@ export default {
         sessionStorage.setItem("projectId", row.projectId);
       }
     },
+    // 打开评分
     openEvaluate(runId, Curobj) {
       this.selected(Curobj);
       this.check = true;
       this.runId = runId;
     },
+    // 已选择信息
     selected(Curobj) {
       this.selectx.isSelectx = false;
       Curobj.isSelectx = true;

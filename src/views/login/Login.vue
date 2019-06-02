@@ -1,11 +1,5 @@
 <template>
-  <div
-    id="login"
-    v-loading="isLoading"
-    element-loading-text="拼命加载中"
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.5)"
-  >
+  <div id="login" v-loading="isLoading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.5)">
     <el-button class="back" type="text" icon="el-icon-back" @click="back">返回主页</el-button>
     <div class="content" v-if="!isLoading && !isErr">
       <div class="head">
@@ -14,12 +8,7 @@
       </div>
       <div class="select">
         <el-select v-model="roleId" placeholder="请选择" size="small">
-          <el-option
-            v-for="role in roles"
-            :key="role.identityId"
-            :label="role.identityName"
-            :value="role.identityId"
-          ></el-option>
+          <el-option v-for="role in roles" :key="role.identityId" :label="role.identityName" :value="role.identityId"></el-option>
         </el-select>
       </div>
       <el-button @click="login" v-enter="this" class="btn" :loading="btnLoading">进入管理页面</el-button>
@@ -43,6 +32,7 @@ export default {
     };
   },
   directives: {
+    // 按enter键登录
     enter(el, { value }) {
       document.onkeydown = e => {
         e = e || window.event;
@@ -53,6 +43,7 @@ export default {
     }
   },
   created() {
+    // 根据请求获取对应的权限
     this.$store
       .dispatch("getRequest")
       .then(roles => {
@@ -60,15 +51,18 @@ export default {
         let curRole = roles[0].identityId;
         this.roleId = curRole;
         this.isLoading = false;
+        // 当用户为普通用户时没有访问权
         if (curRole == 5) {
           this.isErr = true;
-          this.errMsg = "没有权限";
+          this.errMsg = "无访问权限";
         }
       })
+      // 获取错误时对错误的处理
       .catch(({ err, msg, code }) => {
         this.isLoading = false;
         this.isErr = true;
         this.errMsg = msg;
+        // 登录无效时退出登录
         if (code === 1) {
           this.toLogin();
         }
@@ -77,6 +71,7 @@ export default {
   methods: {
     login() {
       this.btnLoading = true;
+      // 设置角色并进入对应的管理页面
       this.$store.dispatch("setRole", this.roleId).catch(err => {
         this.$message.error("不明错误");
         this.btnLoading = false;
@@ -87,14 +82,16 @@ export default {
     clear() {
       this.errMsg = "";
     },
+    // 返回到首页
     back() {
       window.location.href = "http://www.ghjhhyuyuy.xin:8081/";
     },
+    // 登录无效时退出登录
     toLogin() {
-      delCookie("JSESSIONID");
-      location.reload();
+      // delCookie("JSESSIONID");
+      location.reload();   // 刷新浏览器
       window.location.href = "http://www.ghjhhyuyuy.xin:8080/";
-      // 刷新浏览器
+
     }
   }
 };

@@ -1,4 +1,4 @@
-<!-- 菜单 -->
+<!-- 未处理消息数量 -->
 <template>
   <span class="badgebox">
     {{menu.title}}

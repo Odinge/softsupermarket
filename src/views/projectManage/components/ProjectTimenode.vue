@@ -1,13 +1,6 @@
 <template>
-  <!-- 延期对话框 -->
-  <el-dialog
-    center
-    width="440px"
-    title="项目方案"
-    :visible.sync="check"
-    :before-close="handleClose"
-    @open="open"
-  >
+  <!-- 显示时间节点 -->
+  <el-dialog center width="440px" title="项目方案" :visible.sync="check" :before-close="handleClose" @open="open">
     <el-steps direction="vertical" :active="active" :finish-status="type">
       <el-step v-for="(node, key) in timeNodes" :key="key">
         <template slot="title">
@@ -31,6 +24,7 @@ export default {
     };
   },
   computed: {
+    // 渲染时间节点
     timeNodes() {
       if (this.timeNode) {
         let data = this.timeNode.split(";");

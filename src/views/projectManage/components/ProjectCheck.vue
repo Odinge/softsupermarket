@@ -1,13 +1,6 @@
 <template>
   <div>
-    <el-table
-      v-loading="isLoading"
-      :data="filterData"
-      stripe
-      max-height="500"
-      class="project-table"
-      :default-sort="{prop: 'state', order: 'descending'}"
-    >
+    <el-table v-loading="isLoading" :data="filterData" stripe max-height="500" class="project-table" :default-sort="{prop: 'state', order: 'descending'}">
       <el-table-column type="expand">
         <template slot-scope="props">
           <project-detail :props="props.row"></project-detail>
@@ -23,10 +16,7 @@
       </el-table-column>
       <el-table-column prop="applyNum" label="承接团队" v-if="state === 0 && permission($roles.team)" :filters="tags" :filter-method="filterTag">
         <template slot-scope="scope">
-          <span
-            v-if="scope.row.applyNum === 1"
-            v-overflow-e="scope.row.undertake[0].teamName"
-          >{{ scope.row.undertake[0].teamName }}</span>
+          <span v-if="scope.row.applyNum === 1" v-overflow-e="scope.row.undertake[0].teamName">{{ scope.row.undertake[0].teamName }}</span>
           <span v-else>{{ scope.row.applyNum }} 个团队</span>
         </template>
       </el-table-column>
@@ -37,63 +27,21 @@
         </template>
       </el-table-column>
 
-      <el-table-column
-        prop="state"
-        sortable
-        label="状态"
-        :filters="tags"
-        :filter-method="filterTag"
-        v-if="!state"
-      >
+      <el-table-column prop="state" sortable label="状态" :filters="tags" :filter-method="filterTag" v-if="!state">
         <template slot-scope="scope">
-          <el-tag
-            disable-transitions
-            style="font-size:12px"
-            :type="stateColor(scope.row.state)"
-          >{{scope.row.state | filterState}}</el-tag>
-          <el-button
-            circle
-            class="btn"
-            title="取消发布"
-            icon="el-icon-delete"
-            @click="cancelPublish(scope.row.projectId)"
-            v-if="(scope.row.state == 1 || scope.row.state == 3) && permission($roles.demander)"
-          ></el-button>
+          <el-tag disable-transitions style="font-size:12px" :type="stateColor(scope.row.state)">{{scope.row.state | filterState}}</el-tag>
+          <el-button circle class="btn" title="取消发布" icon="el-icon-delete" @click="cancelPublish(scope.row.projectId)" v-if="(scope.row.state == 1 || scope.row.state == 3) && permission($roles.demander)"></el-button>
         </template>
       </el-table-column>
       <el-table-column label="操作" v-if="permission($roles.demander)">
         <template slot-scope="scope" v-if="!scope.row.undertakeNum">
-          <el-button
-            circle
-            class="btn"
-            title="取消修改"
-            icon="el-icon-delete"
-            @click="cancelModificationProject(scope.row)"
-            v-if="scope.row.modifiyState == '未审核' || scope.row.modifiyState == '条件不满足'"
-          ></el-button>
-          <el-button
-            round
-            v-else
-            size="small"
-            type="danger"
-            icon="el-icon-edit"
-            @click="alter(scope.row)"
-          >修改</el-button>
-          <el-tag
-            class="btn"
-            disable-transitions
-            :type="stateColorTxt(scope.row.modifiyState)"
-            v-if="state && scope.row.modifiyState"
-          >{{ scope.row.modifiyState | filterModifiy}}</el-tag>
+          <el-button circle class="btn" title="取消修改" icon="el-icon-delete" @click="cancelModificationProject(scope.row)" v-if="scope.row.modifiyState == '未审核' || scope.row.modifiyState == '条件不满足'"></el-button>
+          <el-button round v-else size="small" type="danger" icon="el-icon-edit" @click="alter(scope.row)">修改</el-button>
+          <el-tag class="btn" disable-transitions :type="stateColorTxt(scope.row.modifiyState)" v-if="state && scope.row.modifiyState">{{ scope.row.modifiyState | filterModifiy}}</el-tag>
         </template>
       </el-table-column>
     </el-table>
-    <project-alter
-      :check.sync="check"
-      :form="project"
-      :modifiyState="modifiyState"
-      @update="getLoadData"
-    ></project-alter>
+    <project-alter :check.sync="check" :form="project" :modifiyState="modifiyState" @update="getLoadData"></project-alter>
     <!-- 分页器 -->
     <project-pagination :data="data" :filter-data.sync="filterData"></project-pagination>
   </div>
@@ -182,6 +130,7 @@ export default {
               this.getModificationState(item);
               return item;
             });
+            // 更新未处理的消息数量
             this.getMsgNum();
             this.isLoading = false;
           } else throw res.msg;
@@ -215,6 +164,7 @@ export default {
     // 修改
     alter(project) {
       this.project = {};
+      // 记录要修改的信息
       this.project = {
         projectId: project.projectId,
         projectName: project.projectName,
@@ -230,6 +180,7 @@ export default {
 
       this.modifiyState = state;
     },
+    // 获取团队信息
     getTeam(teamId, data, index) {
       getTeam(teamId)
         .then(res => {
@@ -241,6 +192,7 @@ export default {
     },
     // 获取项目修改状态
     getModificationState(row) {
+      // 获取修改承接状态
       getModificationAndUndertake(row.projectId)
         .then(res => {
           if (res.status == 0) {
@@ -248,6 +200,7 @@ export default {
             if (id.length) {
               let modificationId = id[id.length - 1];
               row.modificationId = modificationId;
+              // 获取修改状态
               getModificationState(modificationId)
                 .then(res => {
                   if (res.status == 0) {
@@ -271,6 +224,7 @@ export default {
         type: "warning"
       })
         .then(() => {
+          // 取消修改
           cancelModificationProject(row.modificationId)
             .then(res => {
               if (res.status == 0) {
@@ -290,6 +244,7 @@ export default {
         type: "warning"
       })
         .then(() => {
+          // 取消发布
           cancelPublish(projectId)
             .then(res => {
               if (res.status == 0) {

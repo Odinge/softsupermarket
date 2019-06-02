@@ -1,14 +1,7 @@
 <template>
   <!-- 列表信息 -->
   <div class="project-list">
-    <el-table
-      v-loading="isLoading"
-      :data="filterData"
-      stripe
-      max-height="500"
-      class="project-table"
-      :default-sort="{prop: 'state', order: 'ascending'}"
-    >
+    <el-table v-loading="isLoading" :data="filterData" stripe max-height="500" class="project-table" :default-sort="{prop: 'state', order: 'ascending'}">
       <el-table-column type="expand">
         <template slot-scope="props">
           <project-detail :projectId="props.row.projectId"></project-detail>
@@ -24,38 +17,14 @@
       </el-table-column>
       <el-table-column prop="state" label="状态" sortable :filters="tags" :filter-method="filterTag">
         <template slot-scope="scope">
-          <el-tag
-            disable-transitions
-            style="font-size:12px"
-            :type="stateColor(scope.row.state)"
-          >{{scope.row.state | filterState}}</el-tag>
-          <el-button
-            round
-            size="small"
-            type="text"
-            @click="timeNodeDetail(scope.row.runId, scope.row)"
-            :class="{'btn-select':scope.row.isSelectx}"
-          >查看项目方案</el-button>
+          <el-tag disable-transitions style="font-size:12px" :type="stateColor(scope.row.state)">{{scope.row.state | filterState}}</el-tag>
+          <el-button round size="small" type="text" @click="timeNodeDetail(scope.row.runId, scope.row)" :class="{'btn-select':scope.row.isSelectx}">查看项目方案</el-button>
         </template>
       </el-table-column>
       <el-table-column prop="state" label="操作">
         <template slot-scope="scope" v-if="scope.row.state === '1'">
-          <el-button
-            round
-            size="small"
-            type="success"
-            icon="el-icon-check"
-            @click="examine(scope.row, '2')"
-            :loading="scope.row.isSelect"
-          >同意</el-button>
-          <el-button
-            round
-            size="small"
-            icon="el-icon-close"
-            type="danger"
-            @click="examine(scope.row, '3')"
-            :loading="scope.row.isSelect"
-          >拒绝</el-button>
+          <el-button round size="small" type="success" icon="el-icon-check" @click="examine(scope.row, '2')" :loading="scope.row.isSelect">同意</el-button>
+          <el-button round size="small" icon="el-icon-close" type="danger" @click="examine(scope.row, '3')" :loading="scope.row.isSelect">拒绝</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -97,17 +66,9 @@ export default {
   computed: {
     data() {
       return this.dataSrc;
-      // return this.dataSrc.projects;
     }
   },
   mounted() {
-    // const data = [
-    //   ...Array(1).fill(this.projectData[0]),
-    //   ...Array(1).fill(this.projectData[1]),
-    //   ...Array(1).fill(this.projectData[2])
-    // ];
-    // this.dataSrc = data;
-    // this.isLoading = true;
     this.getLoadData();
   },
   methods: {
@@ -117,8 +78,8 @@ export default {
         .then(res => {
           if (res.status == 0) {
             let { data } = res;
-            // this.dataSrc = data.filter(item => item.state == 1);
             this.dataSrc = data;
+            // 获取未处理消息数量
             this.getMsgNum();
 
             this.isLoading = false;
@@ -134,10 +95,13 @@ export default {
     },
     // 审核延期
     examine(Curobj, state) {
+      // 设置数据响应,用于判断操作的对象
       this.$set(Curobj, "isSelect", true);
+      // 审核项目延迟信息
       examineDelay(Curobj.delayId, state)
         .then(res => {
           if (res.status == 0) {
+            // 审核后在更新数据
             this.getLoadData();
             this.$message({
               type: "success",
@@ -157,9 +121,11 @@ export default {
     // 项目方案详情
     timeNodeDetail(runId, Curobj) {
       this.selected(Curobj);
+      // 获取节点信息
       getAllTimeNodes(runId).then(res => {
         if (res.status == 0) {
           this.timeNode = res.data;
+          // 获取项目进度信息
           getProgress(runId).then(res => {
             if (res.status == 0) {
               this.active = res.data.split(/_| /)[0] - 1;
@@ -168,10 +134,6 @@ export default {
           });
         }
       });
-
-      // this.timeNode =
-      //   "1.2019-3-18完成项目搭建;2.2019-5-18完成项目并提交;3.2019-5-18完成项目并提交";
-      // this.active = 1;
     },
     // 选择
     selected(Curobj) {

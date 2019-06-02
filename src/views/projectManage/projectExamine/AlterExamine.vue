@@ -1,15 +1,8 @@
 <template>
   <!-- 列表信息 -->
   <div class="project-list">
-    <el-table
-      stripe
-      v-loading="isLoading"
-      :data="filterData"
-      max-height="500"
-      class="project-table"
-      :default-sort="{prop: 'state', order: 'ascending'}"
-    >
-      <el-table-column type="expand" >
+    <el-table stripe v-loading="isLoading" :data="filterData" max-height="500" class="project-table" :default-sort="{prop: 'state', order: 'ascending'}">
+      <el-table-column type="expand">
         <template slot-scope="props" class="extend">
           <project-detail :projectId="props.row.projectId"></project-detail>
         </template>
@@ -24,31 +17,13 @@
       <el-table-column prop="originalData" label="原始内容"></el-table-column>
       <el-table-column prop="state" sortable label="状态" :filters="tags" :filter-method="filterTag">
         <template slot-scope="scope">
-          <el-tag
-            disable-transitions
-            style="font-size:12px"
-            :type="stateColorTxt(scope.row.state)"
-          >{{scope.row.state}}</el-tag>
+          <el-tag disable-transitions style="font-size:12px" :type="stateColorTxt(scope.row.state)">{{scope.row.state}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="state" label="操作">
         <template slot-scope="scope" v-if="scope.row.state === '未审核'">
-          <el-button
-            round
-            size="small"
-            type="success"
-            icon="el-icon-check"
-            @click="examine(scope.row, '2')"
-            :loading="scope.row.isSelect"
-          >同意</el-button>
-          <el-button
-            round
-            size="small"
-            icon="el-icon-close"
-            type="danger"
-            @click="examine(scope.row, '3')"
-            :loading="scope.row.isSelect"
-          >拒绝</el-button>
+          <el-button round size="small" type="success" icon="el-icon-check" @click="examine(scope.row, '2')" :loading="scope.row.isSelect">同意</el-button>
+          <el-button round size="small" icon="el-icon-close" type="danger" @click="examine(scope.row, '3')" :loading="scope.row.isSelect">拒绝</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -87,28 +62,21 @@ export default {
   computed: {
     data() {
       return this.dataSrc;
-      // return this.dataSrc.projects;
     }
   },
   mounted() {
-    // const data = [
-    //   ...Array(1).fill(this.projectData[0]),
-    //   ...Array(1).fill(this.projectData[1]),
-    //   ...Array(1).fill(this.projectData[2])
-    // ];
-    // this.dataSrc = data;
     this.isLoading = true;
     this.getLoadData();
   },
   methods: {
     // 获取加载的数据
     getLoadData() {
+      // 获取修改项目
       getModificationProject()
         .then(res => {
           let data = res.data.modificationProject;
           this.dataSrc = data.filter(item => item.state == "未审核" || item.state == "条件不满足");
           this.getMsgNum();
-
           this.isLoading = false;
         })
         .catch(err => {
@@ -118,11 +86,14 @@ export default {
     },
     // 审核项目修改
     examine(modification, state) {
+      // 选择当前修改
       this.$set(modification, "isSelect", true);
+      // 审核项目想改
       examineModificationProject(modification.modificationId, state)
         .then(res => {
           if (res.status == 0) {
             if (state == "2") {
+              // 修改项目
               this.alterProject(modification);
             } else {
               this.$message.success("审核成功");
@@ -138,6 +109,7 @@ export default {
     },
     // 修改项目
     alterProject(modification) {
+      // 选获取项目信息，在去修改项目
       getProject(modification.projectId)
         .then(res => {
           const data = res.data[0];

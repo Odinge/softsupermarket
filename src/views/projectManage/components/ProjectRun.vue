@@ -2,15 +2,7 @@
   <!-- 列表信息 -->
   <div>
     <!-- stripe -->
-    <el-table
-      v-loading="isLoading"
-      :data="filterData"
-      max-height="500"
-      class="project-table"
-      @row-click="select"
-      :default-sort="{prop: 'state', order: 'ascending'}"
-      :row-class-name="timeoutClass"
-    >
+    <el-table v-loading="isLoading" :data="filterData" max-height="500" class="project-table" @row-click="select" :default-sort="{prop: 'state', order: 'ascending'}" :row-class-name="timeoutClass">
       <el-table-column type="expand">
         <template slot-scope="props">
           <project-detail :props="props.row"></project-detail>
@@ -19,12 +11,7 @@
       <el-table-column prop="projectName" label="项目名称" sortable></el-table-column>
       <el-table-column prop="progress" label="项目进度">
         <template slot-scope="scope">
-          <el-progress
-            :text-inside="true"
-            :stroke-width="18"
-            :color="scope.row.progressStatus"
-            :percentage="scope.row.progressNum"
-          ></el-progress>
+          <el-progress :text-inside="true" :stroke-width="18" :color="scope.row.progressStatus" :percentage="scope.row.progressNum"></el-progress>
         </template>
       </el-table-column>
       <el-table-column label="结项日期" sortable prop="projectTime">
@@ -35,32 +22,12 @@
       </el-table-column>
       <el-table-column prop="state" sortable label="状态" :filters="tags" :filter-method="filterTag">
         <template slot-scope="scope">
-          <el-tag
-            disable-transitions
-            style="font-size:12px"
-            :type="stateColorTxt(scope.row.examineState)"
-            v-if="scope.row.examineState"
-          >{{scope.row.examineState | filterStateTxt}}</el-tag>
+          <el-tag disable-transitions style="font-size:12px" :type="stateColorTxt(scope.row.examineState)" v-if="scope.row.examineState">{{scope.row.examineState | filterStateTxt}}</el-tag>
           <!-- >{{scope.row.examineState}}</el-tag> -->
-          <el-tag
-            disable-transitions
-            style="font-size:12px"
-            type="danger"
-            v-if="scope.row.overtime > 0"
-          >已超时{{ scope.row.overtime }}次</el-tag>
-          <el-tag
-            disable-transitions
-            style="font-size:12px"
-            type="danger"
-            v-if="scope.row.delayTime > 0"
-          >已延期{{ scope.row.delayTime }}天</el-tag>
+          <el-tag disable-transitions style="font-size:12px" type="danger" v-if="scope.row.overtime > 0">已超时{{ scope.row.overtime }}次</el-tag>
+          <el-tag disable-transitions style="font-size:12px" type="danger" v-if="scope.row.delayTime > 0">已延期{{ scope.row.delayTime }}天</el-tag>
 
-          <el-tag
-            disable-transitions
-            style="font-size:12px;color:#fff"
-            color="#ff0000a6"
-            v-if="scope.row.timeout > 0"
-          >项目超时</el-tag>
+          <el-tag disable-transitions style="font-size:12px;color:#fff" color="#ff0000a6" v-if="scope.row.timeout > 0">项目超时</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -105,10 +72,14 @@ export default {
         .then(res => {
           if (res.status == 0) {
             this.dataSrc = res.data.map(item => {
+              // 局部更新
               this.renewal(item);
+              // 超时判断
               this.timeout(item);
               item.examineState = "未提交";
+              // 获取审核状态
               this.getExamineState(item);
+              // 获取延迟时间
               this.getAllDelayTime(item);
               return item;
             });

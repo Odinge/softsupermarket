@@ -1,39 +1,55 @@
-import Vue from 'vue'
+// vue全局配置
+import Vue from "vue";
 import axios from "axios";
 import store from "../store";
 import { $roles } from "../utils/auth";
 
 Vue.prototype.$http = axios;
-Vue.prototype.$baseUrl = 'http://www.ghjhhyuyuy.xin:8080';
+Vue.prototype.$baseUrl = "http://www.ghjhhyuyuy.xin:8080";
 // 注册一个全局权限判定方法
-Vue.prototype.ROLES = ['admin', 'developer', 'demander'];
+Vue.prototype.ROLES = ["admin", "developer", "demander"];
 Vue.prototype.$roles = $roles;
 
-Vue.prototype.getMsgNum = function () {
+Vue.prototype.getMsgNum = function() {
   this.$store.dispatch("initMsgNum").catch(err => console.error(err));
-}
+};
 
 Vue.prototype.tags = [
-  { text: '未审核', value: "1" },
-  { text: '已审核', value: "2" },
-  { text: '不通过', value: "3" },
+  { text: "未审核", value: "1" },
+  { text: "已审核", value: "2" },
+  { text: "不通过", value: "3" }
 ];
 
-Vue.prototype.filterTag = (value, row) => {
+(Vue.prototype.filterTag = (value, row) => {
   return row.state === value;
-},
-
-// 注册过滤器
-Vue.filter('filterState', value => {
-  const stateMap = ["未提交", "未审核", "已审核", "不通过", "黑名单", "已作废", "已删除"];
+}),
+  // 注册过滤器
+  Vue.filter("filterState", value => {
+    const stateMap = [
+      "未提交",
+      "未审核",
+      "已审核",
+      "不通过",
+      "黑名单",
+      "已作废",
+      "已删除"
+    ];
+    return stateMap[value];
+  });
+Vue.filter("filterStateSub", value => {
+  const stateMap = [
+    "未提交",
+    "未审核",
+    "已审核",
+    "不通过",
+    "黑名单",
+    "已作废",
+    "未提交"
+  ];
   return stateMap[value];
 });
-Vue.filter('filterStateSub', value => {
-  const stateMap = ["未提交", "未审核", "已审核", "不通过", "黑名单", "已作废", "未提交"];
-  return stateMap[value];
-});
 
-Vue.filter('filterStateTxt', value => {
+Vue.filter("filterStateTxt", value => {
   const stateMap = new Map([
     ["未提交", "未提交"],
     ["未审核", "未审核"],
@@ -41,15 +57,13 @@ Vue.filter('filterStateTxt', value => {
     ["条件不满足", "不通过"],
     ["黑名单", "黑名单"],
     ["已作废", "已作废"],
-    ["已删除", "未提交"],
+    ["已删除", "未提交"]
   ]);
   return stateMap.get(value);
 });
 
-
-
 // 注册字段过滤器
-Vue.filter('filterField', value => {
+Vue.filter("filterField", value => {
   const fieldMap = new Map([
     ["projectName", "项目名"],
     ["projectTime", "项目时间"],
@@ -61,17 +75,16 @@ Vue.filter('filterField', value => {
 });
 
 // 注册团队方向过滤器
-Vue.filter('filterTeamDirection', value => {
-  if (!value) return '';
+Vue.filter("filterTeamDirection", value => {
+  if (!value) return "";
   const td = store.getters.teamDirection;
   return td[value - 1].directionName;
 });
 
-
 Vue.prototype.stateColor = state => {
   const color = ["", "danger", "success", "warning", "info"];
   return color[state];
-}
+};
 
 Vue.prototype.stateColorTxt = state => {
   const stateMap = new Map([
@@ -84,14 +97,12 @@ Vue.prototype.stateColorTxt = state => {
   return stateMap.get(state);
   // const color = ["", "danger", "success", "warning", "info"];
   // return color[state];
-}
-
-
+};
 
 Vue.prototype.permission = (...roles) => {
   const role = store.getters.role;
   return roles.includes(role);
-}
+};
 Vue.prototype.$permission = (...roles) => {
   return new Promise((resolve, reject) => {
     const role = store.getters.role;
@@ -101,11 +112,11 @@ Vue.prototype.$permission = (...roles) => {
       reject(false);
     }
   });
-}
+};
 // 注册一个全局自定义指令 `v-permission`
-Vue.directive('permission', {
+Vue.directive("permission", {
   // 当被绑定的元素插入到 DOM 中时……
-  inserted: function (node, { value }, vnode) {
+  inserted: function(node, { value }, vnode) {
     // 聚焦元素
     // console.log(node, vnode.elm);
     const role = store.getters.role;
@@ -116,15 +127,12 @@ Vue.directive('permission', {
 });
 
 // 超出隐藏。。。
-Vue.directive('overflow-e', {
+Vue.directive("overflow-e", {
   // 当被绑定的元素插入到 DOM 中时……
-  inserted: function (node, { value }, vnode) {
+  inserted: function(node, { value }, vnode) {
     node.title = value;
     node.classList.add("overflow-e");
-
   }
 });
 // 直接执行命令
-Vue.directive('exec',
-  (node, { value }) => { }
-);
+Vue.directive("exec", (node, { value }) => {});

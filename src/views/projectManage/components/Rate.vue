@@ -1,12 +1,9 @@
 <template>
+  <!-- 
+  显示评分组件
+ -->
   <span>
-    <el-rate
-      :value="score / base"
-      disabled
-      text-color="#ff9900"
-      class="i-b"
-      :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-    ></el-rate>
+    <el-rate :value="score / base" disabled text-color="#ff9900" class="i-b" :colors="['#99A9BF', '#F7BA2A', '#FF9900']"></el-rate>
     <span class="rate-color">{{ score }}</span>
   </span>
 </template>

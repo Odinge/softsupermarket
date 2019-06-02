@@ -1,14 +1,6 @@
 <template>
   <!-- 延期对话框 -->
-  <el-dialog
-    center
-    width="440px"
-    title="项目评价"
-    :visible.sync="check"
-    :before-close="handleClose"
-    @open="open"
-    custom-class="box"
-  >
+  <el-dialog center width="440px" title="项目评价" :visible.sync="check" :before-close="handleClose" @open="open" custom-class="box">
     <div v-loading="isLoading" class="content" :class="{'center':!isNo}">
       <span class="things" v-if="isNo">{{ evaluate }}</span>
       <span class="things err" v-else-if="!isLoading">没有任何评价</span>
@@ -41,6 +33,7 @@ export default {
       if (this.runId !== this.cache) {
         this.isLoading = true;
         this.isNo = false;
+        // 获取项目评价
         getEvaluate(this.runId)
           .then(res => {
             if (res.status == 0) {

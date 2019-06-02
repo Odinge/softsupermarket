@@ -1,23 +1,11 @@
 <template>
   <!-- 列表信息 -->
   <div class="project-list">
-    <el-table
-      v-loading="isLoading"
-      :data="filterData"
-      stripe
-      max-height="500"
-      class="project-table"
-      :default-sort="{prop: 'projectTime', order: 'descending'}"
-    >
+    <el-table v-loading="isLoading" :data="filterData" stripe max-height="500" class="project-table" :default-sort="{prop: 'projectTime', order: 'descending'}">
       <el-table-column type="expand">
         <template slot-scope="props">
           <project-detail :props="props.row"></project-detail>
-          <el-table
-            stripe
-            :data="props.row.teamUndertakePOList"
-            :default-sort="{prop: 'teamScore', order: 'descending'}"
-            class="table-radius"
-          >
+          <el-table stripe :data="props.row.teamUndertakePOList" :default-sort="{prop: 'teamScore', order: 'descending'}" class="table-radius">
             <el-table-column prop="teamName" label="团队名称"></el-table-column>
             <el-table-column prop="direction" label="团队方向">
               <!-- <template slot-scope="scope">{{ teamDirection[scope.row.direction].directionName }}</template> -->
@@ -30,22 +18,9 @@
             </el-table-column>
             <el-table-column prop="teamId" label="操作">
               <template slot-scope="scope">
-                <el-button
-                  round
-                  type="success"
-                  size="small"
-                  icon="el-icon-edit-outline"
-                  @click="undertakeProject(scope.row, '2')"
-                  :loading="btnLoading"
-                >承接</el-button>
+                <el-button round type="success" size="small" icon="el-icon-edit-outline" @click="undertakeProject(scope.row, '2')" :loading="btnLoading">承接</el-button>
                 <el-button round type="text" size="small" @click="teamDetail(scope.row.teamId)">团队详细</el-button>
-                <el-button
-                  round
-                  type="text"
-                  size="small"
-                  @click="timeNodeDetail(scope.row)"
-                  :class="{'btn-select':scope.row.isSelect}"
-                >查看项目方案</el-button>
+                <el-button round type="text" size="small" @click="timeNodeDetail(scope.row)" :class="{'btn-select':scope.row.isSelect}">查看项目方案</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -93,72 +68,6 @@ export default {
       btnLoading: false, // 按钮操作加载
       teamDirection: [],
       projectData: [
-        {
-          projectName: "猪场管家",
-          projectRequirement: "认真仔细",
-          projectTime: "2019-01-31",
-          projectDescribe: "就是养猪的",
-          projectPrice: "2000",
-          releaseTime: "2019-01-31",
-          projectId: "asd96eb3e28437216e3bfd92e9c72fd1",
-          state: "未审核",
-          teamUndertakePOList: [
-            {
-              teamId: "dafafawfawfafa",
-              teamName: "学习网者团队",
-              direction: "java后端",
-              teamScore: 4
-            },
-            {
-              teamId: "11adssdwcvee",
-              teamName: "108团队",
-              direction: "平面设计",
-              teamScore: 3
-            }
-          ]
-        },
-        {
-          projectName: "软件超市",
-          projectRequirement: "认真仔细1",
-          projectTime: "2019-02-20",
-          projectDescribe: "就是搞软件的",
-          projectPrice: "5000",
-          releaseTime: "2019-01-31",
-          projectId: "asd96eb3e28437216e3bfd92e9c7fsd2",
-          state: "未审核",
-          teamUndertakePOList: [
-            {
-              teamId: "wcaikaojawhjod",
-              teamName: "man团队",
-              direction: "app制作",
-              teamScore: 5
-            },
-            {
-              teamId: "212dawdvg",
-              teamName: "909团队",
-              direction: "平面设计",
-              teamScore: 1
-            }
-          ]
-        },
-        {
-          projectName: "这是一个项目",
-          projectRequirement: "严谨严谨",
-          projectTime: "2019-03-20",
-          projectDescribe: "就是一个项目",
-          projectPrice: "1000",
-          releaseTime: "2019-01-21",
-          projectId: "asd96eb3e2d437216e3bfd92e9c7fsd3",
-          state: "未审核",
-          teamUndertakePOList: [
-            {
-              teamId: "146416awdawdad",
-              teamName: "王者团队",
-              direction: "java后端",
-              teamScore: 3
-            }
-          ]
-        }
       ],
       check: false,
       timeNode: "",
@@ -168,19 +77,10 @@ export default {
   computed: {
     data() {
       return this.dataSrc;
-      // return this.dataSrc.projects;
     }
   },
   mounted() {
-    // const data = [
-    //   ...Array(1).fill(this.projectData[0]),
-    //   ...Array(1).fill(this.projectData[1]),
-    //   ...Array(1).fill(this.projectData[2])
-    // ];
-    // this.dataSrc = data;
-    // this.isLoading = false;
     this.getLoadData();
-    // this.$route.meta.msgNum = 10;
   },
   methods: {
     // 获取加载的数据
@@ -198,10 +98,6 @@ export default {
           this.$message.error("数据获取失败");
           this.isLoading = false;
         });
-      // 获取团队方向列表
-      // getAllTeamDirection().then(res => {
-      //   this.teamDirection = res.data;
-      // });
     },
     // 选择承接的团队
     undertakeProject(Curobj, state) {
@@ -210,6 +106,7 @@ export default {
         center: true
       }).then(() => {
         this.btnLoading = true;
+        // 审核项目承接
         examineAllocation(Curobj.undertakeId, state)
           .then(res => {
             if (res.status == 0) {
@@ -241,6 +138,7 @@ export default {
       this.timeNode = Curobj.timeNode;
       this.check = true;
     },
+    // 记录当前选择的项目
     selected(Curobj) {
       this.select.isSelect = false;
       Curobj.isSelect = true;

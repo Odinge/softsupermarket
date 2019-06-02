@@ -1,4 +1,4 @@
-<!-- 开发团队 -->
+<!-- 管理员团队页面 -->
 <template>
   <div class="project-manage">
     <!-- 菜单 -->
@@ -22,7 +22,7 @@ export default {
     };
   },
   methods: {
-    tabClick() {}
+    tabClick() { }
   }
 };
 </script>

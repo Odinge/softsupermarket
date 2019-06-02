@@ -1,4 +1,4 @@
-<!-- 开发团队 -->
+<!-- 公司管理人管理页面 -->
 <template>
   <div class="project-manage">
     <!-- 菜单 -->

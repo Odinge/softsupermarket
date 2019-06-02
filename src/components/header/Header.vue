@@ -23,9 +23,11 @@ export default {
     return {};
   },
   methods: {
+    // 切换导航样式
     extendNav() {
       eventBus.$emit("showNav");
     },
+    // 退出登录或者切换用户管理界面
     handleCommand(command) {
       if (command === "exit") {
         this.exit();

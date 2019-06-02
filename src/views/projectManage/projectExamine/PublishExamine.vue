@@ -1,13 +1,6 @@
 <template>
   <div>
-    <el-table
-      v-loading="isLoading"
-      :data="filterData"
-      stripe
-      max-height="500"
-      class="project-table"
-      :default-sort="{prop: 'state', order: 'ascending'}"
-    >
+    <el-table v-loading="isLoading" :data="filterData" stripe max-height="500" class="project-table" :default-sort="{prop: 'state', order: 'ascending'}">
       <el-table-column type="expand">
         <template slot-scope="props">
           <project-detail :props="props.row"></project-detail>
@@ -27,31 +20,13 @@
       </el-table-column>
       <el-table-column sortable prop="state" label="状态" :filters="tags" :filter-method="filterTag">
         <template slot-scope="scope">
-          <el-tag
-            disable-transitions
-            style="font-size:12px"
-            :type="stateColor(scope.row.state)"
-          >{{scope.row.state | filterState}}</el-tag>
+          <el-tag disable-transitions style="font-size:12px" :type="stateColor(scope.row.state)">{{scope.row.state | filterState}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="projectId" label="操作">
         <template slot-scope="scope" v-if="scope.row.state === '1'">
-          <el-button
-            round
-            size="small"
-            type="success"
-            icon="el-icon-check"
-            @click="examine(scope.row, '2')"
-            :loading="scope.row.isSelect"
-          >同意</el-button>
-          <el-button
-            round
-            size="small"
-            icon="el-icon-close"
-            type="danger"
-            @click="examine(scope.row, '3')"
-            :loading="scope.row.isSelect"
-          >拒绝</el-button>
+          <el-button round size="small" type="success" icon="el-icon-check" @click="examine(scope.row, '2')" :loading="scope.row.isSelect">同意</el-button>
+          <el-button round size="small" icon="el-icon-close" type="danger" @click="examine(scope.row, '3')" :loading="scope.row.isSelect">拒绝</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -118,20 +93,10 @@ export default {
     }
   },
   mounted() {
-    // const data = [
-    //   ...Array(1).fill(this.projectData[0]),
-    //   ...Array(1).fill(this.projectData[1]),
-    //   ...Array(1).fill(this.projectData[2])
-    // ];
-    // this.dataSrc = data;
-    // this.isLoading = false;
+
     this.getLoadData();
   },
   methods: {
-    // 帅选数据
-    // filterTag(value, row) {
-    //   return row.state === value;
-    // },
     // 获取加载的数据
     getLoadData() {
       getExamineProject()
@@ -140,7 +105,7 @@ export default {
             let { data } = res;
             this.dataSrc = data;
             this.getMsgNum();
-            
+
             this.isLoading = false;
           } else throw res.msg;
         })
