@@ -26,8 +26,6 @@ export default {
     getData() {
       noticeDetail(this.noticeId).then(res => {
         if (res.status === 0) {
-          console.log(2222);
-          console.log(res);
           this.response = res.data;
           this.response.createTime = this.response.createTime.split(" ")[0];
         }

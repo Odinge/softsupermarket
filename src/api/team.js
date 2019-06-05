@@ -51,3 +51,7 @@ export const getBlackTeamList = () =>
 //从Excel导入团队
 export const importTeam = (file) =>
   axios.post("/v1/nonpub/examine/addTeamByExcel",{file});
+
+//从excel导入黑名单（方便）
+export const importBlack= (file) =>
+  axios.post("/v1/nonpub/examine/addBlackListByExcel",{file});

@@ -53,6 +53,8 @@ export default {
         .then(res => {
           if (res.status === 0) {
             this.$message.success("消息发布成功。");
+            this.editor.setContent('');
+            this.title='';
           } else {
             this.$message.error("糟糕，消息发布失败。");
           }

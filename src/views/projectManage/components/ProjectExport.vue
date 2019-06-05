@@ -1,6 +1,6 @@
 <template>
   <!-- 延期对话框 -->
-  <el-dialog center width="440px" title="项目评价" :visible.sync="check" :before-close="handleClose" custom-class="box">
+  <el-dialog center width="440px" title="导入已完成项目" :visible.sync="check" :before-close="handleClose" custom-class="box">
     <el-upload class="upload" ref="upload" :action="uploadUrl" :on-remove="handleRemove" :before-upload="beforeAvatarUpload" :on-error="fileError" :on-exceed="handleExceed" :on-success="fileSuccess" :auto-upload="false" :with-credentials="false" :limit="1">
       <el-button circle slot="trigger" icon="el-icon-document" size="small" title="选取文件"></el-button>
       <el-button class="tag" circle type="success" icon="el-icon-upload2" size="small" title="导入项目" @click="submitUpload"></el-button>

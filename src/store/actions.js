@@ -78,7 +78,7 @@ export default {
                     );
                 } else throw res.msg;
               })
-              .catch(err => reject({ err, msg: "您没有权限访问", code: 2 }));
+              .catch(err => reject({ err, msg: "无访问权限", code: 2 }));
           } else throw res.msg;
         })
         .catch(err => {

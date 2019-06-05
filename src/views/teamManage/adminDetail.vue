@@ -1,5 +1,5 @@
 <template>
-  <div class='detail'>
+  <div class='detail' v-if="detail_info">
       <i class="el-icon-back return"  @click="goBack" title="返回上一页">返回</i>
     <div class="title">团队基本信息</div>
     <div>
@@ -66,7 +66,7 @@
   export default {
     data() {
       return {
-        detail_info: {}
+        detail_info: ''
       }
     },
     filters: {
@@ -78,14 +78,17 @@
       getData() {
         let that=this;
         getTeam(this.teamId).then(function (res) {
+
           if (res.status === 0) {
-            that.detail_info = res.data[0];
+            this.detail_info = res.data[0];
           }
           else{
-            this.fail('获取数据失败!')
+            console.log(res)
+            this.fail('获取数据失败!');
           }
         }).catch((err)=>{
-          that.fail('获取数据失败!')
+         this.$message.error('错误了，获取数据失败!');
+          console.log(err)
         })
       },
       success(msg) {

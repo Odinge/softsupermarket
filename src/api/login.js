@@ -13,7 +13,7 @@ const baseURL = "http://www.ghjhhyuyuy.xin:8080";
 // 设置默认服务器地址
 axios.defaults.withCredentials = true; //让ajax携带cookie
 
-// setCookie("JSESSIONID", "DEE0BFCC645FF8244C1D5830AB2AA65C", { path: "/" });
+// setCookie("JSESSIONID", "A08235677A293854C9C2870BE24FAA57", { path: "/" });
 
 // axios.defaults.baseURL = baseURL;
 

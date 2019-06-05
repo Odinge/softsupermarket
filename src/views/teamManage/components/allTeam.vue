@@ -102,7 +102,7 @@
         }
         agreeModify(val.teamId,state).//
         then(function (res) {
-          console.log(res)
+          // console.log(res)
           if(res.status===0 && res.msg==='成功'){
             that.success('审核成功!');
             that.getData();   /*成功后重新获取数据*/
@@ -150,7 +150,7 @@
           getNewApplication().then(function (res) {   //获取新建团队申请
 
             if(res.status===0){
-              console.log(res.data)
+              // console.log(res.data)
               that.loading=false;
               that.total=res.data.length;
               let data=res.data;
