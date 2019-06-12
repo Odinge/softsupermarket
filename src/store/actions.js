@@ -9,7 +9,8 @@ import {
   SET_MSG_NUM,
   SET_USER_INFO,
   SET_USERNAME,
-  SET_TEMPROLE
+  SET_TEMPROLE,
+  SET_TEAM
 } from "./types";
 import {
   toLogin,
@@ -17,7 +18,8 @@ import {
   getUserInfor,
   getStudentIdByRequest,
   getUserId,
-  getRole
+  getRole,
+  getOnesTeamMessage
 } from "../api/login.js";
 import {
   getMessageById,
@@ -185,6 +187,11 @@ export default {
     msgNum.projectFinish = data.filter(item => item.score == -1).length;
 
     commit(SET_MSG_NUM, msgNum);
+  },
+  // 获取团队信息
+  async getTeamInfo({ state, commit }) {
+    const res = await getOnesTeamMessage(state.userId);
+    if (res.status) throw res;
+    commit(SET_TEAM, res.data);
   }
-  //
 };

@@ -7,7 +7,7 @@
         </span>
       </div>
       <!-- status-icon -->
-      <el-form ref="form" :rules="rules" :model="form" class="form-perm" label-position="top" @submit.native.prevent>
+      <el-form ref="form" :rules="rules" :model="form" class="form-perm" label-position="top" onsubmit="return false">
         <el-form-item prop="studentId">
           <span slot="label">
             权限查询

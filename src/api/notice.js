@@ -1,8 +1,10 @@
 import axios from "axios";
 
 // 发布公告
-export const publish = (title,author,content) =>
-  axios.post("/v1/nonpub/examine/addAnnouncement", {title,author,content});
+// export const publish = (title,author,content) =>
+//   axios.post("/v1/nonpub/examine/addAnnouncement", {title,author,content});
+export const publish = (params) =>
+  axios.post("/v1/nonpub/examine/addAnnouncement", params);
 
 //根据用户信息获取studenId
 export const getStudenId=()=>
@@ -27,4 +29,8 @@ export const deleteNotice=(announcementId)=>
 //获取公告回收站
 export const dustbin=()=>
   axios.get('/v1/nonpub/examine/get/forwardAnnouncements');
+
+//上传图片接口
+export const uploadImg=(file)=>
+  axios.post('/v1/nonpub/examine/uploadAnnouncementImg',file);
 

@@ -1,5 +1,9 @@
 import axios from "axios";
 
+
+//根据userId获取team信息
+export const getMyTeam=(userId)=>axios.get('/v1/nonpub/transform/getOnesTeamMessage',{params:{userId}});
+
 // 获取全部团队方向列表
 export const getAllTeamDirection = () =>
   axios.get("/v1/nonpub/collect/selectAllTeamDirection");
@@ -50,8 +54,9 @@ export const getBlackTeamList = () =>
 
 //从Excel导入团队
 export const importTeam = (file) =>
-  axios.post("/v1/nonpub/examine/addTeamByExcel",{file});
+  axios.post("/v1/nonpub/examine/addTeamByExcel",file);
 
 //从excel导入黑名单（方便）
 export const importBlack= (file) =>
-  axios.post("/v1/nonpub/examine/addBlackListByExcel",{file});
+  axios.post("/v1/nonpub/examine/addBlackListByExcel",file);
+

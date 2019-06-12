@@ -1,14 +1,7 @@
 <template>
   <div class="project-progress" ref="page" @scroll="scroll">
     <el-button @click="back" icon="el-icon-back" class="btn-back">返回</el-button>
-    <el-button
-      circle
-      class="back-top"
-      type="danger"
-      title="返回顶端"
-      @click="toTop"
-      v-show="scrollTop"
-    >top</el-button>
+    <el-button circle class="back-top" type="danger" title="返回顶端" @click="toTop" v-show="scrollTop">top</el-button>
     <div class="project-detail" :class="{showDetail:showDetail}">
       <span class="el-icon-document detail" @click="showDetail = !showDetail" title="项目详情"></span>
       <project-detail :projectId="projectId" class="detail-list"></project-detail>
@@ -24,78 +17,23 @@
           <span class="score-title">项目分数</span>
           <rate :score="originScore" style="display:block"></rate>
         </span>
-        <el-tag
-          disable-transitions
-          class="state-tag"
-          style="font-size:12px;color:#fff"
-          color="#ff0000a6"
-          v-if="timeout"
-        >项目超时</el-tag>
+        <el-tag disable-transitions class="state-tag" style="font-size:12px;color:#fff" color="#ff0000a6" v-if="timeout">项目超时</el-tag>
 
-        <el-tag
-          disable-transitions
-          class="state-tag"
-          style="font-size:12px"
-          type="danger"
-          v-if="overtime"
-        >超时{{ overtime }}次</el-tag>
+        <el-tag disable-transitions class="state-tag" style="font-size:12px" type="danger" v-if="overtime">超时{{ overtime }}次</el-tag>
 
-        <el-tag
-          disable-transitions
-          class="state-tag"
-          style="font-size:12px"
-          type="danger"
-          v-if="delayTime"
-        >已延期 {{ delayTime }} 天</el-tag>
+        <el-tag disable-transitions class="state-tag" style="font-size:12px" type="danger" v-if="delayTime">已延期 {{ delayTime }} 天</el-tag>
 
-        <el-tag
-          class="state-tag"
-          :type="stateColorTxt(delayState)"
-          v-if="delayState"
-        >延期申请状态：{{delayState | filterStateTxt}}</el-tag>
+        <el-tag class="state-tag" :type="stateColorTxt(delayState)" v-if="delayState">延期申请状态：{{delayState | filterStateTxt}}</el-tag>
 
-        <template
-          v-if="permission($roles.team) && isRun && !isLoading && (achievementState || active)"
-        >
-          <el-button
-            v-if="delayState == '未审核'"
-            round
-            class="btn-delay"
-            size="medium"
-            @click="cancelDelay"
-          >取消延期</el-button>
-          <el-button
-            v-else
-            round
-            class="btn-delay"
-            type="warning"
-            size="medium"
-            @click="openDelay"
-          >延期</el-button>
+        <template v-if="permission($roles.team) && isRun && !isLoading && (achievementState || active)">
+          <el-button v-if="delayState == '未审核'" round class="btn-delay" size="medium" @click="cancelDelay">取消延期</el-button>
+          <el-button v-else round class="btn-delay" type="warning" size="medium" @click="openDelay">延期</el-button>
         </template>
 
-        <el-tag
-          class="btn-delay"
-          disable-transitions
-          style="font-size:12px; margin-top:10px;"
-          type="danger"
-          v-if="!isRun && scoreFlag"
-        >未评分</el-tag>
+        <el-tag class="btn-delay" disable-transitions style="font-size:12px; margin-top:10px;" type="danger" v-if="!isRun && scoreFlag">未评分</el-tag>
 
-        <el-button
-          class="btn-delay"
-          type="text"
-          @click="showEevaluate=true"
-          v-if="!isRun && permission(...$roles.manager) && !isLoading"
-        >查看评价</el-button>
-        <el-button
-          round
-          class="btn-delay"
-          type="warning"
-          size="medium"
-          @click="openScore"
-          v-if="!isRun && permission(...$roles.manager) && !isLoading"
-        >打分</el-button>
+        <el-button class="btn-delay" type="text" @click="showEevaluate=true" v-if="!isRun && permission(...$roles.manager) && !isLoading">查看评价</el-button>
+        <el-button round class="btn-delay" type="warning" size="medium" @click="openScore" v-if="!isRun && permission(...$roles.manager) && !isLoading">打分</el-button>
       </div>
       <!-- 上传文件 -->
       <input type="file" ref="file" style="display: none;" @change="selectedFile">
@@ -116,92 +54,32 @@
               <!-- <template v-if="isPrevNode(key) && permission(...$roles.manager, $roles.demander)"> -->
               <template v-if="isPrevNode(key)">
                 <!-- 下载按钮 -->
-                <el-button
-                  circle
-                  class="btn"
-                  icon="el-icon-download"
-                  @click="download(node)"
-                  :loading="node.isSelect"
-                  :disabled="(achievementState == 0 || achievementState == 6 && permission(...$roles.manager, $roles.demander)) && isCurRunNode(key)"
-                ></el-button>
+                <el-button circle class="btn" icon="el-icon-download" @click="download(node)" :loading="node.isSelect" :disabled="(achievementState == 0 || achievementState == 6 && permission(...$roles.manager, $roles.demander)) && isCurRunNode(key)"></el-button>
                 <!-- 显示节点状态 -->
-                <el-tag
-                  class="state-tag"
-                  disable-transitions
-                  :type="stateColor(achievementState)"
-                  v-if="isCurRunNode(key) && permission(...$roles.manager, $roles.demander)"
-                >{{achievementState | filterStateSub}}</el-tag>
+                <el-tag class="state-tag" disable-transitions :type="stateColor(achievementState)" v-if="isCurRunNode(key) && permission(...$roles.manager, $roles.demander)">{{achievementState | filterStateSub}}</el-tag>
               </template>
 
               <!-- 操作按钮  start -->
               <template v-if="isCurRunNode(key)">
                 <!-- 管理员的操作按钮 -->
                 <div class="btn" v-if="permission(...$roles.manager)">
-                  <el-button
-                    circle
-                    size="small"
-                    type="success"
-                    icon="el-icon-check"
-                    :loading="btnLoading"
-                    @click="examine('2')"
-                    class="state-tag"
-                    :disabled="achievementState != 1"
-                  ></el-button>
-                  <el-button
-                    circle
-                    size="small"
-                    icon="el-icon-close"
-                    type="danger"
-                    :loading="btnLoading"
-                    @click="examine('3')"
-                    :disabled="achievementState != 1"
-                  ></el-button>
+                  <el-button circle size="small" type="success" icon="el-icon-check" :loading="btnLoading" @click="examine('2')" class="state-tag" :disabled="achievementState != 1"></el-button>
+                  <el-button circle size="small" icon="el-icon-close" type="danger" :loading="btnLoading" @click="examine('3')" :disabled="achievementState != 1"></el-button>
                 </div>
                 <!-- 开发团队的操作按钮 -->
                 <div class="btn" v-if="permission($roles.team)">
-                  <el-button
-                    circle
-                    title="选择文件"
-                    @click="triggerSelect"
-                    icon="el-icon-document"
-                    :disabled="achievementState ==  1"
-                  ></el-button>
+                  <el-button circle title="选择文件" @click="triggerSelect" icon="el-icon-document" :disabled="achievementState ==  1"></el-button>
                   <!-- 上传 -->
-                  <el-button
-                    circle
-                    type="danger"
-                    icon="el-icon-upload"
-                    :disabled="file.length === 0"
-                    @click="handleUpdate"
-                    :loading="btnLoading"
-                    title="上传文件"
-                  ></el-button>
+                  <el-button circle type="danger" icon="el-icon-upload" :disabled="file.length === 0" @click="handleUpdate" :loading="btnLoading" title="上传文件"></el-button>
                   <!-- 当前节点状态 -->
-                  <el-tag
-                    class="state-tag"
-                    disable-transitions
-                    :type="stateColor(achievementState)"
-                  >{{ achievementState | filterStateSub}}</el-tag>
+                  <el-tag class="state-tag" disable-transitions :type="stateColor(achievementState)">{{ achievementState | filterStateSub}}</el-tag>
                   <!-- type="danger" -->
-                  <el-button
-                    class="state-tag"
-                    circle
-                    title="取消提交"
-                    icon="el-icon-delete"
-                    :loading="delLoading"
-                    @click="cancelAchievement"
-                    v-if="(achievementState == 1) && permission($roles.team)"
-                  ></el-button>
+                  <el-button class="state-tag" circle title="取消提交" icon="el-icon-delete" :loading="delLoading" @click="cancelAchievement" v-if="(achievementState == 1) && permission($roles.team)"></el-button>
                   <!-- 提交文件记录 -->
                   <div class="file-list" v-show="file.length" :class="{error:file.state}">
                     <i class="el-icon-document"></i>
                     <span>{{ file.name }}</span>
-                    <i
-                      class="el-icon-error"
-                      style="margin-left:20px;color:#F56C6C;cursor:pointer"
-                      v-show="file.state"
-                      @click="clearFile"
-                    ></i>
+                    <i class="el-icon-error" style="margin-left:20px;color:#F56C6C;cursor:pointer" v-show="file.state" @click="clearFile"></i>
                   </div>
                   <!-- 提示信息 -->
                   <div class="tip">
@@ -220,13 +98,7 @@
                   <span @click="openHistory(node)">历史</span>
                 </h4>
                 <div class="list" :class="{'active':node.showHistory}">
-                  <el-table
-                    :data="node.historys"
-                    stripe
-                    max-height="300"
-                    :default-sort="{prop: 'commitTime', order: 'descending'}"
-                    v-loading="node.historyLoading"
-                  >
+                  <el-table :data="node.historys" stripe max-height="300" :default-sort="{prop: 'commitTime', order: 'descending'}" v-loading="node.historyLoading">
                     <el-table-column prop="achievementContent" label="提交内容">
                       <template slot-scope="scope">
                         <span v-overflow-e="scope.row.achievementContent">
@@ -243,9 +115,7 @@
                     </el-table-column>
                     <el-table-column prop="state" label="提交状态">
                       <template slot-scope="scope">
-                        <el-tag
-                          :type="stateColor(scope.row.state)"
-                        >{{scope.row.state | filterState}}</el-tag>
+                        <el-tag :type="stateColor(scope.row.state)">{{scope.row.state | filterState}}</el-tag>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -261,39 +131,11 @@
     <!-- 延期对话框 -->
     <project-delay :is-delay.sync="isDelay" :active-time="activeTime" @updateData="getId"></project-delay>
     <!-- 评价项目 -->
-    <el-dialog
-      center
-      width="400px"
-      title="项目评分"
-      :visible.sync="isScore"
-      class="rate-box"
-      v-loading="scoreLoading"
-      element-loading-text="拼命申请中"
-      @closed="closeScore"
-    >
+    <el-dialog center width="400px" title="项目评分" :visible.sync="isScore" class="rate-box" v-loading="scoreLoading" element-loading-text="拼命申请中" @closed="closeScore">
       <div class="rate-box">
-        <el-rate
-          v-model="score"
-          :max="10"
-          allow-half
-          show-score
-          class="rate"
-          text-color="#ff9900"
-          :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-          score-template="{value}"
-        ></el-rate>
-        <el-form
-          ref="form"
-          :model="scoreForm"
-          class="form-score"
-          label-position="top"
-          @submit.native.prevent
-        >
-          <el-form-item
-            label="评价"
-            prop="evaluate"
-            :rules="{ required: true, message: '不能为空', trigger: 'blur' }"
-          >
+        <el-rate v-model="score" :max="10" allow-half show-score class="rate" text-color="#ff9900" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" score-template="{value}"></el-rate>
+        <el-form ref="form" :model="scoreForm" class="form-score" label-position="top" @submit.native.prevent>
+          <el-form-item label="评价" prop="evaluate" :rules="{ required: true, message: '不能为空', trigger: 'blur' }">
             <el-input type="textarea" v-model="scoreForm.evaluate"></el-input>
           </el-form-item>
         </el-form>
@@ -626,8 +468,8 @@ export default {
           this.file.type = type_png.test(name)
             ? "3"
             : type_zip.test(name)
-            ? "2"
-            : "1";
+              ? "2"
+              : "1";
           this.file.content = files[0];
           this.file.name = name;
           this.file.length = files.length;

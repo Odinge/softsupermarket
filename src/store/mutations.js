@@ -8,7 +8,8 @@ import {
   SET_MSG_NUM,
   SET_USER_INFO,
   SET_USERNAME,
-  SET_TEMPROLE
+  SET_TEMPROLE,
+  SET_TEAM
 } from "./types";
 import { constantRouterMap } from "../router";
 import { getMessageByUserGet } from "./../api/login";
@@ -116,5 +117,8 @@ export default {
   // 设置用户名
   [SET_USERNAME](state, username) {
     state.username = username;
+  },
+  [SET_TEAM](state, team) {
+    state.team = team;
   }
 };

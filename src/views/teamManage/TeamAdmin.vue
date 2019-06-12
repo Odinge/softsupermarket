@@ -12,7 +12,7 @@
     <div class="excelTemplate">
       <el-dropdown>
         <span class="el-dropdown-link">
-          导入模板下载<i class="el-icon-arrow-down el-icon--right"></i>
+          导入模板<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <a href="http://www.ghjhhyuyuy.xin:8080/v1/nonpub/examine/getTeamExcelModel">
@@ -116,26 +116,30 @@ export default {
       else {
         let formData = new FormData();
         formData.append('file', file);
-
-        let result = (async () => {
-          if (this.uploadType === 'all') {
-            return await importBlack(formData).catch((err) => {
-              this.$message.error('导入团队失败！');
+        // importBlack(formData).then(res=>{
+        //   console.log(res)
+        // })
+        (async () => {
+          let result = '';
+          if (this.uploadType === 'black') {
+            result = await importBlack(formData).catch((err) => {
+              this.$message.error('糟糕，导入团队失败！');
               console.log(err)
             });
           }
           else {
-            return await importTeam(formData).catch((err) => {
-              this.$message.error('导入团队失败！');
+            result = await importTeam(formData).catch((err) => {
+              this.$message.error('糟糕，导入团队失败！');
               console.log(err)
             });
           }
+          if (result.status === 0) {
+            this.$message.success('导入团队成功！');
+          } else {
+            this.$message.error(result.msg);
+          }
         })();
-        if (result.status === 0) {
-          this.$message.success('导入团队成功！');
-        } else {
-          this.$message.error('导入团队失败！');
-        }
+
       }
     },
     handleMsgNumber(type, number) { /*处理子组件传过来的消息数量*/

@@ -1,6 +1,6 @@
 <template>
   <div class='detail' v-if="detail_info">
-      <i class="el-icon-back return"  @click="goBack" title="返回上一页">返回</i>
+    <i class="el-icon-back return" @click="goBack" title="返回上一页">返回</i>
     <div class="title">团队基本信息</div>
     <div>
       <span>团队名：</span>
@@ -14,10 +14,10 @@
       <span>团队方向：</span>
       <span>{{detail_info.direction}}</span>
     </div>
-    <el-collapse >
+    <el-collapse>
       <el-collapse-item title="团队成员信息" name="1">
         <div class="menDetail">
-          <div class="info" >
+          <div class="info">
             <div>队长：<span class="content">{{this.detail_info.captainInformation[0].name|formData}}</span> </div>
             <div>方向：<span class="content">{{this.detail_info.captainInformation[0].direction|formData}}</span> </div>
             <div>专业：<span class="content">{{this.detail_info.captainInformation[0].major|formData}}</span> </div>
@@ -62,117 +62,115 @@
   </div>
 </template>
 <script>
-  import {  getTeam } from "@/api/team";
-  export default {
-    data() {
-      return {
-        detail_info: ''
-      }
-    },
-    filters: {
-      formData(value) {
-        return value === '' ? '~' : value;
-      }
-    },
-    methods: {
-      getData() {
-        let that=this;
-        getTeam(this.teamId).then(function (res) {
-
-          if (res.status === 0) {
-            this.detail_info = res.data[0];
-          }
-          else{
-            console.log(res)
-            this.fail('获取数据失败!');
-          }
-        }).catch((err)=>{
-         this.$message.error('错误了，获取数据失败!');
-          console.log(err)
-        })
-      },
-      success(msg) {
-        this.$message({
-          message: msg,
-          type: 'success'
-        });
-      },
-      fail(msg) {
-        this.$message.error(msg);
-      },
-      goBack(){
-        this.$router.go(-1);
-      }
-    },
-    computed: {
-      teamId() {
-        return this.$route.params.id;
-      }
-    },
-    created() {
-      this.getData();
+import { getTeam } from "@/api/team";
+export default {
+  data() {
+    return {
+      detail_info: ''
     }
+  },
+  filters: {
+    formData(value) {
+      return value === '' ? '~' : value;
+    }
+  },
+  methods: {
+    getData() {
+      getTeam(this.teamId).then((res) => {
+        if (res.status === 0) {
+          this.detail_info = res.data[0];
+        }
+        else {
+          console.log(res)
+          this.fail('获取数据失败!');
+        }
+      }).catch((err) => {
+        this.$message.error('错误了，获取数据失败!');
+        console.log(err)
+      })
+    },
+    success(msg) {
+      this.$message({
+        message: msg,
+        type: 'success'
+      });
+    },
+    fail(msg) {
+      this.$message.error(msg);
+    },
+    goBack() {
+      this.$router.go(-1);
+    }
+  },
+  computed: {
+    teamId() {
+      return this.$route.params.id;
+    }
+  },
+  created() {
+    this.getData();
   }
+}
 </script>
 <style scoped>
-  .detail{
-    overflow: auto;
-    width: 100%;
-    background-color : white;
-    padding-bottom: 20px;
-    box-sizing: border-box;
-  }
-  .detail div {
-    margin: 10px 0;
-    padding-left: 20px;
-    font-weight: bold;
-  }
-  .return {
-    margin-left: 30px;
-    font-size: 20px;
-    cursor: pointer;
-    color:white;
-    margin-top: 5px;
-    border: 1px solid white;
-    background-color: #777;
-    padding: 5px;
-    border-radius: 5px;
-  }
-  .title {
-    text-align: left;;
-    line-height: 30px;
-    background-color: #eee;
-    border: 1px solid #ccc;
-    font-weight: bold;
-    margin: 0;
-  }
-  .menDetail{
-    min-height:10px;
-    background-color: #ccc;
-  }
- .content {
-   padding-left: 10px;
-   white-space: nowrap;
-   text-overflow: ellipsis;
-   width: calc(100% - 80px);
-   overflow-y: auto;
-   overflow-x: hidden;
- }
- .short {
-   font-weight: bold;
- }
-  .detail .info {
-    margin: 50px 20px;
-    padding-right: 10px;
-    float: left;
-    max-width: 400px;
-    min-width: 250px;
-    box-shadow: 5px 5px 5px;
-    background-color: white;
-  }
-  .shortinfor {
-    display: inline-block;
-    max-width: 200px;
-    vertical-align: middle;
-  }
+.detail {
+  overflow: auto;
+  width: 100%;
+  background-color: white;
+  padding-bottom: 20px;
+  box-sizing: border-box;
+}
+.detail div {
+  margin: 10px 0;
+  padding-left: 20px;
+  font-weight: bold;
+}
+.return {
+  margin-left: 30px;
+  font-size: 20px;
+  cursor: pointer;
+  color: white;
+  margin-top: 5px;
+  border: 1px solid white;
+  background-color: #777;
+  padding: 5px;
+  border-radius: 5px;
+}
+.title {
+  text-align: left;
+  line-height: 30px;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  font-weight: bold;
+  margin: 0;
+}
+.menDetail {
+  min-height: 10px;
+  background-color: #ccc;
+}
+.content {
+  padding-left: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: calc(100% - 80px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.short {
+  font-weight: bold;
+}
+.detail .info {
+  margin: 50px 20px;
+  padding-right: 10px;
+  float: left;
+  max-width: 400px;
+  min-width: 250px;
+  box-shadow: 5px 5px 5px;
+  background-color: white;
+}
+.shortinfor {
+  display: inline-block;
+  max-width: 200px;
+  vertical-align: middle;
+}
 </style>

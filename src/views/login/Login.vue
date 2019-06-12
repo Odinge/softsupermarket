@@ -20,6 +20,7 @@
 </template>
 <script>
 import { delCookie } from "../../utils/auth";
+import { getOnesTeamMessage } from "../../api/login";
 export default {
   data() {
     return {
@@ -71,6 +72,11 @@ export default {
   methods: {
     login() {
       this.btnLoading = true;
+      // if (this.roleId == 3) {
+      //   this.getTeamInfo();
+      //   console.log("dad");
+      // }
+
       // 设置角色并进入对应的管理页面
       this.$store.dispatch("setRole", this.roleId).catch(err => {
         this.$message.error("不明错误");
@@ -88,10 +94,25 @@ export default {
     },
     // 登录无效时退出登录
     toLogin() {
-      // delCookie("JSESSIONID");
+      delCookie("JSESSIONID");
       location.reload();   // 刷新浏览器
       window.location.href = "http://www.ghjhhyuyuy.xin:8080/";
 
+    },
+    // getTeamInfo() {
+    //   getOnesTeamMessage(this.userId).then(res => {
+    //     if (!res.status) {
+    //       console.log(res);
+
+    //     }
+    //   }).catch(err => {
+
+    //   });
+    // }
+  },
+  computed: {
+    userId() {
+      return this.$store.state.userId;
     }
   }
 };
