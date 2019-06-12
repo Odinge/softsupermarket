@@ -3,40 +3,42 @@
     <div class='team-manage'>
       <div v-show="show_if[0]">
         <div class="full_shadow" ref="full_shadow"></div>
-        <!--<div class="line"></div>-->
-        <div class="square">
-          <div class="line2"></div>
-          <div class="line3"></div>
-          <table v-if="teamId">
-            <tr>
-              <td class="type">团队名：</td>
-              <td>{{teamInfo.name}}</td>
-            </tr>
-            <tr>
-              <td class="type">团队方向：</td>
-              <td>{{teamInfo.direction}}</td>
-            </tr>
-            <tr>
-              <td class="type">操作：</td>
-              <td>
-                <span class="dissolve" @click="dissolve">解散团队</span>
-                <span class="detail" @click="detailClick(true)">查看详情</span>
-              </td>
-            </tr>
-          </table>
-        </div>
+        <template v-if="!showMore">
+          <!--<div class="line"></div>-->
+          <div class="square">
+            <div class="line2"></div>
+            <div class="line3"></div>
+            <table>
+              <tr>
+                <td class="type">团队名：</td>
+                <td>{{teamInfo.name}}</td>
+              </tr>
+              <tr>
+                <td class="type">团队方向：</td>
+                <td>{{teamInfo.direction}}</td>
+              </tr>
+              <tr>
+                <td class="type">操作：</td>
+                <td>
+                  <span class="dissolve" @click="dissolve">解散团队</span>
+                  <span class="detail" @click="detailClick(true)">查看详情</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </template>
         <div class="notice">
           <div class="notice-nav">动态公告
-            <!--<span class="more">更多-->
-            <!--<i class="el-icon-d-arrow-right"></i>-->
-            <!--</span>-->
+            <span class="more" @click="more" v-if="!showMore">更多
+              <i class="el-icon-d-arrow-right"></i>
+            </span>
+            <span v-else class="more" @click="more">
+              返回
+              <i class="el-icon-d-arrow-right"></i>
+            </span>
           </div>
           <ul>
-            <li @click="noticeDetail(0)"><span class="time">{{noticeInfo[0].createTime}}</span><span class="content">{{noticeInfo[0].title}}</span></li>
-            <li @click="noticeDetail(1)"><span class="time">{{noticeInfo[1].createTime}}</span><span class="content">{{noticeInfo[1].title}}</span></li>
-            <li @click="noticeDetail(2)"><span class="time">{{noticeInfo[2].createTime}}</span><span class="content">{{noticeInfo[2].title}}</span></li>
-            <li @click="noticeDetail(3)"><span class="time">{{noticeInfo[3].createTime}}</span><span class="content">{{noticeInfo[3].title}}</span></li>
-            <li @click="noticeDetail(4)"><span class="time">{{noticeInfo[4].createTime}}</span><span class="content">{{noticeInfo[4].title}}</span></li>
+            <li v-for="(notice, index) in noticeData" @click="noticeDetail(index)"><span class="time">{{notice.createTime}}</span><span class="content">{{notice.title}}</span></li>
           </ul>
         </div>
       </div>
@@ -47,7 +49,7 @@
 </template>
 <script>
 import devDetail from '@/views/teamManage/devDetail.vue'
-import { getTeam, deleteTeam, getMyTeam } from "@/api/team";
+import { getTeam, deleteTeam } from "@/api/team";
 import { publish, getStudenId, noticeList, getUserId } from "@/api/notice";
 export default {
   components: {
@@ -55,22 +57,25 @@ export default {
   },
   data() {
     return {
-      // teamId:'3783141aba2c4330a0c0373393457cee',
-      teamId: '',
-      team: '',//保存自己（队长）团队信息
+      teamId: '3783141aba2c4330a0c0373393457cee',
       detail_info: [],/*存储数据，传给子组件 devDetail*/
       show_if: [true, false], //大 小显示
       teamInfo: { name: '', direction: "" },
-      noticeInfo: '',
+      noticeInfo: [],
+      showMore: false
+    }
+  },
+  computed: {
+    noticeData() {
+      return this.showMore ? this.noticeInfo : this.noticeInfo.slice(0, 5);
     }
   },
   methods: {
+    more() {
+      this.showMore = !this.showMore;
+    },
     detailClick(bool) {
       let that = this;
-      if (this.teamId === '') {
-        this.$message.error('团队id为空，信息异常，请联系开发人员');
-        return false
-      }
       getTeam(this.teamId).then(function (res) {
         if (res.status === 0) {
           that.detail_info = res.data;
@@ -140,23 +145,10 @@ export default {
       this.$message.error(msg);
     },
   },
-  computed: {
-    userId() {
-      return this.$store.state.userId;
-    }
-  },
   created() {
-    getMyTeam(this.userId).then(res => {
-      let data = res.data;
-      for (let i = 0; i < data.length; i++) {
-        if (data[i]['身份'] === '队长') {
-          this.id = data[i]['团队id'];
-        }
-      }
-    });
     this.detailClick(false);
     noticeList().then((res) => {
-      console.log(res)
+      // console.log(res)
       if (res.status === 0) {
         let data = res.data.slice(0, 6);
         for (let i = 0; i < data.length; i++) {
@@ -205,10 +197,14 @@ export default {
   cursor: pointer;
 }
 .notice {
-  height: 250px;
+  /* height: 250px; */
   width: 600px;
   margin: 20px auto;
   border: 1px solid #ccc;
+}
+.notice ul {
+  max-height: 1000px;
+  overflow: auto;
 }
 .notice li {
   padding: 5px 0 5px 20px;
@@ -248,7 +244,6 @@ li:nth-child(6) {
   font-size: 16px;
   cursor: pointer;
 }
-
 .line {
   width: 80%;
   height: 3px;
@@ -310,7 +305,6 @@ td {
   z-index: 100;
   background-color: rgba(1, 1, 1, 0.3);
 }
-
 .confirm_msg {
   display: none;
   position: fixed;
@@ -334,7 +328,6 @@ td {
   text-align: center;
   margin-bottom: 20px;
 }
-
 .confirm_btn {
   text-align: center;
   margin-top: 30px;

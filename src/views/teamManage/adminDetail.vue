@@ -79,8 +79,7 @@ export default {
       getTeam(this.teamId).then((res) => {
         if (res.status === 0) {
           this.detail_info = res.data[0];
-        }
-        else {
+        } else {
           console.log(res)
           this.fail('获取数据失败!');
         }
