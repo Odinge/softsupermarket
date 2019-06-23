@@ -21,7 +21,7 @@ import {
   getProjectByProgress,
   getProjectByState
 } from "./../api/project";
-import { $roles } from "../utils/auth";
+
 export default {
   // 设置token
   [SET_TOKEN](state, { token }) {
@@ -49,62 +49,8 @@ export default {
   },
 
   // 设置消息数量
-  async [SET_MSG_NUM](state, msgNum) {
-    let data = [];
-    let { role } = state;
-
-    if ($roles.manager.includes(role)) {
-      // 审核项目数
-      data = (await getExamineProject()).data || [];
-      msgNum.publishExamine = data.filter(item => item.state == 1).length;
-
-      // 承接项目数
-      data = (await getAllocation()).data || [];
-      msgNum.undertakeExamine = data.length;
-
-      // 延期项目数
-      data = (await getDelays()).data || [];
-      msgNum.delayExamine = data.filter(item => item.state == 1).length;
-
-      // 修改项目数
-      data = (await getModificationProject()).data;
-      data = data ? data.modificationProject : [];
-      msgNum.alterExamine = data.filter(item => item.state == "未审核").length;
-
-      // 审核总数
-      msgNum.projectExamine =
-        msgNum.undertakeExamine +
-        msgNum.alterExamine +
-        msgNum.delayExamine +
-        msgNum.publishExamine;
-    } else if (role === $roles.demander) {
-      // 未完成项目数
-      data = (await getProjectByProgress("未承接")).data || [];
-      msgNum.projectUndertake = data.filter(
-        item => item.undertakeNum == 0
-      ).length;
-    }
-
-    if (!$roles.manager.includes(role)) {
-      data = (await getProjectByState("1,3")).data || [];
-      msgNum.projectCheck = data.length;
-    }
-
-    // 消息数量
-    data = (await getMessageByUserGet(state.userId)).data || [];
-    msgNum.message = data.filter(item => item.state == "未查看").length;
+  [SET_MSG_NUM](state, msgNum) {
     state.msgNum = msgNum;
-
-    let count = msgNum.porjectRun + msgNum.projectFinish;
-    // 总项目数
-    if ($roles.manager.includes(role)) {
-      msgNum.projectManage = msgNum.projectExamine + count;
-    } else if (role === $roles.demander) {
-      msgNum.projectManage =
-        msgNum.projectCheck + count + msgNum.projectUndertake;
-    } else {
-      msgNum.projectManage = msgNum.projectCheck + count;
-    }
   },
 
   // 设置用户信息

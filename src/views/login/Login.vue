@@ -94,10 +94,10 @@ export default {
     },
     // 登录无效时退出登录
     toLogin() {
-      delCookie("JSESSIONID");
+      // delCookie("JSESSIONID");
+
       location.reload();   // 刷新浏览器
       window.location.href = "http://www.ghjhhyuyuy.xin:8080/";
-
     },
     // getTeamInfo() {
     //   getOnesTeamMessage(this.userId).then(res => {

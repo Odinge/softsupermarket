@@ -28,6 +28,11 @@ import {
   changeMessageState
 } from "./../api/login";
 import {
+  getModifyAppliction,
+  getNewApplication,
+  getBlackTeamList
+} from "./../api/team";
+import {
   getExamineProject,
   getDelays,
   getModificationProject,
@@ -36,7 +41,7 @@ import {
   getProjectByState
 } from "./../api/project";
 import { getAllTeamDirection } from "./../api/team";
-import { setToken, getTokenRole, setRole } from "../utils/auth";
+import { setToken, getTokenRole, setRole, $roles } from "../utils/auth";
 import { Message } from "element-ui";
 
 export default {
@@ -162,7 +167,7 @@ export default {
     }
   },
   // 初始化查看信息数量.用于显示为处理消息数量
-  async initMsgNum({ commit }) {
+  async initMsgNum({ commit, state }) {
     let msgNum = {
       publishExamine: 0,
       delayExamine: 0,
@@ -174,9 +179,26 @@ export default {
       projectCheck: 0,
       projectFinish: 0,
       projectManage: 0,
-      message: 0
+      message: 0,
+      teamManage: 0
     };
+
     let data = [];
+    let { role } = state;
+
+    // 团队信息
+    if ($roles.manager.includes(role)) {
+      // 增加团队
+      data = (await getNewApplication()).data || [];
+      let newTeam = data.length;
+      // 黑名单
+      data = (await getBlackTeamList()).data.blackTeamList || [];
+      let blackList = data.length;
+      // 修改团队
+      data = (await getBlackTeamList()).data.modificationTeam || [];
+      let modifyTeam = data.length;
+      msgNum.teamManage = blackList + modifyTeam + newTeam;
+    }
 
     // 未完成项目数
     data = (await getProjectByProgress("未完成")).data || [];
@@ -185,6 +207,59 @@ export default {
     // 已完成项目数
     data = (await getProjectByProgress("已完成")).data || [];
     msgNum.projectFinish = data.filter(item => item.score == -1).length;
+
+    if ($roles.manager.includes(role)) {
+      // 审核项目数
+      data = (await getExamineProject()).data || [];
+      msgNum.publishExamine = data.filter(item => item.state == 1).length;
+
+      // 承接项目数
+      data = (await getAllocation()).data || [];
+      msgNum.undertakeExamine = data.length;
+
+      // 延期项目数
+      data = (await getDelays()).data || [];
+      msgNum.delayExamine = data.filter(item => item.state == 1).length;
+
+      // 修改项目数
+      data = (await getModificationProject()).data;
+      data = data ? data.modificationProject : [];
+      msgNum.alterExamine = data.filter(item => item.state == "未审核").length;
+
+      // 审核总数
+      msgNum.projectExamine =
+        msgNum.undertakeExamine +
+        msgNum.alterExamine +
+        msgNum.delayExamine +
+        msgNum.publishExamine;
+    } else if (role === $roles.demander) {
+      // 未完成项目数
+      data = (await getProjectByProgress("未承接")).data || [];
+      msgNum.projectUndertake = data.filter(
+        item => item.undertakeNum == 0
+      ).length;
+    }
+
+    // 项目审核
+    if (!$roles.manager.includes(role)) {
+      data = (await getProjectByState("1,3")).data || [];
+      msgNum.projectCheck = data.length;
+    }
+
+    // 消息数量
+    data = (await getMessageByUserGet(state.userId)).data || [];
+    msgNum.message = data.filter(item => item.state == "未查看").length;
+
+    let count = msgNum.porjectRun + msgNum.projectFinish;
+    // 总项目数
+    if ($roles.manager.includes(role)) {
+      msgNum.projectManage = msgNum.projectExamine + count;
+    } else if (role === $roles.demander) {
+      msgNum.projectManage =
+        msgNum.projectCheck + count + msgNum.projectUndertake;
+    } else {
+      msgNum.projectManage = msgNum.projectCheck + count;
+    }
 
     commit(SET_MSG_NUM, msgNum);
   },

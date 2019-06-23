@@ -8,6 +8,7 @@
     </el-tabs>
     <div class="newMsg msg" v-show="createMsg">{{createMsg}}</div>
     <div class="modifyMsg msg" v-show="modifyMsg">{{modifyMsg}}</div>
+    <div class="blackListMsg msg" v-show="blackListMsg">{{blackListMsg}}</div>
 
     <div class="excelTemplate">
       <el-dropdown>
@@ -65,7 +66,7 @@ import blackList from '@/views/teamManage/components/blackList.vue'
 import allTeam from '@/views/teamManage/components/allTeam.vue'
 import modifyApplication from '@/views/teamManage/components/modifyApplication.vue'
 import { getTeam } from "@/api/team";
-import { getModifyAppliction, importTeam, getNewApplication } from "@/api/team";
+import { getModifyAppliction, importTeam, getNewApplication, getBlackTeamList } from "@/api/team";
 import { importBlack } from "../../api/team";
 
 
@@ -78,7 +79,8 @@ export default {
       extend: false, /*是否显示allTeam中删除和同意按钮*/
       createMsg: '',
       modifyMsg: '',
-      uploadType: ''
+      blackListMsg: '',
+      uploadType: '',
     }
   },
   methods: {
@@ -163,7 +165,16 @@ export default {
         else {
           that.modifyMsg = '';
         }
-      })
+      });
+      getBlackTeamList().then(res => { //获取黑名单列表
+        if (res.status === 0) {
+          this.blackListMsg = res.data.blackTeamList.length;
+          console.log(res);
+        }
+        else {
+          this.blackListMsg = '';
+        }
+      });
     },
   },
 
@@ -233,5 +244,9 @@ export default {
 .modifyMsg {
   top: 20px;
   left: 300px;
+}
+.blackListMsg {
+  top: 20px;
+  left: 400px;
 }
 </style>

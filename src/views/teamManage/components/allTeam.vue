@@ -148,7 +148,7 @@ export default {
             that.loading = false;
             that.total = res.data.length;
             let data = res.data;
-            console.log(data)
+            // console.log(data)
             // let tempData=[];
             let tempData = res.data;
             // for(let i=0;i<data.length;i++){
