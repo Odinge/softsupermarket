@@ -16,7 +16,7 @@ export default {
       });
     },
     //根据接收方id请求消息，并返回数量
-    getDate() {
+    getData() {
       this.$store.dispatch("qesMessage", {
         userGet: this.userId
       });
@@ -26,7 +26,7 @@ export default {
   watch: {
     //监控路由的变换
     $route(to, from) {
-      this.getDate();
+      this.getData();
       this.open(this.length);
     },
     length(val) {
@@ -37,7 +37,7 @@ export default {
   },
   created() {
     //进入页面弹出消息提醒，
-    this.getDate();
+    // this.getData();
   },
 
   computed: {
@@ -49,6 +49,7 @@ export default {
     },
     data() {
       return this.$store.state.message;
+      // return [];
     },
     userId() {
       return this.$store.state.userId;

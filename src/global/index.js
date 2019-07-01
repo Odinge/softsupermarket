@@ -10,8 +10,13 @@ Vue.prototype.$baseUrl = "http://www.ghjhhyuyuy.xin:8080";
 Vue.prototype.ROLES = ["admin", "developer", "demander"];
 Vue.prototype.$roles = $roles;
 
-Vue.prototype.getMsgNum = function() {
-  this.$store.dispatch("initMsgNum").catch(err => console.error(err));
+Vue.prototype.getMsgNum = async function() {
+  try {
+    const msgNum = await this.$store.dispatch("initMsgNum");
+    return msgNum;
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 Vue.prototype.tags = [
@@ -136,3 +141,23 @@ Vue.directive("overflow-e", {
 });
 // 直接执行命令
 Vue.directive("exec", (node, { value }) => {});
+
+import {
+  getProjectByProgressLimit,
+  getProjectByProgress
+} from "../api/project";
+// 进度函数
+Vue.prototype.progressFun = function(progress) {
+  const funMap = {};
+  funMap[this.$roles.root] = funMap[
+    this.$roles.admin
+  ] = getProjectByProgress.bind(this);
+
+  funMap[this.$roles.demander] = funMap[
+    this.$roles.team
+  ] = getProjectByProgressLimit.bind(this, this.$store.state.username);
+
+  const role = this.$store.state.role;
+
+  return funMap[role](progress);
+};

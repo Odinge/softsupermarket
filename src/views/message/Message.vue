@@ -31,25 +31,13 @@
         <el-table-column prop="content" label="内容" width="450"></el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
-            <el-tag
-              v-show="scope.row.state =='已查看'"
-              type="success"
-              disable-transitions
-            >{{ scope.row.state }}</el-tag>
-            <el-tag
-              v-show="scope.row.state =='未查看'"
-              type="danger"
-              disable-transitions
-            >{{ scope.row.state }}</el-tag>
+            <el-tag v-show="scope.row.state =='已查看'" type="success" disable-transitions>{{ scope.row.state }}</el-tag>
+            <el-tag v-show="scope.row.state =='未查看'" type="danger" disable-transitions>{{ scope.row.state }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              v-show="scope.row.state=='未查看'"
-              @click="change(scope.row.messageId)"
-            >已读</el-button>
+            <el-button size="mini" v-show="scope.row.state=='未查看'" @click="change(scope.row.messageId)">已读</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -100,15 +88,36 @@ export default {
         });
     }
   },
-  mounted() {
-    this.loadData();
+  created() {
+    if (this.pageEnterState) {
+      if (this.msgLen === 0) {
+        const route = this.$store.getters.addRouter;
+        this.$router.push(route[0].path);
+      } else {
+        this.data = this.tableData;
+        this.isLoading = false;
+      }
+      this.$store.commit("SET_PAGE_ENTER_STATE", false);
+    } else {
+      this.loadData();
+    }
   },
+
   computed: {
     tableData() {
       return this.$store.state.message;
     },
     userId() {
       return this.$store.state.userId;
+    },
+    pageEnterState() {
+      return this.$store.state.pageEnterState;
+    },
+    msgLen() {
+      let newarry = this.tableData.filter(
+        states => states.state == "未查看"
+      );
+      return newarry.length;
     }
   },
   data() {

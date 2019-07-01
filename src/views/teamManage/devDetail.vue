@@ -64,13 +64,13 @@
           </div>
         </div>
       </div>
-      <div>
-        <div  class="member_info">
-          <div class="menDetail"  ref="products_info">
-            <div style="clear:both"></div>
-          </div>
-        </div>
-      </div>
+<!--      <div>-->
+<!--        <div  class="member_info">-->
+<!--          <div class="menDetail"  ref="products_info">-->
+<!--            <div style="clear:both"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
 
       <div class="center">
         <span>团队分数：</span>

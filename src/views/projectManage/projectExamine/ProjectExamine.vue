@@ -2,9 +2,10 @@
 <template>
   <div class="project-examine">
     <project-menu-sec :menu-list="menuList"></project-menu-sec>
-    <!-- <router-view class="project-list" v-if="cache"></router-view> -->
-    <router-view class="project-list"></router-view>
-    <!-- <router-view class="project-list" v-if="!cache"></router-view> -->
+    <keep-alive>
+      <router-view class="project-list" v-if="$route.meta.keepAlive"></router-view>
+    </keep-alive>
+    <router-view class="project-list" v-if="!$route.meta.keepAlive"></router-view>
   </div>
 </template>
 <script>
@@ -21,11 +22,6 @@ export default {
         { title: "修改审核", path: "alterExamine", alterExamine: 0 }
       ]
     };
-  },
-  computed: {
-    cache() {
-      return this.$route.meta.cache;
-    }
   },
   methods: {}
 };

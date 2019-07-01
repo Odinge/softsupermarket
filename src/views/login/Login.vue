@@ -72,17 +72,16 @@ export default {
   methods: {
     login() {
       this.btnLoading = true;
-      // if (this.roleId == 3) {
-      //   this.getTeamInfo();
-      //   console.log("dad");
-      // }
 
       // 设置角色并进入对应的管理页面
-      this.$store.dispatch("setRole", this.roleId).catch(err => {
+      this.$store.dispatch("setRole", this.roleId).then(res => {
+        this.$router.push({ path: "/" }); //登录成功之后重定向到首页
+        this.$store.commit("SET_PAGE_ENTER_STATE", true);
+      }).catch(err => {
         this.$message.error("不明错误");
         this.btnLoading = false;
       });
-      this.$router.push({ path: "/" }); //登录成功之后重定向到首页
+
     },
     // 获取焦点是清除错误信息
     clear() {
@@ -99,21 +98,11 @@ export default {
       location.reload();   // 刷新浏览器
       window.location.href = "http://www.ghjhhyuyuy.xin:8080/";
     },
-    // getTeamInfo() {
-    //   getOnesTeamMessage(this.userId).then(res => {
-    //     if (!res.status) {
-    //       console.log(res);
-
-    //     }
-    //   }).catch(err => {
-
-    //   });
-    // }
   },
   computed: {
     userId() {
       return this.$store.state.userId;
-    }
+    },
   }
 };
 </script>

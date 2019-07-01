@@ -35,6 +35,9 @@ export default {
   box-shadow: 0 0 2px #ccc;
   border-radius: 10px;
 }
+.table-radius {
+  border-radius: 10px;
+}
 /* 状态标签的样式 */
 .tag-finish {
   background-color: rgba(245, 108, 108, 0.1);
@@ -50,7 +53,7 @@ export default {
   content: "￥ ";
 }
 .tip-msg {
-  color:rgb(223, 85, 85);
+  color: rgb(223, 85, 85);
   font-weight: bold;
 }
 .overflow-e {
@@ -59,7 +62,6 @@ export default {
   white-space: nowrap;
 }
 .el-table__expanded-cell {
-    background-color: #ccc !important;
+  background-color: #ccc !important;
 }
-
 </style>

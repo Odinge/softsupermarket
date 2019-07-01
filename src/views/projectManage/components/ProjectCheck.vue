@@ -122,7 +122,8 @@ export default {
     },
     // 未承接
     getProjectUndertake() {
-      getProjectByProgress("未承接")
+      // getProjectByProgress("未承接")
+      this.progressFun("未承接")
         .then(res => {
           if (res.status == 0) {
             this.dataSrc = res.data.map(item => {

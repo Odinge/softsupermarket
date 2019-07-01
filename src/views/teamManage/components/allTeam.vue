@@ -25,7 +25,7 @@
 import { getTeam } from "@/api/team";
 import { getAllNewAppliction } from "@/api/team";
 import { agreeModify } from "@/api/team";
-import { getAllTeamDirection } from "@/api/team";
+import { getAllTeamDirection,handleNewApplication } from "@/api/team";
 import { getNewApplication } from "@/api/team";
 
 export default {
@@ -54,7 +54,7 @@ export default {
       else {
         state = '条件不满足';
       }
-      agreeModify(val.teamId, state).//
+      handleNewApplication(val.teamId, state).//
         then(function (res) {
           // console.log(res)
           if (res.status === 0 && res.msg === '成功') {
@@ -64,7 +64,9 @@ export default {
           }
           else {
             that.fail('发生了错误，操作失败！');
+            console.log(res)
           }
+
         }).catch(() => {
           that.fail('糟糕，系统异常，操作失败！');
         })

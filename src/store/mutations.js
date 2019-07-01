@@ -9,7 +9,11 @@ import {
   SET_USER_INFO,
   SET_USERNAME,
   SET_TEMPROLE,
-  SET_TEAM
+  SET_TEAMID,
+  SET_TEAMS,
+  SET_TEAM,
+  SET_PAGE_ENTER_STATE,
+  SET_PROJECTRUN_MSG_NUM
 } from "./types";
 import { constantRouterMap } from "../router";
 import { getMessageByUserGet } from "./../api/login";
@@ -64,7 +68,21 @@ export default {
   [SET_USERNAME](state, username) {
     state.username = username;
   },
+  [SET_TEAMID](state, teamId) {
+    state.teamId = teamId;
+  },
+  [SET_TEAMS](state, teams) {
+    state.teams = teams;
+  },
   [SET_TEAM](state, team) {
     state.team = team;
+  },
+  [SET_PAGE_ENTER_STATE](state, pageEnterState) {
+    state.pageEnterState = pageEnterState;
+  },
+  [SET_PROJECTRUN_MSG_NUM](state, msgNum) {
+    let num = state.msgNum.projectRun;
+    state.msgNum.projectRun = msgNum;
+    state.msgNum.projectManage = state.msgNum.projectManage - num + msgNum;
   }
 };

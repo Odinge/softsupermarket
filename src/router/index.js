@@ -74,11 +74,13 @@ const project = {
     {
       path: "run",
       name: "projectRun",
+      meta: { keepAlive: true },
       component: () => import("../views/projectManage/components/ProjectRun")
     },
     {
       path: "finish",
       name: "projectFinish",
+      meta: { keepAlive: true },
       component: () => import("../views/projectManage/components/ProjectFinish")
     }
   ],
@@ -107,6 +109,7 @@ const adminProjectManage = [
       {
         path: "undertake",
         name: "undertakeExamine",
+        meta: { keepAlive: true },
         component: () =>
           import("../views/projectManage/projectExamine/UndertakeExamine")
       },

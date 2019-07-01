@@ -38,15 +38,23 @@ import {
   getModificationProject,
   getAllocation,
   getProjectByProgress,
-  getProjectByState
+  getProjectByState,
+  getProjectByProgressLimit
 } from "./../api/project";
 import { getAllTeamDirection } from "./../api/team";
-import { setToken, getTokenRole, setRole, $roles } from "../utils/auth";
+import {
+  setToken,
+  getTokenRole,
+  setRole,
+  $roles,
+  getUserInfoOfStorage,
+  setUserInfoOfStorage
+} from "../utils/auth";
 import { Message } from "element-ui";
 
 export default {
   // 获取请求信息
-  getRequest({ commit }) {
+  getRequest({ commit, dispatch }) {
     return new Promise((resolve, reject) => {
       // 根据请求获取学号
       getStudentIdByRequest()
@@ -59,30 +67,35 @@ export default {
                 if (res.status == 0) {
                   // 获取权限
                   let userId = res.data;
-                  getRole(studentId)
-                    .then(res => {
-                      if (res.status == 0) {
-                        let roles = res.data;
-                        // 权限组
-                        let info = {
-                          roles,
-                          userId,
-                          username: studentId,
-                          teamId: ""
-                        };
-                        commit(SET_USER_INFO, info);
+                  // 获取信息
+                  dispatch("qesMessage", { userGet: userId }).then(() => {
+                    getRole(studentId)
+                      .then(res => {
+                        if (res.status == 0) {
+                          let roles = res.data;
 
-                        resolve(roles);
-                      }
-                      throw res.msg;
-                    })
-                    .catch(err =>
-                      reject({
-                        err,
-                        msg: "权限获取失败",
-                        code: 3
+                          // 权限组
+                          let info = {
+                            roles,
+                            userId,
+                            username: studentId,
+                            teamId: ""
+                          };
+                          setUserInfoOfStorage(info);
+                          commit(SET_USER_INFO, info);
+
+                          resolve(roles);
+                        }
+                        throw res.msg;
                       })
-                    );
+                      .catch(err =>
+                        reject({
+                          err,
+                          msg: "无访问权限",
+                          code: 2
+                        })
+                      );
+                  });
                 } else throw res.msg;
               })
               .catch(err => reject({ err, msg: "无访问权限", code: 2 }));
@@ -95,16 +108,22 @@ export default {
   },
   // 获取角色改变显示
   async getUserInfor({ commit }) {
-    let studentId = (await getStudentIdByRequest()).data;
-    let userId = (await getUserId(studentId)).data;
-    let roles = (await getRole(studentId)).data;
-    let rolesMap = roles.map(item => item.identityId).sort((a, b) => a > b);
-    let info = {
-      roles,
-      userId,
-      username: studentId,
-      teamId: ""
-    };
+    // let studentId = (await getStudentIdByRequest()).data;
+    // let userId = (await getUserId(studentId)).data;
+    // let roles = (await getRole(studentId)).data;
+    // let rolesMap = roles.map(item => item.identityId).sort((a, b) => a > b);
+    // let info = {
+    //   roles,
+    //   userId,
+    //   username: studentId,
+    //   teamId: ""
+    // };
+
+    let info = getUserInfoOfStorage();
+    let rolesMap = info.roles
+      .map(item => item.identityId)
+      .sort((a, b) => a > b);
+
     commit(SET_USER_INFO, info);
 
     let role = getTokenRole();
@@ -147,10 +166,11 @@ export default {
     if (param.userGet) {
       result = await getMessageByUserGet(param.userGet);
     }
-    if (result.status == 0) {
+    if (result.status === 0) {
       result = result.data;
       //下面仅供测试
       commit(SET_MESSAGE, result);
+      return result;
     }
   },
   // 改变id
@@ -175,7 +195,7 @@ export default {
       undertakeExamine: 0,
       projectExamine: 0,
       projectUndertake: 0,
-      porjectRun: 0,
+      projectRun: 0,
       projectCheck: 0,
       projectFinish: 0,
       projectManage: 0,
@@ -184,29 +204,42 @@ export default {
     };
 
     let data = [];
-    let { role } = state;
+    let { role, username } = state;
 
     // 团队信息
     if ($roles.manager.includes(role)) {
       // 增加团队
       data = (await getNewApplication()).data || [];
       let newTeam = data.length;
-      // 黑名单
-      data = (await getBlackTeamList()).data.blackTeamList || [];
-      let blackList = data.length;
+      // // 黑名单
+      // data = (await getBlackTeamList()).data.blackTeamList || [];
+      // let blackList = data.length;
       // 修改团队
       data = (await getBlackTeamList()).data.modificationTeam || [];
       let modifyTeam = data.length;
-      msgNum.teamManage = blackList + modifyTeam + newTeam;
+      // msgNum.teamManage = blackList + modifyTeam + newTeam;
+      msgNum.teamManage = modifyTeam + newTeam;
     }
 
-    // 未完成项目数
-    data = (await getProjectByProgress("未完成")).data || [];
-    msgNum.porjectRun = data.filter(item => item.state == 1).length;
+    if ($roles.manager.includes(role)) {
+      // 未完成项目数
+      data = (await getProjectByProgress("未完成")).data || [];
+      // msgNum.projectRun = data.filter(item => item.state == 2).length;
+      msgNum.projectRun = data.length;
 
-    // 已完成项目数
-    data = (await getProjectByProgress("已完成")).data || [];
-    msgNum.projectFinish = data.filter(item => item.score == -1).length;
+      // 已完成项目数
+      data = (await getProjectByProgress("已完成")).data || [];
+      msgNum.projectFinish = data.filter(item => item.score == -1).length;
+    } else {
+      // 未完成项目数
+      data = (await getProjectByProgressLimit(username, "未完成")).data || [];
+      // msgNum.projectRun = data.filter(item => item.state == 2).length;
+      msgNum.projectRun = data.length;
+
+      // 已完成项目数
+      data = (await getProjectByProgressLimit(username, "已完成")).data || [];
+      msgNum.projectFinish = data.filter(item => item.score == -1).length;
+    }
 
     if ($roles.manager.includes(role)) {
       // 审核项目数
@@ -233,8 +266,8 @@ export default {
         msgNum.delayExamine +
         msgNum.publishExamine;
     } else if (role === $roles.demander) {
-      // 未完成项目数
-      data = (await getProjectByProgress("未承接")).data || [];
+      // 未承接项目数
+      data = (await getProjectByProgressLimit(username, "未承接")).data || [];
       msgNum.projectUndertake = data.filter(
         item => item.undertakeNum == 0
       ).length;
@@ -250,7 +283,7 @@ export default {
     data = (await getMessageByUserGet(state.userId)).data || [];
     msgNum.message = data.filter(item => item.state == "未查看").length;
 
-    let count = msgNum.porjectRun + msgNum.projectFinish;
+    let count = msgNum.projectRun + msgNum.projectFinish;
     // 总项目数
     if ($roles.manager.includes(role)) {
       msgNum.projectManage = msgNum.projectExamine + count;
@@ -262,6 +295,7 @@ export default {
     }
 
     commit(SET_MSG_NUM, msgNum);
+    return msgNum;
   },
   // 获取团队信息
   async getTeamInfo({ state, commit }) {

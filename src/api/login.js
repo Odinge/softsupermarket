@@ -13,7 +13,7 @@ const baseURL = "http://www.ghjhhyuyuy.xin:8080";
 // 设置默认服务器地址
 axios.defaults.withCredentials = true; //让ajax携带cookie
 
-setCookie("JSESSIONID", "C6A998EE56A92A64168B94C95A3871BE", { path: "/" });
+setCookie("JSESSIONID", "FDA3A5536AD7B922A9801FD9A192D46D", { path: "/" });
 
 // axios.defaults.baseURL = baseURL;
 
@@ -76,4 +76,4 @@ export const changeRole = data =>
 
 // 根据userId获取团队id及其身份
 export const getOnesTeamMessage = userId =>
-  axios.post("/v1/nonpub/transform/getOnesTeamMessage", userId);
+  axios.get("/v1/nonpub/transform/getOnesTeamMessage", { params: { userId } });

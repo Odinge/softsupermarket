@@ -3,7 +3,10 @@
     <Header></Header>
     <div class="container">
       <sidebar></sidebar>
-      <router-view class="content"></router-view>
+      <keep-alive>
+        <router-view class="content" v-if="$route.meta.keepAlive"></router-view>
+      </keep-alive>
+      <router-view class="content" v-if="!$route.meta.keepAlive"></router-view>
     </div>
   </div>
 </template>
@@ -18,7 +21,8 @@ export default {
     this.getMsgNum();
     // 获取数据
     this.$store.dispatch("GetAllTeamDirection");
-  }
+  },
+
 };
 </script>
 

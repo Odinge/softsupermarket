@@ -16,8 +16,10 @@ export default {
     projectFinish: 0,
     projectManage: 0
   },
+  teams: [],
   teamId: "",
   team: {},
   userId: "",
-  username: ""
+  username: "",
+  pageEnterState: false
 };

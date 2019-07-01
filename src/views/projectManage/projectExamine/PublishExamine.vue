@@ -52,39 +52,6 @@ export default {
       // data: [], // 真正的数据
       filterData: [], // 数据筛选
       isLoading: true, // 数据是否加载
-
-      projectData: [
-        {
-          projectName: "猪场管家",
-          projectRequirement: "认真仔细",
-          projectTime: "2019-01-31",
-          projectDescribe: "就是养猪的",
-          projectPrice: "2000",
-          releaseTime: "2019-01-31",
-          projectId: "asd96eb3e28437216e3bfd92e9c72fd1",
-          state: "1"
-        },
-        {
-          projectName: "软件超市",
-          projectRequirement: "认真仔细1",
-          projectTime: "2019-02-20",
-          projectDescribe: "就是搞软件的",
-          projectPrice: "5000",
-          releaseTime: "2019-01-31",
-          projectId: "asd96eb3e28437216e3bfd92e9c7fsd2",
-          state: "1"
-        },
-        {
-          projectName: "这是一个项目",
-          projectRequirement: "严谨严谨",
-          projectTime: "2019-03-20",
-          projectDescribe: "就是一个项目的",
-          projectPrice: "1000",
-          releaseTime: "2019-01-21",
-          projectId: "asd96eb3e2d437216e3bfd92e9c7fsd3",
-          state: "2"
-        }
-      ]
     };
   },
   computed: {

@@ -1,13 +1,19 @@
 <template>
   <!-- 列表信息 -->
-  <div>
-    <!-- stripe -->
+  <div class="project-run">
+    <el-tooltip class="item" effect="dark" content="详情信息在加载中" placement="bottom">
+      <i class="el-icon-loading load-icon" v-show="!allLoad"></i>
+    </el-tooltip>
+
     <el-table v-loading="isLoading" :data="filterData" max-height="500" class="project-table" @row-click="select" :default-sort="{prop: 'state', order: 'ascending'}" :row-class-name="timeoutClass">
-      <el-table-column type="expand">
-        <template slot-scope="props">
-          <project-detail :props="props.row"></project-detail>
-        </template>
-      </el-table-column>
+      <template v-if="allLoad">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <project-detail :props="props.row"></project-detail>
+            <team-detail :teamId='"04da940d1eee41e3a86e6dc6644e8a79"'></team-detail>
+          </template>
+        </el-table-column>
+      </template>
       <el-table-column prop="projectName" label="项目名称" sortable></el-table-column>
       <el-table-column prop="progress" label="项目进度">
         <template slot-scope="scope">
@@ -38,28 +44,58 @@
 <script>
 import ProjectPagination from "@/components/ProjectPagination";
 import ProjectDetail from "../components/ProjectDetail";
+import TeamDetail from "../components/TeamDetail";
 import {
   getAllTimeNodes,
   timeoutJudgement,
-  getProjectByProgress,
   getAchievementState,
   getAllDelayTime,
-  getDelayAndAchievementsByRunId
+  getDelayAndAchievementsByRunId,
+  getProjectByProgress, // 管理员
+  getProjectByProgressLimit, // 项目负责人
 } from "../../../api/project";
+// import { mapState } from "vuex";
 export default {
-  components: { ProjectPagination, ProjectDetail },
+  components: { ProjectPagination, ProjectDetail, TeamDetail },
   data() {
     return {
       dataSrc: [], // 数据源
 
       // data: [], // 真正的数据
       filterData: [], // 数据筛选
-      isLoading: true // 数据是否加载
+      isLoading: true, // 数据是否加载
+      // allLoad: false,
+      loadFlag: {
+        timeNode: false,
+        timeout: false,
+        examineState: false,
+        delayTime: false
+      }
     };
   },
   computed: {
+    // ...mapState(["role", "username"]),
     data() {
       return this.dataSrc;
+    },
+    allLoad() {
+      return Object.keys(this.loadFlag).every(key => this.loadFlag[key]);
+    },
+    // loadFun() {
+    //   const funMap = {};
+    //   funMap[this.$roles.root] = funMap[this.$roles.admin] = getProjectByProgress.bind(this);
+    //   funMap[this.$roles.demander] = funMap[this.$roles.team] = getProjectByProgressLimit.bind(this, this.username);
+    //   return funMap[this.role];
+    // }
+  },
+  watch: {
+    allLoad(val) {
+      this.getMsgNum().then(res => {
+        if (val) {
+          const msgNum = this.data.filter(item => item.timeout || ["条件不满足", "未审核"].includes(item.examineState)).length;
+          this.$store.commit("SET_PROJECTRUN_MSG_NUM", msgNum);
+        }
+      });
     }
   },
   mounted() {
@@ -68,7 +104,10 @@ export default {
   methods: {
     // 获取加载的数据
     getLoadData() {
-      getProjectByProgress("未完成")
+      // getProjectByProgress("未完成")
+
+      // this.loadFun("未完成")
+      this.progressFun("未完成")
         .then(res => {
           if (res.status == 0) {
             this.dataSrc = res.data.map(item => {
@@ -83,13 +122,16 @@ export default {
               this.getAllDelayTime(item);
               return item;
             });
-            this.getMsgNum();
+            // this.getMsgNum();
             this.isLoading = false;
           } else throw res.msg;
         })
         .catch(err => {
           this.$message.error("数据获取失败");
           this.isLoading = false;
+          this.loadFlag = {
+            timeNode: true,
+          }
         });
     },
     // 局部更新
@@ -106,6 +148,10 @@ export default {
             let index = Math.round(num * status.length);
             this.$set(row, "progressNum", percent);
             this.$set(row, "progressStatus", status[index]);
+
+            // 置加载位
+            this.loadFlag.timeNode = true;
+
           } else throw res.msg;
         })
         .catch(err => this.$message.error("获取进度数据失败！"));
@@ -116,6 +162,9 @@ export default {
         .then(res => {
           if (res.status == 0) {
             this.$set(row, "timeout", res.data);
+            // 置加载位
+            this.loadFlag.timeout = true;
+
           } else throw res.msg;
         })
         .catch(err => this.$message.error("超时判断失败！"));
@@ -137,6 +186,10 @@ export default {
                   if (res.status == 0) {
                     if (res.data !== "已审核") {
                       this.$set(row, "examineState", res.data);
+
+                      // 置加载位
+                      this.loadFlag.examineState = true;
+
                     }
                   } else throw res.msg;
                 })
@@ -153,13 +206,17 @@ export default {
           if (res.status == 0 || res.status == -1) {
             let allTime = res.data ? res.data.allTime : 0;
             this.$set(row, "delayTime", allTime);
+
+            // 置加载位
+            this.loadFlag.delayTime = true;
+
           } else throw res.msg;
         })
         .catch(err => this.$message.error("延期获取失败！"));
     },
     // 查看详情
-    select(row, event, col) {
-      if (col.label !== "操作") {
+    select(row, col) {
+      if (col.label === "项目进度") {
         this.$router.push({
           name: "projectProgress",
           params: { id: row.runId },
@@ -168,15 +225,53 @@ export default {
         window.sessionStorage.setItem("prevPage", JSON.stringify([]));
         window.sessionStorage.setItem("projectId", row.projectId);
       }
+    },
+    init() {
+
+      this.loadFlag = {
+        timeNode: false,
+        timeout: false,
+        examineState: false,
+        delayTime: false
+      }
     }
   },
-  watch: {}
+
+  // 数据缓存
+  beforeRouteEnter(to, from, next) {
+    //需要刷新的页面
+    if (!["projectProgress", "teamDetail"].includes(from.name)) {
+      to.meta.isRefresh = true;
+    }
+    next()
+  },
+  activated() {
+    if (this.$route.meta.isRefresh) {
+      // 先重置
+      this.$route.meta.isRefresh = false;
+      this.isLoading = true;
+      this.init();
+      this.getLoadData();
+    }
+  },
+
 };
 </script>
 <style>
+.project-run {
+  position: relative;
+}
 .timeout {
   background-color: #fde6e6;
   animation: timeout 1.2s linear infinite;
+}
+.load-icon {
+  position: absolute !important;
+  left: 80px;
+  top: 35px;
+  z-index: 100;
+  font-size: 20px;
+  color: #ff4040;
 }
 /* .timeout:hover {
   animation-play-state: paused;

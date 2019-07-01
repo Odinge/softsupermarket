@@ -235,4 +235,16 @@ export const getRunProjectByTeamId = teamId =>
 
 // 获取审核未通过的项目
 export const getNotPassProjectByUserId = userId =>
-  axios.post("/v1/nonpub/examine/getNotPassProjectByUserId", userId);
+  axios.get("/v1/nonpub/examine/getNotPassProjectByUserId", {
+    params: { userId }
+  });
+
+// 根据团队id获取项目
+export const getProjectByTeamId = teamId =>
+  axios.get("/v1/nonpub/publish/getProjectByTeamId", { params: { teamId } });
+
+// 单位负责人获取项目情况
+export const getProjectByProgressLimit = (teacherId, progress) =>
+  axios.get("/v1/nonpub/supervise/getProjectByProgressLimit", {
+    params: { progress, teacherId }
+  });

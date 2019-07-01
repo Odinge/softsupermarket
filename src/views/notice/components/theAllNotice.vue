@@ -12,16 +12,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      class="page"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="currentPage"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="this.total"
-    ></el-pagination>
+    <el-pagination class="page" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="this.total"></el-pagination>
   </div>
 </template>
 <script>
@@ -45,11 +36,11 @@ export default {
   methods: {
     handleSizeChange(val) {
       this.pageSize = val;
-      this.getData();
+      this.getNoticeList();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.getData();
+      this.getNoticeList();
     },
     getNoticeList() {
       noticeList().then(res => {

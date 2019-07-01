@@ -3,42 +3,40 @@
     <div class='team-manage'>
       <div v-show="show_if[0]">
         <div class="full_shadow" ref="full_shadow"></div>
-        <template v-if="!showMore">
-          <!--<div class="line"></div>-->
-          <div class="square">
-            <div class="line2"></div>
-            <div class="line3"></div>
-            <table>
-              <tr>
-                <td class="type">团队名：</td>
-                <td>{{teamInfo.name}}</td>
-              </tr>
-              <tr>
-                <td class="type">团队方向：</td>
-                <td>{{teamInfo.direction}}</td>
-              </tr>
-              <tr>
-                <td class="type">操作：</td>
-                <td>
-                  <span class="dissolve" @click="dissolve">解散团队</span>
-                  <span class="detail" @click="detailClick(true)">查看详情</span>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </template>
+        <!--<div class="line"></div>-->
+        <div class="square">
+          <div class="line2"></div>
+          <div class="line3"></div>
+          <table v-if="teamId">
+            <tr>
+              <td class="type">团队名：</td>
+              <td>{{teamInfo.name}}</td>
+            </tr>
+            <tr>
+              <td class="type">团队方向：</td>
+              <td>{{teamInfo.direction}}</td>
+            </tr>
+            <tr>
+              <td class="type">操作：</td>
+              <td>
+                <span class="dissolve" @click="dissolve">解散团队</span>
+                <span class="detail" @click="detailClick(true)">查看详情</span>
+              </td>
+            </tr>
+          </table>
+        </div>
         <div class="notice">
           <div class="notice-nav">动态公告
-            <span class="more" @click="more" v-if="!showMore">更多
+            <!-- <span class="more">更多
               <i class="el-icon-d-arrow-right"></i>
-            </span>
-            <span v-else class="more" @click="more">
-              返回
-              <i class="el-icon-d-arrow-right"></i>
-            </span>
+            </span> -->
           </div>
-          <ul>
-            <li v-for="(notice, index) in noticeData" @click="noticeDetail(index)"><span class="time">{{notice.createTime}}</span><span class="content">{{notice.title}}</span></li>
+          <ul v-if="noticeInfo">
+            <li @click="noticeDetail(0)" v-if="noticeInfo[0].createTime"><span class="time">{{noticeInfo[0].createTime}}</span><span class="content">{{noticeInfo[0].title}}</span></li>
+            <li @click="noticeDetail(1)" v-if="noticeInfo[1].createTime"><span class="time"> {{noticeInfo[1].createTime}}</span><span class="content">{{noticeInfo[1].title}}</span></li>
+            <li @click="noticeDetail(2)" v-if="noticeInfo[2].createTime"><span class="time">{{noticeInfo[2].createTime}}</span><span class="content">{{noticeInfo[2].title}}</span></li>
+            <li @click="noticeDetail(3)" v-if="noticeInfo[3].createTime"><span class="time">{{noticeInfo[3].createTime}}</span><span class="content">{{noticeInfo[3].title}}</span></li>
+            <li @click="noticeDetail(4)" v-if="noticeInfo[4].createTime"><span class="time">{{noticeInfo[4].createTime}}</span><span class="content">{{noticeInfo[4].title}}</span></li>
           </ul>
         </div>
       </div>
@@ -49,7 +47,7 @@
 </template>
 <script>
 import devDetail from '@/views/teamManage/devDetail.vue'
-import { getTeam, deleteTeam } from "@/api/team";
+import { getTeam, deleteTeam, getMyTeam } from "@/api/team";
 import { publish, getStudenId, noticeList, getUserId } from "@/api/notice";
 export default {
   components: {
@@ -57,23 +55,16 @@ export default {
   },
   data() {
     return {
-      teamId: '3783141aba2c4330a0c0373393457cee',
+      // teamIdBad:'',
+      team: '',//保存自己（队长）团队信息
       detail_info: [],/*存储数据，传给子组件 devDetail*/
       show_if: [true, false], //大 小显示
       teamInfo: { name: '', direction: "" },
-      noticeInfo: [],
-      showMore: false
-    }
-  },
-  computed: {
-    noticeData() {
-      return this.showMore ? this.noticeInfo : this.noticeInfo.slice(0, 5);
+      noticeInfo: '',
+      teams: '' //多个团队信息
     }
   },
   methods: {
-    more() {
-      this.showMore = !this.showMore;
-    },
     detailClick(bool) {
       let that = this;
       getTeam(this.teamId).then(function (res) {
@@ -87,7 +78,6 @@ export default {
         }
         else {
           that.fail('获取团队信息失败!');
-          console.log('获取团队信息失败：失败原因如下：');
           console.log(res)
         }
       }).catch(() => {
@@ -98,7 +88,9 @@ export default {
       this.show_if = [true, false];
     },
     noticeDetail(index) {
-      console.log(this.noticeInfo[index].announcementId)
+      if (!this.noticeInfo[index].announcementId) {
+        return false
+      }
       if (this.noticeInfo[index].announcementId) {
         this.$router.push({ name: 'teamNoticeDetail', params: { announcementId: this.noticeInfo[index].announcementId } });
       }
@@ -116,7 +108,6 @@ export default {
         deleteTeam(this.teamId).
           then((res) => {
             if (res.status === 0) {
-              console.log(res);
               this.$message({
                 type: 'success',
                 message: '解散团队成功，即将跳转至首页！'
@@ -145,39 +136,73 @@ export default {
       this.$message.error(msg);
     },
   },
+  watch: {
+    teamId: { //监听teamId变化
+      handler: function (val) {
+        if (val) {
+          this.detailClick(false);
+        }
+      },
+      immediate: true
+    }
+  },
+  computed: {
+    userId() {
+      return this.$store.state.username;
+    },
+    teamId() {
+      return JSON.parse(JSON.stringify(this.$store.state.teamId));
+    }
+  },
   created() {
-    this.detailClick(false);
-    noticeList().then((res) => {
-      // console.log(res)
-      if (res.status === 0) {
-        let data = res.data.slice(0, 6);
-        for (let i = 0; i < data.length; i++) {
-          let temp = data[i].createTime.slice(6, 11);
-          data[i].createTime = '【' + temp + '】';
-          temp = data[i].title.slice(0, 25);
-          if (temp.length === 25) {
-            temp = temp + '...';
-          }
-          data[i].title = temp;
-        }
-        let length = 5 - data.length;
-        if (data.length < 6) {
-          for (let i = 0; i < length; i++) {
-            let temp = {};
-            temp.createTime = ' ';
-            temp.content = ' ';
-            data.push(temp);
+    (async () => {
+      if (!this.teamId) {
+        let res = await getMyTeam(this.userId).catch(err => {
+          this.$message.error('获取团队信息失败！');
+          console.log(err)
+        });
+        if (res.status === 0) {
+          let data = res.data;
+          for (let i = 0; i < data.length; i++) {
+            if (data[i] instanceof Array) {
+              this.teams = JSON.parse(JSON.stringify(data[i]));
+              this.teamId = JSON.parse(JSON.stringify(data[i][0]['团队id']));
+            }
           }
         }
-        this.noticeInfo = data;
+        else {
+          this.$message.error(res.msg);
+        }
       }
-    })
-    // getTeam().then((res)=>{
-    //   console.log(res)
-    // })
-    // this.$http.get('http://www.ghjhhyuyuy.xin:8080/v1/nonpub/examine/modificationTeam',{params:{teamId:"f291f2e7d1ce4922a782d6d3649ba410"}}).then((res)=>{
-    //   console.log(res);
-    // })
+      this.detailClick(false);
+      if (!this.teamId) {
+        this.$message.error('团队id为空，信息异常，请联系开发人员');
+      }
+      noticeList().then((res) => {
+        if (res.status === 0) {
+          let data = res.data.slice(0, 6);
+          for (let i = 0; i < data.length; i++) {
+            let temp = data[i].createTime.slice(0, 11);
+            data[i].createTime = '【' + temp + '】';
+            temp = data[i].title.slice(0, 25);
+            if (temp.length === 25) {
+              temp = temp + '...';
+            }
+            data[i].title = temp;
+          }
+          let length = 5 - data.length;
+          if (data.length < 6) {
+            for (let i = 0; i < length; i++) {
+              let temp = {};
+              temp.createTime = ' ';
+              temp.content = ' ';
+              data.push(JSON.parse(JSON.stringify(temp)));
+            }
+          }
+          this.noticeInfo = JSON.parse(JSON.stringify(data));
+        }
+      })
+    })();
   }
 }
 </script>
@@ -197,14 +222,10 @@ export default {
   cursor: pointer;
 }
 .notice {
-  /* height: 250px; */
+  height: 250px;
   width: 600px;
   margin: 20px auto;
   border: 1px solid #ccc;
-}
-.notice ul {
-  max-height: 1000px;
-  overflow: auto;
 }
 .notice li {
   padding: 5px 0 5px 20px;
@@ -244,6 +265,7 @@ li:nth-child(6) {
   font-size: 16px;
   cursor: pointer;
 }
+
 .line {
   width: 80%;
   height: 3px;
@@ -305,6 +327,7 @@ td {
   z-index: 100;
   background-color: rgba(1, 1, 1, 0.3);
 }
+
 .confirm_msg {
   display: none;
   position: fixed;
@@ -328,6 +351,7 @@ td {
   text-align: center;
   margin-bottom: 20px;
 }
+
 .confirm_btn {
   text-align: center;
   margin-top: 30px;
@@ -360,5 +384,14 @@ td {
 }
 .right_btn:hover {
   background-color: #29f38d;
+}
+.drop {
+  position: absolute;
+  top: 20px;
+  right: 50px;
+}
+.choose-title {
+  font-size: 17px;
+  font-weight: bold;
 }
 </style>

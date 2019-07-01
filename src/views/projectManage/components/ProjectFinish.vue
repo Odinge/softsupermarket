@@ -46,10 +46,10 @@ import projectEvaluate from "../components/projectEvaluate";
 import ProjectExport from "../components/ProjectExport";
 import {
   getProjectByState,
-  getProjectByProgress,
   exportProjectCompleted,
   getEvaluatedRunProjects,
-  addFinishedProjectByExcel
+  addFinishedProjectByExcel,
+  getProjectByProgress,
 } from "../../../api/project";
 export default {
   components: {
@@ -81,7 +81,7 @@ export default {
     },
     exportUrl() {
       return this.$baseUrl + "/v1/nonpub/supervise/exportProjectCompleted";
-    }
+    },
   },
   mounted() {
     this.getLoadData();
@@ -97,7 +97,8 @@ export default {
     // 获取加载的数据
     getLoadData() {
       // 获取已完成的项目
-      getProjectByProgress("已完成")
+      // getProjectByProgress("已完成")
+      this.progressFun("已完成")
         .then(res => {
           if (res.status == 0) {
             this.dataSrc = res.data.map(item => {
@@ -127,7 +128,7 @@ export default {
       return state === -1 ? "danger" : "success";
     },
     // 点击项目查看详细项目情况
-    select(row, col, event) {
+    select(row, col) {
       if (col.label != "评分") {
         this.$router.push({
           name: "projectProgress",
@@ -155,7 +156,25 @@ export default {
     filterState(val) {
       return val === -1 ? "未评分" : "已完成";
     }
-  }
+  },
+
+  // 数据缓存
+  beforeRouteEnter(to, from, next) {
+    //需要刷新的页面
+    if (!["projectProgress", "teamDetail"].includes(from.name)) {
+      to.meta.isRefresh = true;
+    }
+    next()
+  },
+  activated() {
+    if (this.$route.meta.isRefresh) {
+      // 先重置
+      this.$route.meta.isRefresh = false;
+      this.isLoading = true;
+      this.getLoadData();
+    }
+  },
+
 };
 </script>
 <style scoped>

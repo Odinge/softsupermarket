@@ -33,8 +33,8 @@
           导入团队<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="all">导入团队（包括黑名单）</el-dropdown-item>
-          <el-dropdown-item command="black">导入黑名单（方便）</el-dropdown-item>
+          <el-dropdown-item command="all">导入团队</el-dropdown-item>
+          <el-dropdown-item command="black">导入黑名单</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
       <i class="el-icon-upload2"></i>
@@ -138,6 +138,7 @@ export default {
           if (result.status === 0) {
             this.$message.success('导入团队成功！');
           } else {
+            console.log(result)
             this.$message.error(result.msg);
           }
         })();
@@ -166,15 +167,15 @@ export default {
           that.modifyMsg = '';
         }
       });
-      getBlackTeamList().then(res => { //获取黑名单列表
-        if (res.status === 0) {
-          this.blackListMsg = res.data.blackTeamList.length;
-          console.log(res);
-        }
-        else {
-          this.blackListMsg = '';
-        }
-      });
+      // getBlackTeamList().then(res => { //获取黑名单列表
+      //   if (res.status === 0) {
+      //     this.blackListMsg = res.data.blackTeamList.length;
+
+      //   }
+      //   else {
+      //     this.blackListMsg = '';
+      //   }
+      // });
     },
   },
 

@@ -1,15 +1,6 @@
 <!-- 分页器 -->
 <template>
-  <el-pagination
-    class="x-page"
-    layout="total,sizes, prev, pager, next, jumper"
-    @current-change="handleCurrentChange"
-    @size-change="handleSizeChange"
-    :current-page="currentPage"
-    :page-sizes="pageSizes"
-    :page-size="pageSize"
-    :total="total"
-  ></el-pagination>
+  <el-pagination class="x-page" layout="total,sizes, prev, pager, next, jumper" @current-change="handleCurrentChange" @size-change="handleSizeChange" :current-page.sync="currentPage" :page-sizes="pageSizes" :page-size="pageSize" :total="total"></el-pagination>
 </template>
 <script>
 export default {
@@ -20,7 +11,8 @@ export default {
   },
   data() {
     return {
-      currentPage: 1
+      currentPage: 1,
+      pageBase: 10
     };
   },
   computed: {
@@ -30,7 +22,7 @@ export default {
     },
     // 一页有多少条数据
     pageSize() {
-      let size = this.total >= 50 ? 50 : this.total;
+      let size = this.total >= this.pageBase ? this.pageBase : this.total;
       return size;
     },
     // 提供每页条数的选择
@@ -46,25 +38,20 @@ export default {
   methods: {
     // 页面条数改变
     handleSizeChange(val) {
-      // TODO 获取项目条数
+      // 获取项目条数
       // history.pushState('','','/d')
       // location.hash = Math.random();
       this.$emit("update:filterData", this.data.slice(0, val));
-      // this.filterData = this.data.slice(0, val);
     },
     // 页面页数改变
     handleCurrentChange(val) {
-      // TODO 获取下一页数据
+      // 获取下一页数据
       // history.pushState('','','/d');
       // location.hash = Math.random();
       this.$emit(
         "update:filterData",
         this.data.slice((val - 1) * this.pageSize, val * this.pageSize)
       );
-      // this.filterData = this.data.slice(
-      //   (val - 1) * this.pageSize,
-      //   val * this.pageSize
-      // );
     }
   },
   created() {
@@ -74,6 +61,11 @@ export default {
     // 监控数据变化时获取数据
     data() {
       this.$emit("update:filterData", this.data.slice(0, this.pageSize));
+    }
+  },
+  activated() {
+    if (this.$route.meta.isRefresh) {
+      this.currentPage = 1;
     }
   }
 };

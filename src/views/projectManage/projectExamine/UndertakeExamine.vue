@@ -19,8 +19,12 @@
             <el-table-column prop="teamId" label="操作">
               <template slot-scope="scope">
                 <el-button round type="success" size="small" icon="el-icon-edit-outline" @click="undertakeProject(scope.row, '2')" :loading="btnLoading">承接</el-button>
-                <el-button round type="text" size="small" @click="teamDetail(scope.row.teamId)">团队详细</el-button>
-                <el-button round type="text" size="small" @click="timeNodeDetail(scope.row)" :class="{'btn-select':scope.row.isSelect}">查看项目方案</el-button>
+                <el-button round type="danger" size="small" icon="el-icon-delete" @click="undertakeProject(scope.row, '3')" :loading="btnLoading">拒绝</el-button>
+                <div>
+                  <el-button round type="text" size="small" @click="teamDetail(scope.row.teamId)">团队详细</el-button>
+                  <el-button round type="text" size="small" @click="timeNodeDetail(scope.row)" :class="{'btn-select':scope.row.isSelect}">查看项目方案</el-button>
+                  <el-button type="text" circle title="下载计划书" icon="el-icon-download" @click="downloadDocument(scope.row.projectId,scope.row.teamId)"></el-button>
+                </div>
               </template>
             </el-table-column>
           </el-table>
@@ -53,7 +57,7 @@ import ProjectTimenode from "../components/ProjectTimenode";
 import Rate from "../components/Rate";
 import ProjectPagination from "@/components/ProjectPagination";
 import ProjectDetail from "../components/ProjectDetail";
-import { getAllocation, examineAllocation } from "../../../api/project";
+import { getAllocation, examineAllocation, downloadProjectDocument } from "../../../api/project";
 import { getAllTeamDirection } from "../../../api/team";
 export default {
   components: { ProjectPagination, ProjectDetail, ProjectTimenode, Rate },
@@ -87,10 +91,16 @@ export default {
     getLoadData() {
       getAllocation()
         .then(res => {
-          if (res.status == 0 || res.status == 10) {
+          if (res.status == 0) {
             let { data } = res;
             this.dataSrc = data || [];
             this.getMsgNum();
+            this.dataSrc.forEach(item => {
+              item.teamUndertakePOList.forEach(i => {
+                i.projectId = item.projectId;
+              });
+            });
+
             this.isLoading = false;
           } else throw res.msg;
         })
@@ -101,7 +111,8 @@ export default {
     },
     // 选择承接的团队
     undertakeProject(Curobj, state) {
-      this.$confirm(`是否选择 ${Curobj.teamName} 团队承接此项目?`, "提示", {
+      const msgMap = ["", "", "选择", "拒绝"];
+      this.$confirm(`是否 ${msgMap[state]} ${Curobj.teamName} 团队承接此项目?`, "提示", {
         type: "warning",
         center: true
       }).then(() => {
@@ -125,6 +136,8 @@ export default {
               message: "审核失败"
             });
           });
+      }).catch(() => {
+        this.$message.info("已取消");
       });
     },
     // 团队详情
@@ -138,6 +151,18 @@ export default {
       this.timeNode = Curobj.timeNode;
       this.check = true;
     },
+    // 下载项目计划书
+    downloadDocument(projectId, teamId) {
+      // projectId = 'f3f7712312312312311089b20c0d42f5';
+      // teamId = 'c4ca4238a0b923820dcc509a6f75849b';
+      downloadProjectDocument(projectId, teamId).then(res => {
+        if (!res.status) {
+          window.location.href = this.$baseUrl + "/v1/nonpub/supervise/downloadProjectDocument?projectId=" + projectId + "&teamId=" + teamId;
+        } else throw res;
+      }).catch(err => {
+        this.$message.error(err.msg);
+      });
+    },
     // 记录当前选择的项目
     selected(Curobj) {
       this.select.isSelect = false;
@@ -145,13 +170,27 @@ export default {
       this.select = Curobj;
     }
   },
+
+  // 数据缓存
+  beforeRouteEnter(to, from, next) {
+    //需要刷新的页面
+    if (from.name !== "teamDetail") {
+      to.meta.isRefresh = true;
+    }
+    next()
+  },
+  activated() {
+    if (this.$route.meta.isRefresh) {
+      // 先重置
+      this.$route.meta.isRefresh = false;
+      this.isLoading = true;
+      this.getLoadData();
+    }
+  },
   watch: {}
 };
 </script>
 <style scoped>
-.table-radius {
-  border-radius: 10px;
-}
 /* .i-b {
   display: inline-block;
 }

@@ -4,7 +4,10 @@
     <!-- 菜单 -->
     <project-menu :menu-list="menuList"></project-menu>
     <!-- 列表信息 -->
-    <router-view class="project-list"></router-view>
+    <keep-alive>
+      <router-view class="project-list" v-if="$route.meta.keepAlive"></router-view>
+    </keep-alive>
+    <router-view class="project-list" v-if="!$route.meta.keepAlive"></router-view>
   </div>
 </template>
 <script>

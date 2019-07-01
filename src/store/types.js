@@ -20,8 +20,14 @@ export const SET_MSG_NUM = "SET_MSG_NUM";
 // 设置用户id
 export const SET_USER_INFO = "SET_USER_INFO";
 
+export const SET_PAGE_ENTER_STATE = "SET_PAGE_ENTER_STATE";
+
 export const SET_USERNAME = "SET_USERNAME";
 
 export const SET_TEMPROLE = "SET_TEMPROLE";
 
+export const SET_PROJECTRUN_MSG_NUM = "SET_PROJECTRUN_MSG_NUM";
+
 export const SET_TEAM = "SET_TEAM";
+export const SET_TEAMID = "SET_TEAMID";
+export const SET_TEAMS = "SET_TEAMS";

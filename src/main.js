@@ -16,12 +16,6 @@ import "element-ui/lib/theme-chalk/index.css";
 import "./global";
 import { delRole } from "./utils/auth";
 
-// 引入ueditor,富文本编辑器
-// import "../static/ueditor/ueditor.config.js";
-// import "../static/ueditor/ueditor.all.min.js";
-// import "../static/ueditor/lang/zh-cn/zh-cn.js";
-// import "../static/ueditor/ueditor.parse.min.js";
-
 import qs from "qs";
 Vue.prototype.qs = qs;
 
