@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-08-13 08:42:51
+ * @LastEditTime: 2019-08-13 08:44:04
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -102,7 +102,7 @@ export default {
       return this.dataSrc;
     }
   },
-  mounted() {    ``
+  mounted() {
     this.getLoadData();
   },
   methods: {
