@@ -17,10 +17,10 @@ export const getProjectByState = state =>
   axios.get("/v1/nonpub/publish/projectbystate", { params: { state } });
 
 // 项目根据状态分类
-export const projectsClassifyByState = state =>
-  axios.get("/v1/nonpub/examine/projectsClassifyByState", {
-    params: { state }
-  });
+// export const projectsClassifyByState = state =>
+//   axios.get("/v1/nonpub/examine/projectsClassifyByState", {
+//     params: { state }
+//   });
 
 // 根据项目进度获取项目
 export const getProjectByProgress = progress =>
@@ -82,8 +82,8 @@ export const getProgress = runId =>
   axios.get("/v1/nonpub/supervise/progress", { params: { runId } });
 
 // 生成运行时项目并创建时刻表
-export const timetable = timeNode =>
-  axios.post("/v1/nonpub/supervise/timetable", { timeNode });
+// export const timetable = timeNode =>
+//   axios.post("/v1/nonpub/supervise/timetable", { timeNode });
 
 // 获取项目节点信息
 export const getAllTimeNodes = runId =>
@@ -229,22 +229,45 @@ export const addFinishedProjectByExcel = file =>
 export const exportProjectCompleted = () =>
   axios.post("/v1/nonpub/supervise/exportProjectCompleted");
 
-// 根据团队id获取正在进行的项目
-export const getRunProjectByTeamId = teamId =>
-  axios.post("/v1/nonpub/publish/getRunProjectByTeamId", teamId);
-
+// =====================================获取项目================================
 // 获取审核未通过的项目
 export const getNotPassProjectByUserId = userId =>
   axios.get("/v1/nonpub/examine/getNotPassProjectByUserId", {
     params: { userId }
   });
 
-// 根据团队id获取项目
-export const getProjectByTeamId = teamId =>
-  axios.get("/v1/nonpub/publish/getProjectByTeamId", { params: { teamId } });
-
 // 单位负责人获取项目情况
 export const getProjectByProgressLimit = (teacherId, progress) =>
   axios.get("/v1/nonpub/supervise/getProjectByProgressLimit", {
     params: { progress, teacherId }
+  });
+
+/**
+ * 根据团队id获取项目
+ * */
+export const getProjectByTeamId = teamId =>
+  axios.get("/v1/nonpub/publish/getProjectByTeamId", { params: { teamId } });
+
+/**
+ * 根据团队id来获取审核未通过和未审核项目
+ */
+export const getFailedAndUnauditedProjectByTeamId = teamId =>
+  axios.get("/v1/nonpub/publish/getFailedAndUnauditedProjectByTeamId", {
+    params: { teamId }
+  });
+
+/**
+ * 根据团队id获取正在进行的项目
+ */
+export const getRunProjectByTeamId = teamId =>
+  axios.get("/v1/nonpub/publish/getRunProjectByTeamId", {
+    params: { teamId }
+  });
+
+/**
+ * 获取团队已完成项目
+ */
+export const getTeamFinishProject = teamId =>
+  axios.get("/v1/nonpub/publish/teamFinishProject", {
+    params: { teamId }
   });

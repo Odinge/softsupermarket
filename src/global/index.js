@@ -143,21 +143,38 @@ Vue.directive("overflow-e", {
 Vue.directive("exec", (node, { value }) => {});
 
 import {
-  getProjectByProgressLimit,
-  getProjectByProgress
+  getProjectByProgressLimit, // 单位负责人
+  getProjectByProgress, // 管理员
+  getProjectByTeamId, // 根据团队获取项目
+  getFailedAndUnauditedProjectByTeamId, // 未承接
+  getRunProjectByTeamId, // 正在进行
+  getTeamFinishProject // 已完成
 } from "../api/project";
 // 进度函数
 Vue.prototype.progressFun = function(progress) {
   const funMap = {};
+  const { teamId } = this.$store.state;
+  const role = this.$store.state.role;
+
   funMap[this.$roles.root] = funMap[
     this.$roles.admin
   ] = getProjectByProgress.bind(this);
 
-  funMap[this.$roles.demander] = funMap[
-    this.$roles.team
-  ] = getProjectByProgressLimit.bind(this, this.$store.state.username);
+  funMap[this.$roles.demander] = getProjectByProgressLimit.bind(
+    this,
+    this.$store.state.username
+  );
 
-  const role = this.$store.state.role;
+  if (role === this.$roles.team) {
+    switch (progress) {
+      case "未审核":
+        return getFailedAndUnauditedProjectByTeamId(teamId);
+      case "未完成":
+        return getRunProjectByTeamId(teamId);
+      case "已完成":
+        return getTeamFinishProject(teamId);
+    }
+  }
 
   return funMap[role](progress);
 };

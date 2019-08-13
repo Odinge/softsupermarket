@@ -80,7 +80,7 @@ export default {
       return this.dataSrc;
     },
     exportUrl() {
-      return this.$baseUrl + "/v1/nonpub/supervise/exportProjectCompleted";
+      return "http://www.ghjhhyuyuy.xin:8080/v1/nonpub/supervise/exportProjectCompleted";
     },
   },
   mounted() {

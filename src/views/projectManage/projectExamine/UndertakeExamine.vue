@@ -12,9 +12,9 @@
               <template slot-scope="scope">{{ scope.row.direction | filterTeamDirection }}</template>
             </el-table-column>
             <el-table-column prop="teamScore" sortable label="团队分数">
-              <template slot-scope="scope">
+              <!-- <template slot-scope="scope">
                 <rate :score="scope.row.teamScore" :base='20'></rate>
-              </template>
+              </template> -->
             </el-table-column>
             <el-table-column prop="teamId" label="操作">
               <template slot-scope="scope">

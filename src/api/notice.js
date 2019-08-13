@@ -1,8 +1,6 @@
 import axios from "axios";
 
 // 发布公告
-// export const publish = (title,author,content) =>
-//   axios.post("/v1/nonpub/examine/addAnnouncement", {title,author,content});
 export const publish = params =>
   axios.post("/v1/nonpub/examine/addAnnouncement", params);
 

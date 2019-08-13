@@ -19,10 +19,10 @@ export default {
   },
   computed: {
     uploadUrl() {
-      return "/v1/nonpub/examine/addFinishedProjectByExcel";
+      return "http://www.ghjhhyuyuy.xin:8080/v1/nonpub/examine/addFinishedProjectByExcel";
     },
     tempUrl() {
-      return this.$baseUrl + "/v1/nonpub/examine/getProjectExcelModel";
+      return "http://www.ghjhhyuyuy.xin:8080/v1/nonpub/examine/getProjectExcelModel";
     }
   },
   methods: {
@@ -46,7 +46,7 @@ export default {
     },
     // 文件删除时的回调
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      // console.log(file, fileList);
     },
     // 文件上传错误的回调
     fileError() {

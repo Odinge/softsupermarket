@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-08-13 07:20:20
+ * @LastEditors: Please set LastEditors
+ */
 // 更新状态
 import {
   SET_TOKEN,
@@ -59,7 +66,7 @@ export default {
 
   // 设置用户信息
   [SET_USER_INFO](state, info) {
-    state.teamId = info.teamId;
+    // state.teamId = info.teamId;
     state.userId = info.userId;
     state.username = info.username;
     state.roles = info.roles;

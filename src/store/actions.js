@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-08-13 08:07:12
+ * @LastEditors: Please set LastEditors
+ */
 // 通过commit间接更新state，异步回调ajax
 import {
   ADDROUTER,
@@ -18,8 +25,7 @@ import {
   getUserInfor,
   getStudentIdByRequest,
   getUserId,
-  getRole,
-  getOnesTeamMessage
+  getRole
 } from "../api/login.js";
 import {
   getMessageById,
@@ -30,7 +36,8 @@ import {
 import {
   getModifyAppliction,
   getNewApplication,
-  getBlackTeamList
+  getBlackTeamList,
+  getMyTeam
 } from "./../api/team";
 import {
   getExamineProject,
@@ -39,7 +46,10 @@ import {
   getAllocation,
   getProjectByProgress,
   getProjectByState,
-  getProjectByProgressLimit
+  getProjectByProgressLimit,
+  getFailedAndUnauditedProjectByTeamId, // 未承接
+  getRunProjectByTeamId, // 正在进行
+  getTeamFinishProject // 已完成
 } from "./../api/project";
 import { getAllTeamDirection } from "./../api/team";
 import {
@@ -78,8 +88,8 @@ export default {
                           let info = {
                             roles,
                             userId,
-                            username: studentId,
-                            teamId: ""
+                            username: studentId
+                            // teamId: ""
                           };
                           setUserInfoOfStorage(info);
                           commit(SET_USER_INFO, info);
@@ -107,7 +117,7 @@ export default {
     });
   },
   // 获取角色改变显示
-  async getUserInfor({ commit }) {
+  async getUserInfor({ commit, dispatch }) {
     // let studentId = (await getStudentIdByRequest()).data;
     // let userId = (await getUserId(studentId)).data;
     // let roles = (await getRole(studentId)).data;
@@ -137,7 +147,11 @@ export default {
     commit(SET_TOKEN, { token });
   },
   // 设置token
-  setRole({ commit }, role) {
+  async setRole({ commit, dispatch }, role) {
+    if (role === $roles.team) {
+      let data = await dispatch("getTeamInfo");
+      console.log(data);
+    }
     setRole(role);
     setToken();
   },
@@ -150,6 +164,8 @@ export default {
     // 退出清除缓存和登录
     await sessionStorage.removeItem("token");
     await sessionStorage.removeItem("xxx");
+    await sessionStorage.removeItem("teams");
+    await sessionStorage.removeItem("teamId");
     // 刷新浏览器
     location.reload();
   },
@@ -204,7 +220,7 @@ export default {
     };
 
     let data = [];
-    let { role, username } = state;
+    let { role, username, teamId } = state;
 
     // 团队信息
     if ($roles.manager.includes(role)) {
@@ -224,20 +240,26 @@ export default {
     if ($roles.manager.includes(role)) {
       // 未完成项目数
       data = (await getProjectByProgress("未完成")).data || [];
-      // msgNum.projectRun = data.filter(item => item.state == 2).length;
       msgNum.projectRun = data.length;
 
       // 已完成项目数
       data = (await getProjectByProgress("已完成")).data || [];
       msgNum.projectFinish = data.filter(item => item.score == -1).length;
-    } else {
+    } else if (role === $roles.demander) {
       // 未完成项目数
       data = (await getProjectByProgressLimit(username, "未完成")).data || [];
-      // msgNum.projectRun = data.filter(item => item.state == 2).length;
       msgNum.projectRun = data.length;
 
       // 已完成项目数
       data = (await getProjectByProgressLimit(username, "已完成")).data || [];
+      msgNum.projectFinish = data.filter(item => item.score == -1).length;
+    } else {
+      // 未完成项目数
+      data = (await getRunProjectByTeamId(teamId)).data || [];
+      msgNum.projectRun = data.length;
+
+      // 已完成项目数
+      data = (await getTeamFinishProject(teamId)).data || [];
       msgNum.projectFinish = data.filter(item => item.score == -1).length;
     }
 
@@ -274,8 +296,12 @@ export default {
     }
 
     // 项目审核
-    if (!$roles.manager.includes(role)) {
-      data = (await getProjectByState("1,3")).data || [];
+    if (role === $roles.demander) {
+      data = (await getProjectByProgressLimit(username, "未审核")).data || [];
+      msgNum.projectCheck = data.length;
+    } else if (role === $roles.team) {
+      let temp = (await getFailedAndUnauditedProjectByTeamId(teamId)).data;
+      data = [...temp.Failed, ...temp.Unaudited];
       msgNum.projectCheck = data.length;
     }
 
@@ -299,8 +325,19 @@ export default {
   },
   // 获取团队信息
   async getTeamInfo({ state, commit }) {
-    const res = await getOnesTeamMessage(state.userId);
+    const res = await getMyTeam(state.username);
     if (res.status) throw res;
-    commit(SET_TEAM, res.data);
+    let { data } = res;
+    // console.log(data);
+
+    for (let i = 0; i < data.length; i++) {
+      let teams = data[i];
+      if (teams instanceof Array) {
+        let teamId = teams[0]["团队id"];
+        commit("SET_TEAMS", teams);
+        commit("SET_TEAMID", teamId);
+      }
+    }
+    return data;
   }
 };

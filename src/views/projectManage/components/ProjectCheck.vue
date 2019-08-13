@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-08-13 08:42:51
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div>
     <el-table v-loading="isLoading" :data="filterData" stripe max-height="500" class="project-table" :default-sort="{prop: 'state', order: 'descending'}">
@@ -14,10 +21,10 @@
           <span>{{ scope.row.projectTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="applyNum" label="承接团队" v-if="state === 0 && permission($roles.team)" :filters="tags" :filter-method="filterTag">
+      <el-table-column prop="applyNum" label="已申请承接团队" v-if="state === 0 && permission($roles.team)" :filters="tags" :filter-method="filterTag">
         <template slot-scope="scope">
-          <span v-if="scope.row.applyNum === 1" v-overflow-e="scope.row.undertake[0].teamName">{{ scope.row.undertake[0].teamName }}</span>
-          <span v-else>{{ scope.row.applyNum }} 个团队</span>
+          <!-- <span v-if="scope.row.applyNum === 1" v-overflow-e="scope.row.undertake[0].teamName">{{ scope.row.undertake[0].teamName }}</span> -->
+          <span>{{ scope.row.applyNum?scope.row.applyNum+"个团队在申请":"暂无团队申请"}} </span>
         </template>
       </el-table-column>
       <el-table-column prop="undertakeNum" label="团队承接申请" v-if="state" :filters="tags" :filter-method="filterTag">
@@ -95,7 +102,7 @@ export default {
       return this.dataSrc;
     }
   },
-  mounted() {
+  mounted() {    ``
     this.getLoadData();
   },
   methods: {
@@ -122,7 +129,6 @@ export default {
     },
     // 未承接
     getProjectUndertake() {
-      // getProjectByProgress("未承接")
       this.progressFun("未承接")
         .then(res => {
           if (res.status == 0) {
@@ -143,14 +149,14 @@ export default {
     },
     // 项目未审核
     getProjectUnchecked() {
-      getProjectByState("1,3")
+      this.progressFun("未审核")
         .then(res => {
-          if (res.status == 0) {
-            this.dataSrc = res.data.map(item => {
-              item.undertake.forEach((it, index, self) => {
-                it.teamName = self.length + " 个团队";
-                this.getTeam(it.teamId, self, index);
-              });
+
+          if (res.status === 0) {
+            let data = this.permission(this.$roles.team) ? [...res.data.Failed, ...res.data.Unaudited] : res.data;
+
+            this.dataSrc = data.map(item => {
+              item.applyNum && (item.applyNum = 0);
               return item;
             });
             this.getMsgNum();
@@ -158,6 +164,8 @@ export default {
           } else throw res.msg;
         })
         .catch(err => {
+          // console.log("dada");
+
           this.$message.error("数据获取失败");
           this.isLoading = false;
         });

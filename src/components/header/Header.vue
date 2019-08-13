@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-08-13 08:21:56
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="header">
     <h1 class="icon">
@@ -15,7 +22,7 @@
       </el-dropdown-menu>
     </el-dropdown>
     <!-- 团队 -->
-    <el-dropdown @command="chooseTeam" class="drop" v-if="teams.length>1&&parseInt(this.$store.state.role)===3">
+    <el-dropdown @command="chooseTeam" class="drop" v-if="teams.length>1&&permission($roles.team)">
       <span class="el-dropdown-link ">
         <span class="choose-title">切换团队</span><i class="el-icon-arrow-down el-icon--right down"></i>
       </span>
@@ -28,11 +35,10 @@
 <script>
 import eventBus from "../../utils/eventBus.js";
 import { getMyTeam } from "@/api/team";
+import { mapState } from "vuex";
 export default {
   data() {
-    return {
-      teams: [] //多个团队信息
-    };
+    return {};
   },
   methods: {
     // 切换导航样式
@@ -55,36 +61,37 @@ export default {
     }
   },
   computed: {
-    username() {
-      return this.$store.state.username;
-    }
+    // username() {
+    //   return this.$store.state.username;
+    // },
+    ...mapState(["username", "teams"])
   },
   created() {
-    getMyTeam(this.username).then(res => {
-      if (res.status === 0) {
-        let data = res.data;
-        console.log(res);
+    // getMyTeam(this.username).then(res => {
+    //   if (res.status === 0) {
+    //     let data = res.data;
+    //     console.log(res);
 
-        for (let i = 0; i < data.length; i++) {
-          if (data[i] instanceof Array) {
-            this.teams = JSON.parse(JSON.stringify(data[i]));
-            let teamId = JSON.parse(JSON.stringify(data[i][0]['团队id']));
-            this.$store.commit('SET_TEAMS', JSON.parse(JSON.stringify(data[i])));
-            this.$store.commit('SET_TEAMID', (JSON.parse(JSON.stringify(teamId))));
-          }
-        }
+    //     for (let i = 0; i < data.length; i++) {
+    //       if (data[i] instanceof Array) {
+    //         this.teams = JSON.parse(JSON.stringify(data[i]));
+    //         let teamId = JSON.parse(JSON.stringify(data[i][0]['团队id']));
+    //         this.$store.commit('SET_TEAMS', JSON.parse(JSON.stringify(data[i])));
+    //         this.$store.commit('SET_TEAMID', (JSON.parse(JSON.stringify(teamId))));
+    //       }
+    //     }
 
-        // if(!this.teamId){
-        //   this.$message.error('团队id为空，信息异常，请联系开发人员');
-        // }
-      }
-      else {
-        this.$message.error(res.msg);
-      }
-    }).catch(err => {
-      this.$message.error('获取团队信息失败！');
-      console.log(err)
-    })
+    //     // if(!this.teamId){
+    //     //   this.$message.error('团队id为空，信息异常，请联系开发人员');
+    //     // }
+    //   }
+    //   else {
+    //     this.$message.error(res.msg);
+    //   }
+    // }).catch(err => {
+    //   this.$message.error('获取团队信息失败！');
+    //   console.log(err)
+    // })
 
   }
 };

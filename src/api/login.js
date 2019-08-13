@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-08-13 07:16:39
+ * @LastEditors: Please set LastEditors
+ */
 import axios from "axios";
 import {
   getToken,
@@ -8,12 +15,12 @@ import {
   roles
 } from "./../utils/auth";
 
-const baseURL = "http://www.ghjhhyuyuy.xin:8080";
+// const baseURL = "http://www.ghjhhyuyuy.xin:8080";
 
 // 设置默认服务器地址
 axios.defaults.withCredentials = true; //让ajax携带cookie
 
-setCookie("JSESSIONID", "FDA3A5536AD7B922A9801FD9A192D46D", { path: "/" });
+setCookie("JSESSIONID", "23A1DFA1DA174815D89DFA154CFF96E2", { path: "/" });
 
 // axios.defaults.baseURL = baseURL;
 
@@ -73,7 +80,3 @@ export const getRole = userId =>
 // 改变角色
 export const changeRole = data =>
   axios.post("/v1/nonpub/examine/changeRole", data);
-
-// 根据userId获取团队id及其身份
-export const getOnesTeamMessage = userId =>
-  axios.get("/v1/nonpub/transform/getOnesTeamMessage", { params: { userId } });

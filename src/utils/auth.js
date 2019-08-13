@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-04-19 14:18:23
+ * @LastEditors: your name
+ */
 export const getToken = () => sessionStorage.getItem("token");
 
 export const setToken = () => {
@@ -104,8 +111,6 @@ export const setUserInfoOfStorage = info => {
 
 export const getUserInfoOfStorage = () => {
   let info = sessionStorage.getItem("Info");
-  if (info) {
-    info = JSON.parse(info);
-  }
+  if (info) info = JSON.parse(info);
   return info;
 };

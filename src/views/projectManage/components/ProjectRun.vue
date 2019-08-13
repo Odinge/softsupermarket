@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-08-13 08:38:44
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <!-- 列表信息 -->
   <div class="project-run">
@@ -10,7 +17,7 @@
         <el-table-column type="expand">
           <template slot-scope="props">
             <project-detail :props="props.row"></project-detail>
-            <team-detail :teamId='"04da940d1eee41e3a86e6dc6644e8a79"'></team-detail>
+            <team-detail :teamId='props.row.teamId || "ab3c7f20f6a7499f8b3706537d00b469"'></team-detail>
           </template>
         </el-table-column>
       </template>
@@ -106,11 +113,12 @@ export default {
     getLoadData() {
       // getProjectByProgress("未完成")
 
-      // this.loadFun("未完成")
       this.progressFun("未完成")
         .then(res => {
+
           if (res.status == 0) {
-            this.dataSrc = res.data.map(item => {
+            let { data } = res;
+            this.dataSrc = data.map(item => {
               // 局部更新
               this.renewal(item);
               // 超时判断
@@ -222,8 +230,8 @@ export default {
           params: { id: row.runId },
           query: { overtime: row.overtime }
         });
-        window.sessionStorage.setItem("prevPage", JSON.stringify([]));
-        window.sessionStorage.setItem("projectId", row.projectId);
+        // sessionStorage.setItem("prevPage", JSON.stringify([]));
+        sessionStorage.setItem("projectId", row.projectId);
       }
     },
     init() {
