@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-08-13 08:44:04
+ * @LastEditTime: 2019-08-14 07:09:21
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -27,9 +27,9 @@
           <span>{{ scope.row.applyNum?scope.row.applyNum+"个团队在申请":"暂无团队申请"}} </span>
         </template>
       </el-table-column>
-      <el-table-column prop="undertakeNum" label="团队承接申请" v-if="state" :filters="tags" :filter-method="filterTag">
+      <el-table-column prop="undertakeNum" label="团队承接申请" v-if="state" :filters="teamtags" :filter-method="filterTag">
         <template slot-scope="scope">
-          <span v-if="scope.row.undertakeNum === 0">无团队申请</span>
+          <span v-if="scope.row.undertakeNum == 0">无团队申请</span>
           <span v-else>{{ scope.row.undertakeNum }} 个团队</span>
         </template>
       </el-table-column>
@@ -40,13 +40,15 @@
           <el-button circle class="btn" title="取消发布" icon="el-icon-delete" @click="cancelPublish(scope.row.projectId)" v-if="(scope.row.state == 1 || scope.row.state == 3) && permission($roles.demander)"></el-button>
         </template>
       </el-table-column>
+
       <el-table-column label="操作" v-if="permission($roles.demander)">
-        <template slot-scope="scope" v-if="!scope.row.undertakeNum">
+        <template slot-scope="scope" v-if="!+scope.row.undertakeNum">
           <el-button circle class="btn" title="取消修改" icon="el-icon-delete" @click="cancelModificationProject(scope.row)" v-if="scope.row.modifiyState == '未审核' || scope.row.modifiyState == '条件不满足'"></el-button>
           <el-button round v-else size="small" type="danger" icon="el-icon-edit" @click="alter(scope.row)">修改</el-button>
           <el-tag class="btn" disable-transitions :type="stateColorTxt(scope.row.modifiyState)" v-if="state && scope.row.modifiyState">{{ scope.row.modifiyState | filterModifiy}}</el-tag>
         </template>
       </el-table-column>
+
     </el-table>
     <project-alter :check.sync="check" :form="project" :modifiyState="modifiyState" @update="getLoadData"></project-alter>
     <!-- 分页器 -->
@@ -91,7 +93,7 @@ export default {
       },
       check: false,
       modifiyState: "",
-      tags: [
+      teamtags: [
         { text: "没有团队申请", value: 0 },
         { text: "有团队申请的", value: 1 },
       ]

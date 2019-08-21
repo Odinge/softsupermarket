@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-08-13 08:38:44
+ * @LastEditTime: 2019-08-13 17:47:27
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -17,7 +17,7 @@
         <el-table-column type="expand">
           <template slot-scope="props">
             <project-detail :props="props.row"></project-detail>
-            <team-detail :teamId='props.row.teamId || "ab3c7f20f6a7499f8b3706537d00b469"'></team-detail>
+            <team-detail v-if="!permission($roles.team)" :teamId='props.row.teamId'></team-detail>
           </template>
         </el-table-column>
       </template>
@@ -88,12 +88,6 @@ export default {
     allLoad() {
       return Object.keys(this.loadFlag).every(key => this.loadFlag[key]);
     },
-    // loadFun() {
-    //   const funMap = {};
-    //   funMap[this.$roles.root] = funMap[this.$roles.admin] = getProjectByProgress.bind(this);
-    //   funMap[this.$roles.demander] = funMap[this.$roles.team] = getProjectByProgressLimit.bind(this, this.username);
-    //   return funMap[this.role];
-    // }
   },
   watch: {
     allLoad(val) {
@@ -111,25 +105,29 @@ export default {
   methods: {
     // 获取加载的数据
     getLoadData() {
-      // getProjectByProgress("未完成")
-
       this.progressFun("未完成")
         .then(res => {
 
           if (res.status == 0) {
             let { data } = res;
-            this.dataSrc = data.map(item => {
-              // 局部更新
-              this.renewal(item);
-              // 超时判断
-              this.timeout(item);
-              item.examineState = "未提交";
-              // 获取审核状态
-              this.getExamineState(item);
-              // 获取延迟时间
-              this.getAllDelayTime(item);
-              return item;
-            });
+            // console.log(data);
+
+            if (data.length === 0) {
+              this.init(true);
+            } else {
+              this.dataSrc = data.map(item => {
+                // 局部更新
+                this.renewal(item);
+                // 超时判断
+                this.timeout(item);
+                item.examineState = "未提交";
+                // 获取审核状态
+                this.getExamineState(item);
+                // 获取延迟时间
+                this.getAllDelayTime(item);
+                return item;
+              });
+            }
             // this.getMsgNum();
             this.isLoading = false;
           } else throw res.msg;
@@ -137,9 +135,7 @@ export default {
         .catch(err => {
           this.$message.error("数据获取失败");
           this.isLoading = false;
-          this.loadFlag = {
-            timeNode: true,
-          }
+          this.init(true);
         });
     },
     // 局部更新
@@ -234,13 +230,12 @@ export default {
         sessionStorage.setItem("projectId", row.projectId);
       }
     },
-    init() {
-
+    init(bool = false) {
       this.loadFlag = {
-        timeNode: false,
-        timeout: false,
-        examineState: false,
-        delayTime: false
+        timeNode: bool,
+        timeout: bool,
+        examineState: bool,
+        delayTime: bool
       }
     }
   },

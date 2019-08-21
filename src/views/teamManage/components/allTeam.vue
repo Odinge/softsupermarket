@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-06-05 12:50:31
+ * @LastEditTime: 2019-08-13 19:01:00
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div>
     <el-table v-loading="loading" :data="tableData" style="width: 100%" max-height="500">
@@ -25,7 +32,7 @@
 import { getTeam } from "@/api/team";
 import { getAllNewAppliction } from "@/api/team";
 import { agreeModify } from "@/api/team";
-import { getAllTeamDirection,handleNewApplication } from "@/api/team";
+import { getAllTeamDirection, handleNewApplication } from "@/api/team";
 import { getNewApplication } from "@/api/team";
 
 export default {
@@ -54,10 +61,10 @@ export default {
       else {
         state = '条件不满足';
       }
-      handleNewApplication(val.teamId, state).//
-        then(function (res) {
+      handleNewApplication(val.teamId, state)
+        .then(function (res) {
           // console.log(res)
-          if (res.status === 0 && res.msg === '成功') {
+          if (res.status === 0) {
             that.success('审核成功!');
             that.getData();   /*成功后重新获取数据*/
             that.$emit('updateMsgNumber')/*发送更新消息数量事件*/
@@ -66,8 +73,8 @@ export default {
             that.fail('发生了错误，操作失败！');
             console.log(res)
           }
-
-        }).catch(() => {
+        })
+        .catch(() => {
           that.fail('糟糕，系统异常，操作失败！');
         })
 

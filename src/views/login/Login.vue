@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-20 22:21:23
+ * @LastEditTime: 2019-08-13 15:59:32
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="login" v-loading="isLoading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.5)">
     <el-button class="back" type="text" icon="el-icon-back" @click="back">返回主页</el-button>
@@ -78,7 +85,7 @@ export default {
         this.$router.push({ path: "/" }); //登录成功之后重定向到首页
         this.$store.commit("SET_PAGE_ENTER_STATE", true);
       }).catch(err => {
-        this.$message.error("不明错误");
+        this.$message.error(err);
         this.btnLoading = false;
       });
 

@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-08-13 15:38:03
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <!-- 列表信息 -->
   <div class="project-list">
@@ -12,9 +19,10 @@
               <template slot-scope="scope">{{ scope.row.direction | filterTeamDirection }}</template>
             </el-table-column>
             <el-table-column prop="teamScore" sortable label="团队分数">
-              <!-- <template slot-scope="scope">
-                <rate :score="scope.row.teamScore" :base='20'></rate>
-              </template> -->
+              <template slot-scope="scope">
+                <!-- <rate :score="scope.row.teamScore" :base='20'></rate> -->
+                <span style="color:#ff9900;font-size:18px">{{scope.row.teamScore}}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="teamId" label="操作">
               <template slot-scope="scope">

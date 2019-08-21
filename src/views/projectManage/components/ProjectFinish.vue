@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-08-20 19:40:46
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div class="finish">
     <div class="expbtn">
@@ -10,10 +17,11 @@
       <el-table-column type="expand">
         <template slot-scope="props">
           <project-detail :projectId="props.row.projectId"></project-detail>
+          <team-detail :teamId='props.row.teamId' v-if="!permission($roles.team)"></team-detail>
         </template>
       </el-table-column>
       <el-table-column prop="projectName" label="项目名称" sortable></el-table-column>
-      <el-table-column prop="teamName" label="承接团队"></el-table-column>
+      <!-- <el-table-column prop="teamName" label="承接团队"></el-table-column> -->
       <el-table-column label="结项日期" sortable prop="projectTime">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
@@ -44,6 +52,7 @@ import ProjectPagination from "@/components/ProjectPagination";
 import ProjectDetail from "../components/ProjectDetail";
 import projectEvaluate from "../components/projectEvaluate";
 import ProjectExport from "../components/ProjectExport";
+import TeamDetail from "../components/TeamDetail";
 import {
   getProjectByState,
   exportProjectCompleted,
@@ -58,6 +67,7 @@ export default {
     ProjectExport,
     projectEvaluate,
     ProjectPagination,
+    TeamDetail
   },
   data() {
     return {

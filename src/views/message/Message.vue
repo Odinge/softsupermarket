@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-08-14 06:58:37
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="message">
     <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -81,6 +88,7 @@ export default {
         .then(res => {
           this.data = this.tableData;
           this.isLoading = false;
+          this.getMsgNum();
         })
         .catch(() => {
           this.$message.error("数据获取失败");

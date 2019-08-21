@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-08-21 00:41:39
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div>
     <el-card class="box-card">
@@ -18,14 +25,7 @@
           <el-input type="textarea" v-model="form.projectRequirement"></el-input>
         </el-form-item>
         <el-form-item label="项目时间" prop="projectTime">
-          <el-date-picker
-            v-model="form.projectTime"
-            type="daterange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            value-format="yyyy.MM.dd"
-          ></el-date-picker>
+          <el-date-picker v-model="form.projectTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy.MM.dd"></el-date-picker>
         </el-form-item>
         <el-form-item label="项目描述" prop="projectDescribe">
           <el-input type="textarea" v-model="form.projectDescribe"></el-input>
@@ -107,6 +107,9 @@ export default {
   computed: {
     userId() {
       return this.$store.state.userId;
+    },
+    username() {
+      return this.$store.state.username;
     }
   },
   methods: {
@@ -120,7 +123,10 @@ export default {
               let formData = this.form;
               formData.projectTime =
                 formData.projectTime[0] + "-" + formData.projectTime[1];
-              formData.userId = this.userId;
+              // formData.userId = this.userId;
+              formData.userId = this.username;
+              console.log(formData);
+
               publish(formData)
                 .then(res => {
                   // 项目发布成功。等待管理员审核

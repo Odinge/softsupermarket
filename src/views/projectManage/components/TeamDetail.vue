@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-06-27 15:35:03
+ * @LastEditTime: 2019-08-13 15:44:16
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div>
     <h3 style="font-size:20px; margin:20px;">承接团队</h3>
@@ -6,12 +13,14 @@
       <el-table-column prop="direction" label="团队方向"></el-table-column>
       <el-table-column prop="teamScore" sortable label="团队分数">
         <template slot-scope="scope">
-          <rate :score="scope.row.teamScore" :base='20'></rate>
+          <span style="color:#ff9900;font-size:18px">{{scope.row.teamScore}}</span>
+          <!-- <rate :score="scope.row.teamScore" :base='20'></rate> -->
         </template>
       </el-table-column>
       <el-table-column prop="teamId" label="操作">
         <template slot-scope="scope">
-          <el-button round type="text" size="small" @click="teamDetail(scope.row.teamId)">团队详细</el-button>
+          <router-link :to='{ name: "teamDetail", params: { id: scope.row.teamId } }' class="a-detail">团队详细</router-link>
+          <!-- <el-button round type="text" size="small" @click="teamDetail(scope.row.teamId)">团队详细</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -58,4 +67,13 @@ export default {
 </script>
 
 <style>
+.a-detail {
+  color: #409eff;
+}
+.a-detail:hover {
+  color: #89b0d6;
+}
+.a-detail-select {
+  color: rgb(231, 194, 73);
+}
 </style>

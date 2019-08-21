@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-08-13 08:07:12
+ * @LastEditTime: 2019-08-13 18:17:37
  * @LastEditors: Please set LastEditors
  */
 // 通过commit间接更新state，异步回调ajax
@@ -148,10 +148,7 @@ export default {
   },
   // 设置token
   async setRole({ commit, dispatch }, role) {
-    if (role === $roles.team) {
-      let data = await dispatch("getTeamInfo");
-      console.log(data);
-    }
+    if (role === $roles.team) await dispatch("getTeamInfo");
     setRole(role);
     setToken();
   },
@@ -326,16 +323,20 @@ export default {
   // 获取团队信息
   async getTeamInfo({ state, commit }) {
     const res = await getMyTeam(state.username);
-    if (res.status) throw res;
+    if (res.status) throw "团队获取失败";
     let { data } = res;
-    // console.log(data);
+    console.log(data);
 
     for (let i = 0; i < data.length; i++) {
       let teams = data[i];
       if (teams instanceof Array) {
-        let teamId = teams[0]["团队id"];
-        commit("SET_TEAMS", teams);
-        commit("SET_TEAMID", teamId);
+        try {
+          let teamId = teams[0]["团队id"];
+          commit("SET_TEAMS", teams);
+          commit("SET_TEAMID", teamId);
+        } catch (err) {
+          throw "抱歉，您不是队长没有权限访问！！！";
+        }
       }
     }
     return data;
