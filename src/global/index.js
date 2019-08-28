@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-08-28 17:10:31
+ * @LastEditors: Please set LastEditors
+ */
 // vue全局配置
 import Vue from "vue";
 import axios from "axios";
@@ -25,22 +32,23 @@ Vue.prototype.tags = [
   { text: "不通过", value: "3" }
 ];
 
-(Vue.prototype.filterTag = (value, row) => {
+Vue.prototype.filterTag = (value, row) => {
   return row.state === value;
-}),
-  // 注册过滤器
-  Vue.filter("filterState", value => {
-    const stateMap = [
-      "未提交",
-      "未审核",
-      "已审核",
-      "不通过",
-      "黑名单",
-      "已作废",
-      "已删除"
-    ];
-    return stateMap[value];
-  });
+};
+// 注册过滤器
+Vue.filter("filterState", value => {
+  const stateMap = [
+    "未提交",
+    "未审核",
+    "已审核",
+    "不通过",
+    "黑名单",
+    "已作废",
+    "已删除",
+    "已删除"
+  ];
+  return stateMap[value];
+});
 Vue.filter("filterStateSub", value => {
   const stateMap = [
     "未提交",

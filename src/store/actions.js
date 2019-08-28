@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-08-13 18:17:37
+ * @LastEditTime: 2019-08-22 10:30:30
  * @LastEditors: Please set LastEditors
  */
 // 通过commit间接更新state，异步回调ajax
@@ -325,7 +325,7 @@ export default {
     const res = await getMyTeam(state.username);
     if (res.status) throw "团队获取失败";
     let { data } = res;
-    console.log(data);
+    // console.log(data);
 
     for (let i = 0; i < data.length; i++) {
       let teams = data[i];

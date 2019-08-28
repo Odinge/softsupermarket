@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-08-28 17:07:48
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div class="project-progress" ref="page" @scroll="scroll">
     <el-button @click="back" icon="el-icon-back" class="btn-back">返回</el-button>
@@ -324,7 +331,8 @@ export default {
         })
         .catch(err => {
           this.isLoading = false;
-          this.$message.error("超时判断失败！");
+          this.timeout = 0;
+          // this.$message.error("超时判断失败！");
         });
     },
     getDelayTime() {

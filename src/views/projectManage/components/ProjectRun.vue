@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-08-13 17:47:27
+ * @LastEditTime: 2019-08-28 17:10:36
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -93,7 +93,7 @@ export default {
     allLoad(val) {
       this.getMsgNum().then(res => {
         if (val) {
-          const msgNum = this.data.filter(item => item.timeout || ["条件不满足", "未审核"].includes(item.examineState)).length;
+          const msgNum = this.data.filter(item => item.timeout || ["条件不满足", "未审核", "未提交"].includes(item.examineState)).length;
           this.$store.commit("SET_PROJECTRUN_MSG_NUM", msgNum);
         }
       });
@@ -171,7 +171,11 @@ export default {
 
           } else throw res.msg;
         })
-        .catch(err => this.$message.error("超时判断失败！"));
+        .catch(err => {
+          this.loadFlag.timeout = true;
+          this.$set(row, "timeout", 0);
+          // this.$message.error("超时判断失败！")
+        });
     },
     timeoutClass({ row }) {
       if (row.timeout) {
@@ -182,7 +186,7 @@ export default {
     getExamineState(row) {
       getDelayAndAchievementsByRunId(row.runId)
         .then(res => {
-          if (res.status == 12) {
+          if (res.status == 0) {
             let id = res.data[res.data.length - 1];
             if (id && id.achievementsId) {
               getAchievementState(id.achievementsId)
@@ -198,6 +202,10 @@ export default {
                   } else throw res.msg;
                 })
                 .catch(err => this.$message.error(err));
+            } else {
+              this.$set(row, "examineState", "未提交");
+              // 置加载位
+              this.loadFlag.examineState = true;
             }
           } else throw res.msg;
         })
@@ -207,7 +215,7 @@ export default {
     getAllDelayTime(row) {
       getAllDelayTime(row.runId)
         .then(res => {
-          if (res.status == 0 || res.status == -1) {
+          if (res.status == 0) {
             let allTime = res.data ? res.data.allTime : 0;
             this.$set(row, "delayTime", allTime);
 
@@ -226,7 +234,6 @@ export default {
           params: { id: row.runId },
           query: { overtime: row.overtime }
         });
-        // sessionStorage.setItem("prevPage", JSON.stringify([]));
         sessionStorage.setItem("projectId", row.projectId);
       }
     },

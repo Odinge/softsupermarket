@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-20 22:21:23
- * @LastEditTime: 2019-08-13 15:59:32
+ * @LastEditTime: 2019-08-28 17:18:34
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -79,7 +79,11 @@ export default {
   methods: {
     login() {
       this.btnLoading = true;
-
+      if (this.roleId == 5) {
+        this.isErr = true;
+        this.errMsg = "无访问权限";
+        return false;
+      }
       // 设置角色并进入对应的管理页面
       this.$store.dispatch("setRole", this.roleId).then(res => {
         this.$router.push({ path: "/" }); //登录成功之后重定向到首页

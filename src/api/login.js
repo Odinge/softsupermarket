@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-08-21 08:25:22
+ * @LastEditTime: 2019-08-28 17:19:41
  * @LastEditors: Please set LastEditors
  */
 import axios from "axios";
@@ -20,7 +20,7 @@ import {
 // 设置默认服务器地址
 axios.defaults.withCredentials = true; //让ajax携带cookie
 
-setCookie("JSESSIONID", "A111293C03E6CDA88D7D72A80DB0A879", { path: "/" });
+// setCookie("JSESSIONID", "E814A26C1C89A99B656ECC82E11B0760", { path: "/" });
 
 // axios.defaults.baseURL = baseURL;
 

@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 15:35:55
+ * @LastEditTime: 2019-08-28 16:41:02
+ * @LastEditors: Please set LastEditors
+ */
 // 路由模块
 import Vue from "vue";
 import Router from "vue-router";
@@ -57,11 +64,13 @@ const project = {
     icon: "xiangmu"
   },
   detail: [
-    // { path: 'detail/:id', name: 'projectDetail', component: () => import('../views/projectManage/ProjectDetail'), },
     {
       path: "progress/:id",
       name: "projectProgress",
-      component: () => import("../views/projectManage/ProjectProgress"),
+      component: () =>
+        import(
+          /* webpackChunkName: "ProjectProgress" */ "../views/projectManage/ProjectProgress"
+        ),
       props: true
     }
   ],
@@ -69,25 +78,37 @@ const project = {
     {
       path: "check",
       name: "projectCheck",
-      component: () => import("../views/projectManage/components/ProjectCheck")
+      component: () =>
+        import(
+          /* webpackChunkName: "ProjectCheck" */ "../views/projectManage/components/ProjectCheck"
+        )
     },
     {
       path: "run",
       name: "projectRun",
       meta: { keepAlive: true },
-      component: () => import("../views/projectManage/components/ProjectRun")
+      component: () =>
+        import(
+          /* webpackChunkName: "projectRun" */ "../views/projectManage/components/ProjectRun"
+        )
     },
     {
       path: "finish",
       name: "projectFinish",
       meta: { keepAlive: true },
-      component: () => import("../views/projectManage/components/ProjectFinish")
+      component: () =>
+        import(
+          /* webpackChunkName: "projectFinish" */ "../views/projectManage/components/ProjectFinish"
+        )
     }
   ],
   undertake: {
     path: "undertake",
     name: "projectUndertake",
-    component: () => import("../views/projectManage/components/ProjectCheck"),
+    component: () =>
+      import(
+        /* webpackChunkName: "TeamAdmin" */ "../views/projectManage/components/ProjectCheck"
+      ),
     props: { state: 1 }
   }
 };
@@ -98,32 +119,42 @@ const adminProjectManage = [
     name: "projectExamine",
     redirect: "/projectManage/examine/publish",
     component: () =>
-      import("../views/projectManage/projectExamine/ProjectExamine"),
+      import(
+        /* webpackChunkName: "ProjectExamine" */ "../views/projectManage/projectExamine/ProjectExamine"
+      ),
     children: [
       {
         path: "publish",
         name: "publishExamine",
         component: () =>
-          import("../views/projectManage/projectExamine/PublishExamine")
+          import(
+            /* webpackChunkName: "PublishExamine" */ "../views/projectManage/projectExamine/PublishExamine"
+          )
       },
       {
         path: "undertake",
         name: "undertakeExamine",
         meta: { keepAlive: true },
         component: () =>
-          import("../views/projectManage/projectExamine/UndertakeExamine")
+          import(
+            /* webpackChunkName: "UndertakeExamine" */ "../views/projectManage/projectExamine/UndertakeExamine"
+          )
       },
       {
         path: "delay",
         name: "delayExamine",
         component: () =>
-          import("../views/projectManage/projectExamine/DelayExamine")
+          import(
+            /* webpackChunkName: "DelayExamine" */ "../views/projectManage/projectExamine/DelayExamine"
+          )
       },
       {
         path: "alter",
         name: "alterExamine",
         component: () =>
-          import("../views/projectManage/projectExamine/AlterExamine")
+          import(
+            /* webpackChunkName: "TeamAdmin" */ "../views/projectManage/projectExamine/AlterExamine"
+          )
       }
     ]
   },
@@ -133,6 +164,7 @@ const adminProjectManage = [
 
 // 异步路由
 export const asyncRouterMap = [
+  // 团队管理 --- 管理员
   {
     ...team.path,
     meta: {
@@ -141,12 +173,16 @@ export const asyncRouterMap = [
     },
     children: [
       {
-        path: "/teamManage",
-        component: () => import("../views/teamManage/TeamAdmin")
+        path: team.path.path,
+        component: () =>
+          import(
+            /* webpackChunkName: "TeamAdmin" */ "../views/teamManage/TeamAdmin"
+          )
       },
       ...team.detail
     ]
   },
+  // 团队管理 --- 团队开发人员
   {
     ...team.path,
     meta: {
@@ -155,18 +191,24 @@ export const asyncRouterMap = [
     },
     children: [
       {
-        path: "/teamManage",
-        component: () => import("../views/teamManage/TeamDeveloper")
+        path: team.path.path,
+        component: () =>
+          import(
+            /* webpackChunkName: "TeamDeveloper" */ "../views/teamManage/TeamDeveloper"
+          )
       },
       {
         path: "noticeDetail:announcementId",
         name: "teamNoticeDetail",
         component: () =>
-          import("../views/teamManage/components/teamNoticeDetail.vue")
+          import(
+            /* webpackChunkName: "teamNoticeDetail" */ "../views/teamManage/components/teamNoticeDetail.vue"
+          )
       },
       ...team.detail
     ]
   },
+  // 项目管理 --- 管理员
   {
     ...project.path,
     meta: {
@@ -175,14 +217,18 @@ export const asyncRouterMap = [
     },
     children: [
       {
-        path: "/projectManage",
+        path: project.path.path,
         redirect: "/projectManage/examine",
-        component: () => import("../views/projectManage/ProjectAdmin"),
+        component: () =>
+          import(
+            /* webpackChunkName: "ProjectAdmin" */ "../views/projectManage/ProjectAdmin"
+          ),
         children: [...adminProjectManage]
       },
       ...project.detail
     ]
   },
+  // 项目管理 --- 团队开发人员
   {
     ...project.path,
     meta: {
@@ -191,14 +237,18 @@ export const asyncRouterMap = [
     },
     children: [
       {
-        path: "/projectManage",
+        path: project.path.path,
         redirect: "/projectManage/check",
-        component: () => import("../views/projectManage/ProjectDeveloper"),
+        component: () =>
+          import(
+            /* webpackChunkName: "ProjectDeveloper" */ "../views/projectManage/ProjectDeveloper"
+          ),
         children: [...project.check]
       },
       ...project.detail
     ]
   },
+  // 项目管理 --- 公司负责人
   {
     ...project.path,
     meta: {
@@ -207,14 +257,18 @@ export const asyncRouterMap = [
     },
     children: [
       {
-        path: "/projectManage",
+        path: project.path.path,
         redirect: "/projectManage/check",
-        component: () => import("../views/projectManage/ProjectDemander"),
+        component: () =>
+          import(
+            /* webpackChunkName: "ProjectDemander" */ "../views/projectManage/ProjectDemander"
+          ),
         children: [...project.check, project.undertake]
       },
       ...project.detail
     ]
   },
+  // 发布项目
   {
     path: "/publish",
     name: "publish",
@@ -316,5 +370,4 @@ export const asyncRouterMap = [
 export default new Router({
   mode: "history",
   routes: constantRouterMap
-  // routes: asyncRouterMap
 });
