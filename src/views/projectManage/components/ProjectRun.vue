@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-08-28 17:10:36
+ * @LastEditTime: 2019-08-30 19:28:41
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -158,7 +158,10 @@ export default {
 
           } else throw res.msg;
         })
-        .catch(err => this.$message.error("获取进度数据失败！"));
+        .catch(err => {
+          this.loadFlag.timeNode = true;
+          this.$message.error("获取进度数据失败！")
+        });
     },
     // 超时判断
     timeout(row) {
@@ -194,14 +197,16 @@ export default {
                   if (res.status == 0) {
                     if (res.data !== "已审核") {
                       this.$set(row, "examineState", res.data);
-
-                      // 置加载位
-                      this.loadFlag.examineState = true;
-
                     }
+                    // 置加载位
+                    this.loadFlag.examineState = true;
                   } else throw res.msg;
                 })
-                .catch(err => this.$message.error(err));
+                .catch(err => {
+                  // 置加载位
+                  this.loadFlag.examineState = true;
+                  this.$message.error(err)
+                });
             } else {
               this.$set(row, "examineState", "未提交");
               // 置加载位
@@ -209,7 +214,10 @@ export default {
             }
           } else throw res.msg;
         })
-        .catch(err => this.$message.error(err));
+        .catch(err => {
+          this.loadFlag.examineState = true;
+          this.$message.error(err)
+        });
     },
     // 获取延期
     getAllDelayTime(row) {
@@ -224,7 +232,11 @@ export default {
 
           } else throw res.msg;
         })
-        .catch(err => this.$message.error("延期获取失败！"));
+        .catch(err => {
+          // 置加载位
+          this.loadFlag.delayTime = true;
+          this.$message.error("延期获取失败！")
+        });
     },
     // 查看详情
     select(row, col) {
@@ -250,7 +262,8 @@ export default {
   // 数据缓存
   beforeRouteEnter(to, from, next) {
     //需要刷新的页面
-    if (!["projectProgress", "teamDetail"].includes(from.name)) {
+    // if (!["projectProgress", "teamDetail"].includes(from.name)) {
+    if (!["teamDetail"].includes(from.name)) {
       to.meta.isRefresh = true;
     }
     next()

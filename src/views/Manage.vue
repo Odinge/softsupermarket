@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-09-01 10:11:17
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="manage">
     <Header></Header>
@@ -19,8 +26,13 @@ export default {
   components: { Header, Sidebar },
   beforeCreate() {
     this.getMsgNum();
+
     // 获取数据
-    this.$store.dispatch("GetAllTeamDirection");
+    if (this.permission(...this.$roles.manager)) {
+      this.$store.dispatch("GetAllTeamDirection").then(data => {
+      }).catch(err => { this.$message.error("数据获取失败") });
+    }
+
   },
 
 };

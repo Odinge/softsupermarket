@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-08-13 15:38:03
+ * @LastEditTime: 2019-09-01 09:32:03
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -15,7 +15,6 @@
           <el-table stripe :data="props.row.teamUndertakePOList" :default-sort="{prop: 'teamScore', order: 'descending'}" class="table-radius">
             <el-table-column prop="teamName" label="团队名称"></el-table-column>
             <el-table-column prop="direction" label="团队方向">
-              <!-- <template slot-scope="scope">{{ teamDirection[scope.row.direction].directionName }}</template> -->
               <template slot-scope="scope">{{ scope.row.direction | filterTeamDirection }}</template>
             </el-table-column>
             <el-table-column prop="teamScore" sortable label="团队分数">
@@ -66,7 +65,6 @@ import Rate from "../components/Rate";
 import ProjectPagination from "@/components/ProjectPagination";
 import ProjectDetail from "../components/ProjectDetail";
 import { getAllocation, examineAllocation, downloadProjectDocument } from "../../../api/project";
-import { getAllTeamDirection } from "../../../api/team";
 export default {
   components: { ProjectPagination, ProjectDetail, ProjectTimenode, Rate },
   data() {
@@ -78,7 +76,6 @@ export default {
       filterData: [], // 数据筛选
       isLoading: true, // 数据是否加载
       btnLoading: false, // 按钮操作加载
-      teamDirection: [],
       projectData: [
       ],
       check: false,

@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-09-01 10:11:47
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <!-- 渲染导航列表 -->
   <div class="sidebar" :class="{mini}">

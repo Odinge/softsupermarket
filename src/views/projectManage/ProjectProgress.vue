@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-08-28 17:07:48
+ * @LastEditTime: 2019-08-30 19:13:32
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -20,7 +20,7 @@
         <span class="title-head">
           <i class="el-icon-date sec-head-title"></i>项目日程表
         </span>
-        <span class="score-head">
+        <span class="score-head" v-if="!isRun  && !isLoading">
           <span class="score-title">项目分数</span>
           <rate :score="originScore" style="display:block"></rate>
         </span>
@@ -36,11 +36,11 @@
           <el-button v-if="delayState == '未审核'" round class="btn-delay" size="medium" @click="cancelDelay">取消延期</el-button>
           <el-button v-else round class="btn-delay" type="warning" size="medium" @click="openDelay">延期</el-button>
         </template>
-
-        <el-tag class="btn-delay" disable-transitions style="font-size:12px; margin-top:10px;" type="danger" v-if="!isRun && scoreFlag">未评分</el-tag>
-
-        <el-button class="btn-delay" type="text" @click="showEevaluate=true" v-if="!isRun && permission(...$roles.manager) && !isLoading">查看评价</el-button>
-        <el-button round class="btn-delay" type="warning" size="medium" @click="openScore" v-if="!isRun && permission(...$roles.manager) && !isLoading">打分</el-button>
+        <template v-if="!isRun  && !isLoading">
+          <el-tag class="btn-delay" disable-transitions style="font-size:12px; margin-top:10px;" type="danger" v-if="scoreFlag">未评分</el-tag>
+          <el-button class="btn-delay" type="text" @click="showEevaluate=true" v-if="permission(...$roles.manager)">查看评价</el-button>
+          <el-button round class="btn-delay" type="warning" size="medium" @click="openScore" v-if="permission(...$roles.manager)">打分</el-button>
+        </template>
       </div>
       <!-- 上传文件 -->
       <input type="file" ref="file" style="display: none;" @change="selectedFile">
@@ -91,9 +91,9 @@
                   <!-- 提示信息 -->
                   <div class="tip">
                     请上传1个成果文件。文件类型为：
-                    <strong class="tip-msg">文本文件</strong>、
-                    <strong class="tip-msg">压缩文件</strong>、
-                    <strong class="tip-msg">图片</strong>
+                    <!-- <strong class="tip-msg">文本文件</strong>、 -->
+                    <strong class="tip-msg">压缩文件</strong>
+                    <!-- <strong class="tip-msg">图片</strong> -->
                   </div>
                 </div>
               </template>
@@ -231,7 +231,7 @@ export default {
       return this.$route.params.id;
     },
     projectId() {
-      return window.sessionStorage.getItem("projectId") || "";
+      return sessionStorage.getItem("projectId") || "";
     },
     rate() {
       return +this.$route.query.check;
@@ -262,11 +262,20 @@ export default {
     this.originScore = this.score;
     this.scoreFlag = this.check;
     this.getTimeNode();
+
+    // window.addEventListener("focus", this.getTimeNode);
   },
+  // beforeRouteLeave(to, from, next) {
+  // 导航离开该组件的对应路由时调用
+  // 可以访问组件实例 `this`
+  // window.removeEventListener("focus", this.getTimeNode);
+  // next();
+  // },
   methods: {
     // 返回上一页
     back() {
       this.$router.go(-1);
+
     },
     resetForm() {
       this.$refs.form.resetFields();
@@ -305,20 +314,28 @@ export default {
       })
         .then(() => {
           this.delLoading = true;
-          cancelAchievement(this.achievementId)
-            .then(res => {
-              if (res.status == 0) {
-                this.loadHistory();
-                this.$message.success("取消成功");
-                this.delLoading = false;
-              } else throw res.msg;
-            })
-            .catch(err => {
-              this.$message.error("取消失败");
-              this.delLoading = false;
-            });
+          this.delAchievement();
         })
         .catch(() => this.$message.info("已取消"));
+    },
+    // 删除提交
+    delAchievement(callback) {
+      cancelAchievement(this.achievementId)
+        .then(res => {
+          if (res.status == 0) {
+            this.loadHistory();
+            if (!callback) {
+              this.$message.success("取消成功");
+              this.delLoading = false;
+            } else {
+              callback();
+            }
+          } else throw res.msg;
+        })
+        .catch(err => {
+          this.$message.error("取消失败");
+          !callback && (this.delLoading = false);
+        });
     },
     // 超时判断
     getTimeout() {
@@ -338,7 +355,7 @@ export default {
     getDelayTime() {
       getAllDelayTime(this.runId)
         .then(res => {
-          if (res.status == 0 || res.status == -1) {
+          if (res.status == 0) {
             this.delayTime = res.data ? res.data.allTime : 0;
           } else throw res.msg;
         })
@@ -363,7 +380,7 @@ export default {
             if (this.isRun) {
               this.getTimeout();
             } else this.isLoading = false;
-          } else throw re.msg;
+          } else throw res.msg;
         })
         .catch(err => {
           this.isLoading = false;
@@ -373,10 +390,6 @@ export default {
     // ============================历史======================
     // 打开加载当前历史
     loadHistory() {
-      // let index = this.isRun ? this.active : this.active - 1;
-      // let isRun = this.steps > 0 && this.steps !== this.active;
-      // console.log(this.steps, this.active);
-
       let index = this.isRun ? this.active : this.active - 1;
       this.openHistory(this.timeNode[index], true);
     },
@@ -398,11 +411,11 @@ export default {
             node.historys = historys;
             node.historyLoading = false;
             if (node === this.curNode) {
-              let history = historys[historys.length - 1];
-              if (history) {
-                this.achievementState = history.state;
-                this.achievementId = history.achievementId;
-              }
+              let history = historys[historys.length - 1] || {};
+              // if (history) {
+              this.achievementState = history.state || 0;
+              this.achievementId = history.achievementId || "";
+              // }
             }
           } else throw res.msg;
         })
@@ -465,7 +478,7 @@ export default {
       this.handleExceed(files, name);
     },
     // 上传文件检查
-    handleExceed(files, name) {
+    handleExceedTest(files, name) {
       // let types = ["文本文档", "压缩包", "脑图"];
       let type_png = /\.(png|jpe?g|gif|svg|bmp)(\?.*)?$/i;
       // let type_txt = /\.(txt|doc|docx|rtf|md|ppt|pptx)(\?.*)?$/i;
@@ -503,6 +516,43 @@ export default {
         this.clearFile();
       }
     },
+    handleExceed(files, name) {
+
+      // let types = ["文本文档", "压缩包", "脑图"];
+      let type_png = /\.(png|jpe?g|gif|svg|bmp)(\?.*)?$/i;
+      // let type_txt = /\.(txt|doc|docx|rtf|md|ppt|pptx)(\?.*)?$/i;
+      let type_txt = /\.(txt)(\?.*)?$/i;
+      let type_zip = /\.(zip|gz|z|rar|arj|cab)(\?.*)?$/i;
+      if (name.includes(".")) {
+        if (type_zip.test(name)) {
+          this.file.type = type_png.test(name)
+            ? "3"
+            : type_zip.test(name)
+              ? "2"
+              : "1";
+          this.file.content = files[0];
+          this.file.name = name;
+          this.file.length = files.length;
+        } else {
+          this.$message({
+            type: "warning",
+            showClose: true,
+            duration: 5000,
+            dangerouslyUseHTMLString: true,
+            message: `<p style='line-height:20px'>
+            文件类型不正确！
+            必须为:
+            <p>
+              <strong class='tip-msg'>压缩文件</strong>
+            </p></p>`
+          });
+          this.clearFile();
+        }
+      } else {
+        this.$message.warning("上传文件无效！");
+        this.clearFile();
+      }
+    },
     // 上传行为
     handleUpdate() {
       if (this.file.length) {
@@ -526,10 +576,19 @@ export default {
         .then(res => {
           if (res.status == 0) {
             this.file.length = 0;
-            // 显示记录
-            this.loadHistory();
-            this.$message.success("上传成功");
-            this.btnLoading = false;
+            // 上一次提交是否未审核 
+            if (this.achievementState == 1) {
+              this.delAchievement(() => {
+                this.$message.success("上传成功");
+                this.btnLoading = false;
+              })
+            } else {
+              // 显示记录
+              this.loadHistory();
+              this.$message.success("上传成功");
+              this.btnLoading = false;
+            }
+
           } else throw res.msg;
         })
         .catch(err => {
@@ -608,7 +667,7 @@ export default {
     getId() {
       getDelayAndAchievementsByRunId(this.runId)
         .then(res => {
-          if (res.status == 12) {
+          if (res.status == 0) {
             let { data } = res;
             let id = data[data.length - 1];
             if (id && id.delayId) {
@@ -619,7 +678,7 @@ export default {
         })
         .catch(err => {
           this.isLoading = false;
-          this.$message.error("获取ID失败");
+          this.$message.error("ID获取失败");
         });
     },
     // ======================评分============================
@@ -652,7 +711,7 @@ export default {
               });
               this.$route.meta.check = score;
               // this.getAllTimeNodes();
-              // this.getTimeNode();
+              this.getTimeNode();
             }
           } else throw res.msg;
           this.scoreLoading = false;
@@ -693,6 +752,7 @@ export default {
       examineAchievements(this.achievementId, state)
         .then(res => {
           if (res.status == 0) {
+            this.achievementState = 0;
             if (state == 2) {
               this.changeProcess();
             } else {
@@ -707,6 +767,7 @@ export default {
           this.$message.error("提交审核失败");
         });
     },
+    // 改变进度
     changeProcess() {
       changeProcess(this.runId)
         .then(res => {

@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-08-20 19:40:46
+ * @LastEditTime: 2019-08-30 19:27:29
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -171,7 +171,8 @@ export default {
   // 数据缓存
   beforeRouteEnter(to, from, next) {
     //需要刷新的页面
-    if (!["projectProgress", "teamDetail"].includes(from.name)) {
+    // if (!["projectProgress", "teamDetail"].includes(from.name)) {
+    if (!["teamDetail"].includes(from.name)) {
       to.meta.isRefresh = true;
     }
     next()

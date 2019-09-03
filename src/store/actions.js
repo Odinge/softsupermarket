@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-08-22 10:30:30
+ * @LastEditTime: 2019-09-01 09:55:47
  * @LastEditors: Please set LastEditors
  */
 // 通过commit间接更新state，异步回调ajax
@@ -78,34 +78,36 @@ export default {
                   // 获取权限
                   let userId = res.data;
                   // 获取信息
-                  dispatch("qesMessage", { userGet: userId }).then(() => {
-                    getRole(studentId)
-                      .then(res => {
-                        if (res.status == 0) {
-                          let roles = res.data;
+                  dispatch("qesMessage", { userGet: userId })
+                    .then(() => {
+                      getRole(studentId)
+                        .then(res => {
+                          if (res.status == 0) {
+                            let roles = res.data;
 
-                          // 权限组
-                          let info = {
-                            roles,
-                            userId,
-                            username: studentId
-                            // teamId: ""
-                          };
-                          setUserInfoOfStorage(info);
-                          commit(SET_USER_INFO, info);
+                            // 权限组
+                            let info = {
+                              roles,
+                              userId,
+                              username: studentId
+                              // teamId: ""
+                            };
+                            setUserInfoOfStorage(info);
+                            commit(SET_USER_INFO, info);
 
-                          resolve(roles);
-                        }
-                        throw res.msg;
-                      })
-                      .catch(err =>
-                        reject({
-                          err,
-                          msg: "无访问权限",
-                          code: 2
+                            resolve(roles);
+                          }
+                          throw res.msg;
                         })
-                      );
-                  });
+                        .catch(err =>
+                          reject({
+                            err,
+                            msg: "无访问权限",
+                            code: 2
+                          })
+                        );
+                    })
+                    .catch(err => {});
                 } else throw res.msg;
               })
               .catch(err => reject({ err, msg: "无访问权限", code: 2 }));

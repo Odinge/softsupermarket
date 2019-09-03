@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 15:35:55
- * @LastEditTime: 2019-08-28 16:41:02
+ * @LastEditTime: 2019-09-01 09:00:33
  * @LastEditors: Please set LastEditors
  */
 // 路由模块
@@ -265,7 +265,8 @@ export const asyncRouterMap = [
           ),
         children: [...project.check, project.undertake]
       },
-      ...project.detail
+      ...project.detail,
+      ...team.detail
     ]
   },
   // 发布项目

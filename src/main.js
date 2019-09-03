@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-09-01 10:12:15
+ * @LastEditors: Please set LastEditors
+ */
 // 入口文件
 import Vue from "vue";
 import App from "./App";
@@ -44,19 +51,26 @@ router.beforeEach((to, from, next) => {
         store
           .dispatch("getUserInfor")
           .then(role => {
-            store.dispatch("GenerateRoutes", { role }).then(data => {
-              // 生成可访问的路由表
-              router.addRoutes(data); // 动态添加可访问路由表
-              // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
-              next({ ...to, replace: true });
-            });
+            store
+              .dispatch("GenerateRoutes", { role })
+              .then(data => {
+                // 生成可访问的路由表
+                router.addRoutes(data); // 动态添加可访问路由表
+                // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+
+                next({ ...to, replace: true });
+              })
+              .catch(err => {});
           })
           .catch(err => {
             delRole();
-            store.dispatch("Logout").then(() => {
-              //登录成功之后重定向到登录页
-              next("/login");
-            });
+            store
+              .dispatch("Logout")
+              .then(() => {
+                //登录成功之后重定向到登录页
+                next("/login");
+              })
+              .catch(err => {});
           });
       } else {
         //当有用户权限的时候，说明所有可访问路由已生成 如访问没权限的全面会自动进入404页面

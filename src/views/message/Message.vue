@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-08-14 06:58:37
+ * @LastEditTime: 2019-09-01 10:03:49
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -77,7 +77,7 @@ export default {
       }
     },
     change(messageId) {
-      this.$store.dispatch("changeId", messageId).then(() => this.loadData());
+      this.$store.dispatch("changeId", messageId).then(() => this.loadData()).catch(err => this.$message.error("数据获取失败"));
     },
     //根据信息id获取，本来应该根据身份id获取
     loadData() {

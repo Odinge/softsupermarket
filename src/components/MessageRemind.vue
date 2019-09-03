@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-09-01 10:01:55
+ * @LastEditors: Please set LastEditors
+ -->
 <template></template>
 
 <script>
@@ -38,6 +45,7 @@ export default {
   created() {
     //进入页面弹出消息提醒，
     // this.getData();
+
   },
 
   computed: {
@@ -55,7 +63,6 @@ export default {
       return this.$store.state.userId;
     }
   },
-  components: {}
 };
 </script>
 <!--scoped 样式仅仅在当前组件使用-->

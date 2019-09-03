@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-20 22:21:23
- * @LastEditTime: 2019-08-28 17:18:34
+ * @LastEditTime: 2019-09-01 10:13:06
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -88,6 +88,7 @@ export default {
       this.$store.dispatch("setRole", this.roleId).then(res => {
         this.$router.push({ path: "/" }); //登录成功之后重定向到首页
         this.$store.commit("SET_PAGE_ENTER_STATE", true);
+        // this.btnLoading = false;
       }).catch(err => {
         this.$message.error(err);
         this.btnLoading = false;
