@@ -207,6 +207,7 @@ export default {
               self.loading = false
               self.$emit('on-ready')
               editor.setContent(self.value);
+              self.$emit('editor',editor); //抛出editor 让组件共享editor指令，
             }
           )
           // 抛出 'input' 事件钩子，同步value数据

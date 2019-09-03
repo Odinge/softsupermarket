@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-08-30 19:13:32
+ * @LastEditTime: 2019-09-03 20:44:10
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -32,7 +32,7 @@
 
         <el-tag class="state-tag" :type="stateColorTxt(delayState)" v-if="delayState">延期申请状态：{{delayState | filterStateTxt}}</el-tag>
 
-        <template v-if="permission($roles.team) && isRun && !isLoading && (achievementState || active)">
+        <template v-if="permission($roles.team) && isRun && !isLoading ">
           <el-button v-if="delayState == '未审核'" round class="btn-delay" size="medium" @click="cancelDelay">取消延期</el-button>
           <el-button v-else round class="btn-delay" type="warning" size="medium" @click="openDelay">延期</el-button>
         </template>

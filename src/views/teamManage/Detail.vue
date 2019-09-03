@@ -39,7 +39,18 @@
         </div>
       </el-collapse-item>
     </el-collapse>
-
+    <el-collapse>
+      <el-collapse-item title="作品" name="1">
+        <ul>
+          <li v-for="(item,index) of works" class="work">
+            <span class="el-icon-close delete" @click="deleteWork(item.id)"> </span>
+            <div class="workTitle">{{item.title}}</div>
+            <img :src="item.filename" alt="item.title">
+            <p :title="item.represent">{{item.represent}}</p>
+          </li>
+        </ul>
+      </el-collapse-item>
+    </el-collapse>
     <div>
       <span>团队分数：</span>
       <span>{{this.detail_info[0].teamScore}}</span>
@@ -55,6 +66,7 @@
   </div>
 </template>
 <script>
+  import { getTeamWork} from "@/api/team";
   export default {
     props:['detail_info'],
     data(){
@@ -67,15 +79,29 @@
         return value===''?'~':value;
       }
     },
+    methods:{
+      handleGetWork(){
+        getTeamWork().then(res=>{
+          if(res.status===0){
+            this.works=res.data;
+            console.log(this.works)
+          }
+          else{
+            this.$message.error('获取团队作品失败'+res.msg);
+          }
+        }).catch(err=>{
+          console.log(err);
+          this.$message.error('糟糕,获取团队作品失败');
+        })
+      }
+    },
+    created(){
+     this.handleGetWork();
+    },
     mounted:{
 
     },
 
-    methods:{
-      xx(){
-        console.dir(this.detail_info)
-      }
-    }
   }
 </script>
 <style scoped>

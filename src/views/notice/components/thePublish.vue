@@ -2,7 +2,12 @@
   <div class="editor">
     <div class="container">
       <input class="title" type="text" placeholder="请输入公告标题" v-model="title">
-      <mceeditor v-model="value" :url="'http://www.ghjhhyuyuy.xin:8080/v1/nonpub/examine/uploadAnnouncementImg'" @on-upload-success="onEditorUploadSuccess"></mceeditor>
+      <mceeditor
+        v-model="value"
+        :url="'http://www.ghjhhyuyuy.xin:8080/v1/nonpub/examine/uploadAnnouncementImg'"
+        @on-upload-success="onEditorUploadSuccess"
+        @editor="getEditor"
+      ></mceeditor>
       <div class="save" @click="publishHandler">发布</div>
     </div>
   </div>
@@ -22,6 +27,7 @@ export default {
     return {
       title: "",
       value: '',
+      editor:'',
     };
   },
 
@@ -29,6 +35,9 @@ export default {
 
   },
   methods: {
+    getEditor(editor) {
+      this.editor = editor
+    },
     onEditorUploadSuccess(arr) {
       let res = arr[0];
       let success = arr[1];
@@ -64,6 +73,8 @@ export default {
             this.$message.success("消息发布成功。");
             this.value = '';
             this.title = '';
+            console.log(this.editor)
+            this.editor.setContent('');
           } else {
             this.$message.error("糟糕，消息发布失败。");
             console.log(res)

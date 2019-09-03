@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-09-03 20:15:22
+ * @LastEditTime: 2019-09-03 20:34:16
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -37,6 +37,7 @@ import eventBus from "../../utils/eventBus.js";
 import { getMyTeam } from "@/api/team";
 import { mapState } from "vuex";
 export default {
+  inject: ['reload'], // 刷新
   data() {
     return {};
   },
@@ -59,7 +60,8 @@ export default {
         this.$store.commit('SET_TEAMID', chooseTeam);
         // console.log(this.$route.fullPath);
         // this.$router.push("/");
-        this.$router.go(0);
+        // this.$router.go(0);
+        this.reload()
 
       }
     },

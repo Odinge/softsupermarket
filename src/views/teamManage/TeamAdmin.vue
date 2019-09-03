@@ -185,20 +185,12 @@ export default {
   //   }
   // },
   created() {
-    // if(this.view){  /*记录用户上一页所在位置*/
-    //   this.component=this.view;
-    // }else{
-    //   this.component='allTeam';
-    // }
-    // this.component=location.hash.slice(1);
-    // console.log(location.hash.slice(1))
-    // this.activeName=location.hash.slice(1);
-    // console.log(location.hash.slice(1));
     this.getMsgNumber();
   }
 }
 </script>
 <style scoped>
+
 .team-manage {
   background-color: #eee;
   padding: 20px;

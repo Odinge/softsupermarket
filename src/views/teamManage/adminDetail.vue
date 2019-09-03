@@ -41,11 +41,15 @@
     </el-collapse>
 
     <el-collapse>
-      <el-collapse-item title="团队作品" name="1">
-        <div>作品1</div>
-        <div>作品2</div>
+      <el-collapse-item title="作品" name="1">
+        <ul>
+          <li v-for="(item,index) of works" class="work">
+            <div class="workTitle">{{item.title}}</div>
+            <img :src="item.filename" alt="item.title">
+            <p :title="item.represent">{{item.represent}}</p>
+          </li>
+        </ul>
       </el-collapse-item>
-
     </el-collapse>
     <div>
       <span>团队分数：</span>
@@ -62,11 +66,12 @@
   </div>
 </template>
 <script>
-import { getTeam } from "@/api/team";
+import { getTeam,getTeamWork } from "@/api/team";
 export default {
   data() {
     return {
-      detail_info: ''
+      detail_info: '',
+      works:[]
     }
   },
   filters: {
@@ -75,6 +80,19 @@ export default {
     }
   },
   methods: {
+    handleGetWork(){
+      getTeamWork().then(res=>{
+        if(res.status===0){
+          this.works=res.data;
+        }
+        else{
+          this.$message.error('获取团队作品失败'+res.msg);
+        }
+      }).catch(err=>{
+        console.log(err);
+        this.$message.error('糟糕,获取团队作品失败');
+      })
+    },
     getData() {
       getTeam(this.teamId).then((res) => {
         if (res.status === 0) {
@@ -108,10 +126,44 @@ export default {
   },
   created() {
     this.getData();
+    this.handleGetWork();
   }
 }
 </script>
 <style scoped>
+  .work{
+    width:260px;
+    overflow: auto;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    min-height: 200px;
+    max-height: 600px;
+    margin-right: 120px;
+    margin-top: 20px;
+    display: inline-block;
+  }
+  .work img{
+    width: 250px;
+    height: 250px;
+    margin: 5px 0;
+  }
+  .workTitle{
+    height: 20px;
+    white-space: nowrap;
+    text-align: center;
+    margin: 0;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .work p{
+    padding: 0 10px;
+    min-height: 10px;
+    max-height: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 .detail {
   overflow: auto;
   width: 100%;

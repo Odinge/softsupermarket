@@ -1,10 +1,35 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-09-03 20:33:47
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
-  <router-view></router-view>
+  <router-view v-if="isRouterAlive"></router-view>
 </template>
 
 <script>
 export default {
-  name: "App"
+  name: "App",
+  provide() {
+    return {
+      reload: this.reload
+    }
+  },
+  data() {
+    return {
+      isRouterAlive: true
+    }
+  },
+  methods: {
+    reload() {
+      this.isRouterAlive = false
+      this.$nextTick(function () {
+        this.isRouterAlive = true
+      })
+    }
+  }
 };
 </script>
 

@@ -77,3 +77,15 @@ export const importTeam = file =>
 //从excel导入黑名单（方便）
 export const importBlack = file =>
   axios.post("/v1/nonpub/examine/addBlackListByExcel", file);
+
+//上传作品
+export const uploadProduct=(params)=>
+  axios.post('/v1/nonpub/supervise/commitTeamWorksWithImgs',params);
+
+//获取团队作品
+export const getTeamWork=()=>
+  axios.get('/v1/nonpub/supervise/displayTeamwork');
+
+//删除团队作品
+export const deleteTeamWork=(teamworkId)=>
+  axios.get('/v1/nonpub/supervise/deleteTeamwork',{params:{teamworkId}});
