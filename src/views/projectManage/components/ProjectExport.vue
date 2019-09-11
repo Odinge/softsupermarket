@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-22 19:09:07
+ * @LastEditTime: 2019-09-05 14:50:32
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <!-- 延期对话框 -->
   <el-dialog center width="440px" title="导入已完成项目" :visible.sync="check" :before-close="handleClose" custom-class="box">
@@ -19,10 +26,11 @@ export default {
   },
   computed: {
     uploadUrl() {
-      return "http://www.ghjhhyuyuy.xin:8080/v1/nonpub/examine/addFinishedProjectByExcel";
+      return "/v1/nonpub/examine/addFinishedProjectByExcel";
+      // return "/v1/nonpub/examine/addFinishedProjectByExcel";
     },
     tempUrl() {
-      return "http://www.ghjhhyuyuy.xin:8080/v1/nonpub/examine/getProjectExcelModel";
+      return "/v1/nonpub/examine/getProjectExcelModel";
     }
   },
   methods: {
@@ -35,7 +43,7 @@ export default {
       this.close();
     },
     // 文件提交
-    submitUpload(...arg) {
+    submitUpload() {
       this.$confirm(`确认导入文件？`, "导入", {
         type: "warning"
       })

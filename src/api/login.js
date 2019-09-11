@@ -2,10 +2,11 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-09-03 20:53:43
+ * @LastEditTime: 2019-09-06 20:25:43
  * @LastEditors: Please set LastEditors
  */
 import axios from "axios";
+import { MessageBox } from "element-ui";
 import {
   getToken,
   setCookie,
@@ -20,7 +21,7 @@ import {
 // 设置默认服务器地址
 axios.defaults.withCredentials = true; //让ajax携带cookie
 
-// setCookie("JSESSIONID", "C3B80FDAC0CB6E1F000019A25100D0A6", { path: "/" });
+// setCookie("JSESSIONID", "32A352158FCFB847DB94AA8054E90A0B", { path: "/" });
 
 // axios.defaults.baseURL = baseURL;
 
@@ -39,7 +40,41 @@ axios.interceptors.request.use(
 );
 
 // 在这里统一的拦截结果，把结果处理成res.data,相应拦截
-axios.interceptors.response.use(res => res.data);
+axios.interceptors.response.use(
+  res => {
+    const { data } = res;
+    if (typeof data === "string" && data.includes("authserver")) {
+      MessageBox.alert("请重新登录！！！", "权限过期", {
+        confirmButtonText: "确定",
+        showClose: false,
+        center: true,
+        roundButton: true,
+        type: "error",
+        callback: action => {
+          // location.reload(); // 刷新浏览器
+          window.location.href = "http://www.ghjhhyuyuy.xin:8080/";
+        }
+      });
+      data.status = 0;
+      data.data = [];
+    }
+
+    switch (data.status) {
+      case undefined:
+      case 0:
+      case 1:
+        return data;
+      default:
+        break;
+    }
+    throw res;
+  },
+  err => {
+    console.log(err);
+
+    return Promise.reject(err);
+  }
+);
 
 // 根据id获取信息
 export const getMessageById = messageId =>
@@ -80,3 +115,6 @@ export const getRole = userId =>
 // 改变角色
 export const changeRole = data =>
   axios.post("/v1/nonpub/examine/changeRole", data);
+
+// 退出登录
+export const loginout = () => axios.post("/v1/pub/loginout");

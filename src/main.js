@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-09-01 10:12:15
+ * @LastEditTime: 2019-09-06 20:12:47
  * @LastEditors: Please set LastEditors
  */
 // 入口文件
@@ -12,8 +12,9 @@ import router from "./router";
 import store from "./store";
 // 重置css文件
 import "../static/css/reset.css";
+
 // 图标文件
-import "@/assets/iconfont/iconfont.css";
+import "./assets/iconfont/iconfont.css";
 import "./assets/iconfont1/iconfont.css";
 // 引入UI组件
 import ElementUI from "element-ui";
@@ -22,6 +23,8 @@ import "element-ui/lib/theme-chalk/index.css";
 // vue全局属性方法
 import "./global";
 import { delRole } from "./utils/auth";
+
+// import "../static/tinymce/tinymce.min.js";
 
 import qs from "qs";
 Vue.prototype.qs = qs;

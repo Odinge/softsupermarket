@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-09-01 10:05:18
+ * @LastEditTime: 2019-09-06 16:29:12
  * @LastEditors: Please set LastEditors
  */
 // vue全局配置
@@ -17,20 +17,20 @@ Vue.prototype.$baseUrl = "http://www.ghjhhyuyuy.xin:8080";
 Vue.prototype.ROLES = ["admin", "developer", "demander"];
 Vue.prototype.$roles = $roles;
 
-// Vue.prototype.getMsgNum = async function() {
-//   try {
-//     const msgNum = await this.$store.dispatch("initMsgNum");
-//     return msgNum;
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
-Vue.prototype.getMsgNum = function() {
-  this.$store
-    .dispatch("initMsgNum")
-    .then(res => {})
-    .catch(err => console.error(err));
+Vue.prototype.getMsgNum = async function() {
+  try {
+    const msgNum = await this.$store.dispatch("initMsgNum");
+    return msgNum;
+  } catch (err) {
+    console.error(err);
+  }
 };
+// Vue.prototype.getMsgNum = function() {
+//   this.$store
+//     .dispatch("initMsgNum")
+//     .then(res => {})
+//     .catch(err => console.error(err));
+// };
 
 Vue.prototype.tags = [
   { text: "未审核", value: "1" },

@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-06-25 16:07:31
+ * @LastEditTime: 2019-09-06 20:07:44
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div>
     <textarea :id="Id"></textarea>
@@ -207,7 +214,7 @@ export default {
               self.loading = false
               self.$emit('on-ready')
               editor.setContent(self.value);
-              self.$emit('editor',editor); //抛出editor 让组件共享editor指令，
+              self.$emit('editor', editor); //抛出editor 让组件共享editor指令，
             }
           )
           // 抛出 'input' 事件钩子，同步value数据

@@ -2,12 +2,12 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-08-30 19:27:29
+ * @LastEditTime: 2019-09-05 14:56:51
  * @LastEditors: Please set LastEditors
  -->
 <template>
   <div class="finish">
-    <div class="expbtn">
+    <div class="expbtn" v-if="permission(...$roles.manager)">
       <el-button circle type="success" icon="el-icon-upload2" size="small" title="导入项目" @click="showUpload = true" class="tag"></el-button>
       <a :href="exportUrl" class="tag">
         <el-button circle type="warning" icon="el-icon-download" size="small" title="导出项目"></el-button>
@@ -90,7 +90,7 @@ export default {
       return this.dataSrc;
     },
     exportUrl() {
-      return "http://www.ghjhhyuyuy.xin:8080/v1/nonpub/supervise/exportProjectCompleted";
+      return "/v1/nonpub/supervise/exportProjectCompleted";
     },
   },
   mounted() {

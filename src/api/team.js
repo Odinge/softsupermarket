@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:18:23
+ * @LastEditTime: 2019-09-05 14:55:06
+ * @LastEditors: Please set LastEditors
+ */
 import axios from "axios";
 
 //根据userId获取team信息
@@ -79,13 +86,13 @@ export const importBlack = file =>
   axios.post("/v1/nonpub/examine/addBlackListByExcel", file);
 
 //上传作品
-export const uploadProduct=(params)=>
-  axios.post('/v1/nonpub/supervise/commitTeamWorksWithImgs',params);
+export const uploadProduct = params =>
+  axios.post("/v1/nonpub/supervise/commitTeamWorksWithImgs", params);
 
 //获取团队作品
-export const getTeamWork=()=>
-  axios.get('/v1/nonpub/supervise/displayTeamwork');
+export const getTeamWork = () =>
+  axios.get("/v1/nonpub/supervise/displayTeamwork");
 
 //删除团队作品
-export const deleteTeamWork=(teamworkId)=>
-  axios.get('/v1/nonpub/supervise/deleteTeamwork',{params:{teamworkId}});
+export const deleteTeamWork = teamworkId =>
+  axios.get("/v1/nonpub/supervise/deleteTeamwork", { params: { teamworkId } });

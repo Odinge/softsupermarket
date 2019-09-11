@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-09-01 09:55:47
+ * @LastEditTime: 2019-09-06 19:21:37
  * @LastEditors: Please set LastEditors
  */
 // 通过commit间接更新state，异步回调ajax
@@ -25,7 +25,8 @@ import {
   getUserInfor,
   getStudentIdByRequest,
   getUserId,
-  getRole
+  getRole,
+  loginout
 } from "../api/login.js";
 import {
   getMessageById,
@@ -166,6 +167,12 @@ export default {
     await sessionStorage.removeItem("teams");
     await sessionStorage.removeItem("teamId");
     // 刷新浏览器
+    location.reload();
+  },
+  async loginout({ dispatch }) {
+    // 退出清除缓存和登录
+    await loginout();
+    // await dispatch("Logout");
     location.reload();
   },
   // 获取信息

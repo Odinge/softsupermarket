@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-04-19 14:17:03
+ * @LastEditTime: 2019-09-05 14:43:54
+ * @LastEditors: Please set LastEditors
+ */
 "use strict";
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.
@@ -11,7 +18,7 @@ module.exports = {
     assetsPublicPath: "/",
     proxyTable: {
       "/v1": {
-        target: "http://www.ghjhhyuyuy.xin:8080",
+        target: "http://www.ghjhhyuyuy.xin:8082",
         changeOrigin: true
       }
     },

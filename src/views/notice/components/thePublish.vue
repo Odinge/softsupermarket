@@ -1,24 +1,25 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-06-05 12:50:31
+ * @LastEditTime: 2019-09-06 20:23:21
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div class="editor">
     <div class="container">
       <input class="title" type="text" placeholder="请输入公告标题" v-model="title">
-      <mceeditor
-        v-model="value"
-        :url="'http://www.ghjhhyuyuy.xin:8080/v1/nonpub/examine/uploadAnnouncementImg'"
-        @on-upload-success="onEditorUploadSuccess"
-        @editor="getEditor"
-      ></mceeditor>
+      <mceeditor v-model="value" url="/v1/nonpub/examine/uploadAnnouncementImg" @on-upload-success="onEditorUploadSuccess" @editor="getEditor"></mceeditor>
       <div class="save" @click="publishHandler">发布</div>
     </div>
   </div>
 </template>
 <script>
-import axios from 'axios'
-import mceeditor from '@/views/notice/components/Editor'
-window.tinymce.baseURL = '/static/tinymce'
-window.tinymce.suffix = '.min'
-import '@/assets/tinymce/zh_CN.js'
-import { publish, noticeList, uploadImg } from "../../../api/notice";
+import mceeditor from "./Editor";
+window.tinymce.baseURL = '/static/tinymce';
+window.tinymce.suffix = '.min';
+import '../../../../static/tinymce/zh_CN.js';
+import { publish } from "../../../api/notice";
 export default {
   components: {
     mceeditor
@@ -27,7 +28,7 @@ export default {
     return {
       title: "",
       value: '',
-      editor:'',
+      editor: '',
     };
   },
 

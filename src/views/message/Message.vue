@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-09-03 20:30:21
+ * @LastEditTime: 2019-09-05 22:28:07
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -43,6 +43,9 @@
           </template>
         </el-table-column>
         <el-table-column label="操作">
+          <template slot="header" slot-scope="scope">
+            <el-button size="mini" type="text" icon="el-icon-notebook-1" @click="readAll" :disabled="!msgLen">一键阅读</el-button>
+          </template>
           <template slot-scope="scope">
             <el-button size="mini" v-show="scope.row.state=='未查看'" @click="change(scope.row.messageId)">已读</el-button>
           </template>
@@ -79,6 +82,7 @@ export default {
     change(messageId) {
       this.$store.dispatch("changeId", messageId).then(() => this.loadData()).catch(err => this.$message.error("数据获取失败"));
     },
+
     //根据信息id获取，本来应该根据身份id获取
     loadData() {
       this.$store
@@ -94,6 +98,11 @@ export default {
           this.$message.error("数据获取失败");
           this.isLoading = false;
         });
+    },
+    readAll() {
+      this.noReadList.forEach(message => {
+        this.change(message.messageId);
+      });
     }
   },
   created() {
@@ -122,10 +131,12 @@ export default {
       return this.$store.state.pageEnterState;
     },
     msgLen() {
-      let newarry = this.tableData.filter(
+      return this.noReadList.length;
+    },
+    noReadList() {
+      return this.tableData.filter(
         states => states.state == "未查看"
       );
-      return newarry.length;
     }
   },
   data() {

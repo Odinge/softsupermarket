@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-06-05 12:50:31
+ * @LastEditTime: 2019-09-05 14:54:46
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div class='team-manage'>
     <el-tabs v-model="activeName" @tab-click="paneClick">
@@ -16,10 +23,10 @@
           导入模板<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <a href="http://www.ghjhhyuyuy.xin:8080/v1/nonpub/examine/getTeamExcelModel">
+          <a href="/v1/nonpub/examine/getTeamExcelModel">
             <el-dropdown-item command="all">全部团队</el-dropdown-item>
           </a>
-          <a href="http://www.ghjhhyuyuy.xin:8080/v1/nonpub/examine/getBlackTeamExcelModel">
+          <a href="/v1/nonpub/examine/getBlackTeamExcelModel">
             <el-dropdown-item command="black">黑名单</el-dropdown-item>
           </a>
         </el-dropdown-menu>
@@ -40,17 +47,17 @@
       <i class="el-icon-upload2"></i>
     </div>
     <input type="file" ref="file" class="file" @change="checkFile($event)">
-    <a href="http://www.ghjhhyuyuy.xin:8080/v1/nonpub/examine/getAllTeamsToExcel">
+    <a href="/v1/nonpub/examine/getAllTeamsToExcel">
       <div class="out">
         <el-dropdown>
           <span class="el-dropdown-link">
             导出团队<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <a href="http://www.ghjhhyuyuy.xin:8080/v1/nonpub/examine/getAllTeamsToExcel">
+            <a href="/v1/nonpub/examine/getAllTeamsToExcel">
               <el-dropdown-item command="all">导出全部团队</el-dropdown-item>
             </a>
-            <a href="http://www.ghjhhyuyuy.xin:8080/v1/nonpub/supervise/exportBlackListByExcel">
+            <a href="/v1/nonpub/supervise/exportBlackListByExcel">
               <el-dropdown-item command="black">导出黑名单</el-dropdown-item>
             </a>
           </el-dropdown-menu>
@@ -190,7 +197,6 @@ export default {
 }
 </script>
 <style scoped>
-
 .team-manage {
   background-color: #eee;
   padding: 20px;

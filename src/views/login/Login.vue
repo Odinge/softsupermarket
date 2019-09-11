@@ -2,12 +2,13 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-20 22:21:23
- * @LastEditTime: 2019-09-01 10:13:06
+ * @LastEditTime: 2019-09-05 15:35:06
  * @LastEditors: Please set LastEditors
  -->
 <template>
   <div id="login" v-loading="isLoading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.5)">
     <el-button class="back" type="text" icon="el-icon-back" @click="back">返回主页</el-button>
+    <el-button class="exit" type="text" @click="exit">登出系统</el-button>
     <div class="content" v-if="!isLoading && !isErr">
       <div class="head">
         <i class="iconfont icon-denglu"></i>
@@ -110,6 +111,13 @@ export default {
       location.reload();   // 刷新浏览器
       window.location.href = "http://www.ghjhhyuyuy.xin:8080/";
     },
+    exit() {
+      this.$store.dispatch("loginout").then(() => {
+        this.toLogin();
+      }).catch(err => {
+        this.toLogin();
+      });
+    }
   },
   computed: {
     userId() {
@@ -171,6 +179,14 @@ export default {
   background-color: rgba(0, 204, 255, 0.808);
 }
 .back {
+  padding: 30px;
+  color: rgb(29, 10, 10);
+  font-size: 20px;
+  text-shadow: 0 0 2px #ccc;
+}
+.exit {
+  position: absolute;
+  right: 0;
   padding: 30px;
   color: rgb(29, 10, 10);
   font-size: 20px;
