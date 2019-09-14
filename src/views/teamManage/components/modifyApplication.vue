@@ -41,10 +41,10 @@ export default {
       let that = this;
       let state = '';
       if (handle === 'agree') {
-        state = '已审核';
+        state = '2';
       }
       else {
-        state = '条件不满足'
+        state = '3'
       }
       agreeModify(val.modificationId, state).then(function (res) { //同意或者拒绝团队修改申请
         if (res.status === 0) {

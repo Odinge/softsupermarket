@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-09-05 14:55:06
+ * @LastEditTime: 2019-09-14 21:01:54
  * @LastEditors: Please set LastEditors
  */
 import axios from "axios";
@@ -90,8 +90,10 @@ export const uploadProduct = params =>
   axios.post("/v1/nonpub/supervise/commitTeamWorksWithImgs", params);
 
 //获取团队作品
-export const getTeamWork = () =>
-  axios.get("/v1/nonpub/supervise/displayTeamwork");
+export const getTeamWork = teamId =>
+  axios.get("/v1/nonpub/publish/displayTeamworkByTeamId", {
+    params: { teamId }
+  });
 
 //删除团队作品
 export const deleteTeamWork = teamworkId =>

@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-06-05 12:50:31
+ * @LastEditTime: 2019-06-05 12:50:31
+ * @LastEditors: your name
+ -->
 <template>
   <div class='detail' v-if="detail_info">
     <i class="el-icon-back return" @click="goBack" title="返回上一页">返回</i>
@@ -24,6 +31,7 @@
             <div>学院：<span class="content">{{this.detail_info.captainInformation[0].department|formData}}</span> </div>
             <div>年级：<span class="content">{{this.detail_info.captainInformation[0].grade|formData}}</span> </div>
             <div>性别：<span class="content">{{this.detail_info.captainInformation[0].sex|formData}}</span> </div>
+            <div>电话：<span class="content">{{this.detail_info.captainInformation[0].telNumber|formData}}</span> </div>
             <div>简介：<span class="content shortinfor" :title="this.detail_info.captainInformation[0].description">{{this.detail_info.captainInformation[0].description|formData}}</span> </div>
           </div>
           <div class="info" v-for="(data,key) in detail_info.memberInformation" :key="key">
@@ -33,6 +41,7 @@
             <div>学院：<span class="content">{{data.department|formData}}</span> </div>
             <div>年级：<span class="content">{{data.grade|formData}}</span> </div>
             <div>性别：<span class="content">{{data.sex|formData}}</span> </div>
+            <div>电话：<span class="content">{{data.telNumber|formData}}</span> </div>
             <div><span class="short">简介：</span><span class="content shortinfor" :title="data.description">{{data.description|formData}}</span> </div>
           </div>
           <div style="clear:both"></div>
@@ -66,12 +75,12 @@
   </div>
 </template>
 <script>
-import { getTeam,getTeamWork } from "@/api/team";
+import { getTeam, getTeamWork } from "@/api/team";
 export default {
   data() {
     return {
       detail_info: '',
-      works:[]
+      works: []
     }
   },
   filters: {
@@ -80,15 +89,15 @@ export default {
     }
   },
   methods: {
-    handleGetWork(){
-      getTeamWork().then(res=>{
-        if(res.status===0){
-          this.works=res.data;
+    handleGetWork() {
+      getTeamWork().then(res => {
+        if (res.status === 0) {
+          this.works = res.data;
         }
-        else{
-          this.$message.error('获取团队作品失败'+res.msg);
+        else {
+          this.$message.error('获取团队作品失败' + res.msg);
         }
-      }).catch(err=>{
+      }).catch(err => {
         console.log(err);
         this.$message.error('糟糕,获取团队作品失败');
       })
@@ -131,39 +140,39 @@ export default {
 }
 </script>
 <style scoped>
-  .work{
-    width:260px;
-    overflow: auto;
-    box-sizing: border-box;
-    border: 1px solid #ddd;
-    min-height: 200px;
-    max-height: 600px;
-    margin-right: 120px;
-    margin-top: 20px;
-    display: inline-block;
-  }
-  .work img{
-    width: 250px;
-    height: 250px;
-    margin: 5px 0;
-  }
-  .workTitle{
-    height: 20px;
-    white-space: nowrap;
-    text-align: center;
-    margin: 0;
-    font-weight: bold;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .work p{
-    padding: 0 10px;
-    min-height: 10px;
-    max-height: 100px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+.work {
+  width: 260px;
+  overflow: auto;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  min-height: 200px;
+  max-height: 600px;
+  margin-right: 120px;
+  margin-top: 20px;
+  display: inline-block;
+}
+.work img {
+  width: 250px;
+  height: 250px;
+  margin: 5px 0;
+}
+.workTitle {
+  height: 20px;
+  white-space: nowrap;
+  text-align: center;
+  margin: 0;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.work p {
+  padding: 0 10px;
+  min-height: 10px;
+  max-height: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .detail {
   overflow: auto;
   width: 100%;

@@ -254,7 +254,7 @@
           deleteTeamWork(id).then(function (res) {
             if(res.status===0){
               that.success('删除作品成功!');
-              that.handleGetWork();
+              that.handleGetWork(that.teamId);
             }
             else{
               console.log(res)
@@ -315,7 +315,7 @@
           uploadProduct(formData).then(res=>{
             if(res.status===0){
               this.$message.success('上传图片成功');
-              this.handleGetWork();
+              this.handleGetWork(this.teamId);
               this.fileName='';
               this.productName='';
               this.productDescription='';
@@ -516,14 +516,14 @@
           this.studentId.push(tempId);
         }
       },
-      handleGetWork(){
-        getTeamWork().then(res=>{
+      handleGetWork(teamId){
+        getTeamWork(teamId).then(res=>{
           if(res.status===0){
             this.works=res.data;
             console.log(this.works)
           }
           else{
-            this.$message.error('获取团队作品失败'+res.msg);
+            this.$message.error('获取团队作品失败'+(res.msg||''));
           }
         }).catch(err=>{
           console.log(err);
@@ -551,7 +551,7 @@
       }
     },
     created(){
-      this.handleGetWork();
+      this.handleGetWork(this.teamId);
       },
     mounted(){ /*监听团队详细信息，更新时更新学号列表*/
       this.getStudentId();

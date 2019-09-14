@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-09-06 20:25:43
+ * @LastEditTime: 2019-09-14 21:02:05
  * @LastEditors: Please set LastEditors
  */
 import axios from "axios";
@@ -21,7 +21,7 @@ import {
 // 设置默认服务器地址
 axios.defaults.withCredentials = true; //让ajax携带cookie
 
-// setCookie("JSESSIONID", "32A352158FCFB847DB94AA8054E90A0B", { path: "/" });
+// setCookie("JSESSIONID", "4FBFF7EF1923DBC5DCFD86363A599700", { path: "/" });
 
 // axios.defaults.baseURL = baseURL;
 
@@ -67,7 +67,7 @@ axios.interceptors.response.use(
       default:
         break;
     }
-    throw res;
+    throw data;
   },
   err => {
     console.log(err);

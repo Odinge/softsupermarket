@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-06-05 12:50:31
- * @LastEditTime: 2019-08-13 19:01:00
+ * @LastEditTime: 2019-09-14 20:57:30
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -178,13 +178,13 @@ export default {
             }
           }
           else {
-            that.fail('获取数据失败！');
+            that.fail(res.msg);
             that.tableData = [];
             that.loading = false;
             that.total = 0;
           }
-        }).catch(() => {
-          that.fail('获取数据失败！');
+        }).catch((err) => {
+          that.fail(err.msg || '获取数据失败！');
           that.tableData = [];
           that.loading = false;
           that.total = 0;

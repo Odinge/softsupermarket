@@ -112,6 +112,8 @@ export default {
                 type: 'success',
                 message: '解散团队成功，即将跳转至首页！'
               });
+              window.localStorage.clear();
+              this.$router.push('http://www.ghjhhyuyuy.xin:8081/home')
             }
             else {
               console.log(res);
