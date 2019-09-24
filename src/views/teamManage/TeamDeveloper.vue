@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-06-05 12:50:31
+ * @LastEditTime: 2019-06-05 12:50:31
+ * @LastEditors: your name
+ -->
 <template>
   <div>
     <div class='team-manage'>
@@ -113,7 +120,8 @@ export default {
                 message: '解散团队成功，即将跳转至首页！'
               });
               window.localStorage.clear();
-              this.$router.push('http://www.ghjhhyuyuy.xin:8081/home')
+              // this.$router.push('http://www.ghjhhyuyuy.xin:8081/home')
+              this.$router.push('http://software.sicau.edu.cn:8081/')
             }
             else {
               console.log(res);

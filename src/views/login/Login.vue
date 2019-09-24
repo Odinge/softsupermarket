@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-20 22:21:23
- * @LastEditTime: 2019-09-05 15:35:06
+ * @LastEditTime: 2019-09-24 21:58:58
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -102,14 +102,16 @@ export default {
     },
     // 返回到首页
     back() {
-      window.location.href = "http://www.ghjhhyuyuy.xin:8081/";
+      // window.location.href = "http://www.ghjhhyuyuy.xin:8081/";
+      window.location.href = "http://software.sicau.edu.cn:8081/";
     },
     // 登录无效时退出登录
     toLogin() {
       // delCookie("JSESSIONID");
 
       location.reload();   // 刷新浏览器
-      window.location.href = "http://www.ghjhhyuyuy.xin:8080/";
+      // window.location.href = "http://www.ghjhhyuyuy.xin:8080/";
+      window.location.href = "http://software.sicau.edu.cn:8080/";
     },
     exit() {
       this.$store.dispatch("loginout").then(() => {
