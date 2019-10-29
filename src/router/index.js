@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 15:35:55
- * @LastEditTime: 2019-09-01 09:00:33
+ * @LastEditTime: 2019-10-29 14:24:40
  * @LastEditors: Please set LastEditors
  */
 // 路由模块
@@ -370,5 +370,6 @@ export const asyncRouterMap = [
 
 export default new Router({
   mode: "history",
+  base: "/manage/",
   routes: constantRouterMap
 });

@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:17:03
- * @LastEditTime: 2019-09-24 22:01:37
+ * @LastEditTime: 2019-10-29 14:23:07
  * @LastEditors: Please set LastEditors
  */
 "use strict";
@@ -17,6 +17,7 @@ module.exports = {
     assetsSubDirectory: "static",
     assetsPublicPath: "/",
     proxyTable: {
+      // "http://software.sicau.edu.cn:8082/v1": {
       "/v1": {
         // target: "http://www.ghjhhyuyuy.xin:8082",
         target: "http://software.sicau.edu.cn:8082",
@@ -54,7 +55,8 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, "../dist"),
     assetsSubDirectory: "static",
-    assetsPublicPath: "/",
+    // assetsPublicPath: "/",
+    assetsPublicPath: "/manage/",
 
     /**
      * Source Maps

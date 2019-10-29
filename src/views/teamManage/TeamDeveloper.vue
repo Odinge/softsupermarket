@@ -2,8 +2,8 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-06-05 12:50:31
- * @LastEditTime: 2019-06-05 12:50:31
- * @LastEditors: your name
+ * @LastEditTime: 2019-10-29 15:51:53
+ * @LastEditors: Please set LastEditors
  -->
 <template>
   <div>
@@ -121,7 +121,7 @@ export default {
               });
               window.localStorage.clear();
               // this.$router.push('http://www.ghjhhyuyuy.xin:8081/home')
-              this.$router.push('http://software.sicau.edu.cn:8081/')
+              this.$router.push('http://software.sicau.edu.cn/')
             }
             else {
               console.log(res);
