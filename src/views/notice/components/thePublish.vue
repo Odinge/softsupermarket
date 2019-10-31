@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-06-05 12:50:31
- * @LastEditTime: 2019-09-06 20:23:21
+ * @LastEditTime: 2019-10-31 10:54:44
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -16,9 +16,9 @@
 </template>
 <script>
 import mceeditor from "./Editor";
-window.tinymce.baseURL = '/static/tinymce';
+window.tinymce.baseURL = '/manage/static/tinymce';
 window.tinymce.suffix = '.min';
-import '../../../../static/tinymce/zh_CN.js';
+import "../../../../static/tinymce/zh_CN";
 import { publish } from "../../../api/notice";
 export default {
   components: {

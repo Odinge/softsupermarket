@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-06-25 16:07:31
- * @LastEditTime: 2019-09-06 20:07:44
+ * @LastEditTime: 2019-10-31 10:08:33
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -12,7 +12,8 @@
 </template>
 <script>
 import axios from 'axios'
-import '../../../../static/tinymce/tinymce.min.js'
+// import '../../../../static/tinymce/tinymce.min.js'
+import "../../../../static/tinymce/tinymce.min"
 export default {
   name: 'mceeditor',
   data() {
