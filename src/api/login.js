@@ -2,11 +2,12 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-10-31 10:55:39
+ * @LastEditTime: 2019-11-11 19:48:25
  * @LastEditors: Please set LastEditors
  */
 import axios from "axios";
 import { MessageBox } from "element-ui";
+import { goto } from "./../utils/goto";
 import {
   getToken,
   setCookie,
@@ -19,7 +20,7 @@ import {
 // 设置默认服务器地址
 axios.defaults.withCredentials = true; //让ajax携带cookie
 
-// setCookie("JSESSIONID", "0B26CD8F4CE4B08159D77825D3D8C793", { path: "/" });
+// setCookie("JSESSIONID", "14DD9F2380FFF0C5154E87D82A80FE98", { path: "/" });
 
 // const baseURL = "http://www.ghjhhyuyuy.xin:8080";
 // const baseURL = "http://software.sicau.edu.cn:8082";
@@ -54,8 +55,7 @@ axios.interceptors.response.use(
         callback: action => {
           location.reload(); // 刷新浏览器
           // window.location.href = "http://www.ghjhhyuyuy.xin:8080/";
-
-          window.location.href = "http://software.sicau.edu.cn:8080/";
+          goto("http://software.sicau.edu.cn:8080/");
         }
       });
       data.status = 0;

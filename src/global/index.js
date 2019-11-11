@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-09-06 16:29:12
+ * @LastEditTime: 2019-11-11 19:19:31
  * @LastEditors: Please set LastEditors
  */
 // vue全局配置
@@ -12,7 +12,8 @@ import store from "../store";
 import { $roles } from "../utils/auth";
 
 Vue.prototype.$http = axios;
-Vue.prototype.$baseUrl = "http://www.ghjhhyuyuy.xin:8080";
+// Vue.prototype.$baseUrl = "http://www.ghjhhyuyuy.xin:8080";
+Vue.prototype.$baseUrl = "";
 // 注册一个全局权限判定方法
 Vue.prototype.ROLES = ["admin", "developer", "demander"];
 Vue.prototype.$roles = $roles;

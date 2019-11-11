@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-20 22:21:23
- * @LastEditTime: 2019-10-31 09:57:39
+ * @LastEditTime: 2019-11-11 19:48:03
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -29,6 +29,7 @@
 <script>
 import { delCookie } from "../../utils/auth";
 import { getOnesTeamMessage } from "../../api/login";
+import { goto } from '../../utils/goto';
 export default {
   data() {
     return {
@@ -102,7 +103,8 @@ export default {
     },
     // 返回到首页
     back() {
-      window.location.href = "http://software.sicau.edu.cn/";
+      // window.location.href = "http://software.sicau.edu.cn/";
+      goto("http://software.sicau.edu.cn/");
     },
     // 登录无效时退出登录
     toLogin() {
@@ -115,16 +117,20 @@ export default {
         callback: action => {
           // delCookie("JSESSIONID");
           location.reload(); // 刷新浏览器
-          window.location.href = "http://software.sicau.edu.cn:8080/";
+          // window.location.href = "http://software.sicau.edu.cn:8080/";
+          // goto("http://software.sicau.edu.cn:8080/");
+          goto("http://software.sicau.edu.cn:8080/");
         }
       });
     },
     exit() {
       this.$store.dispatch("loginout").then(() => {
         location.reload(); // 刷新浏览器
-        window.location.href = "http://software.sicau.edu.cn:8080/";
+        // window.location.href = "http://software.sicau.edu.cn:8080/";
+        goto("http://software.sicau.edu.cn:8080/");
       }).catch(err => {
-        window.location.href = "http://software.sicau.edu.cn:8080/";
+        // window.location.href = "http://software.sicau.edu.cn:8080/";
+        goto("http://software.sicau.edu.cn:8080/");
       })
     }
   },

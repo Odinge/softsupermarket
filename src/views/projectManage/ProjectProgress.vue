@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-09-03 20:44:10
+ * @LastEditTime: 2019-11-11 19:21:13
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -62,6 +62,7 @@
               <template v-if="isPrevNode(key)">
                 <!-- 下载按钮 -->
                 <el-button circle class="btn" icon="el-icon-download" @click="download(node)" :loading="node.isSelect" :disabled="(achievementState == 0 || achievementState == 6 && permission(...$roles.manager, $roles.demander)) && isCurRunNode(key)"></el-button>
+                <a :href="getDownloadUrl(node)" v-show="false" ref="download"></a>
                 <!-- 显示节点状态 -->
                 <el-tag class="state-tag" disable-transitions :type="stateColor(achievementState)" v-if="isCurRunNode(key) && permission(...$roles.manager, $roles.demander)">{{achievementState | filterStateSub}}</el-tag>
               </template>
@@ -217,7 +218,7 @@ export default {
       },
       // isRun: false,
       achievementState: 0,
-      achievementId: ""
+      achievementId: "",
     };
   },
   computed: {
@@ -576,7 +577,7 @@ export default {
         .then(res => {
           if (res.status == 0) {
             this.file.length = 0;
-            // 上一次提交是否未审核 
+            // 上一次提交是否未审核
             if (this.achievementState == 1) {
               this.delAchievement(() => {
                 this.$message.success("上传成功");
@@ -599,6 +600,9 @@ export default {
         });
     },
     // =======================下载文件========================
+    getDownloadUrl(node) {
+      return this.$baseUrl + "/v1/nonpub/supervise/downloadAchievement?runId=" + this.runId + "&timeNode=" + node.number;
+    },
     download(Curobj) {
       Curobj.isSelect = true;
       let timeNode = Curobj.number;
@@ -607,13 +611,8 @@ export default {
           if (res.status) {
             this.$message.error("下载失败" + res.msg);
           } else {
+            this.$refs.download[timeNode - 1].click();
             this.$message.success("资源获取成功");
-            window.location.href =
-              this.$baseUrl +
-              "/v1/nonpub/supervise/downloadAchievement?runId=" +
-              this.runId +
-              "&timeNode=" +
-              timeNode;
           }
           Curobj.isSelect = false;
         })

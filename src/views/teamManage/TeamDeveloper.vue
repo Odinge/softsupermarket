@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-06-05 12:50:31
- * @LastEditTime: 2019-10-29 15:51:53
+ * @LastEditTime: 2019-11-11 19:42:25
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -56,6 +56,8 @@
 import devDetail from '@/views/teamManage/devDetail.vue'
 import { getTeam, deleteTeam, getMyTeam } from "@/api/team";
 import { publish, getStudenId, noticeList, getUserId } from "@/api/notice";
+import { goto } from '../../utils/goto';
+
 export default {
   components: {
     devDetail
@@ -121,7 +123,8 @@ export default {
               });
               window.localStorage.clear();
               // this.$router.push('http://www.ghjhhyuyuy.xin:8081/home')
-              this.$router.push('http://software.sicau.edu.cn/')
+              // this.$router.push('http://software.sicau.edu.cn/')
+              goto('http://software.sicau.edu.cn/')
             }
             else {
               console.log(res);
