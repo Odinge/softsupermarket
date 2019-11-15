@@ -122,9 +122,7 @@ export default {
                 message: '解散团队成功，即将跳转至首页！'
               });
               window.localStorage.clear();
-              // this.$router.push('http://www.ghjhhyuyuy.xin:8081/home')
-              // this.$router.push('http://software.sicau.edu.cn/')
-              goto('http://software.sicau.edu.cn/')
+              goto('https://software.sicau.edu.cn/')
             }
             else {
               console.log(res);

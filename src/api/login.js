@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-04-19 14:18:23
- * @LastEditTime: 2019-11-11 19:48:25
+ * @LastEditTime: 2019-11-15 18:03:17
  * @LastEditors: Please set LastEditors
  */
 import axios from "axios";
@@ -55,7 +55,7 @@ axios.interceptors.response.use(
         callback: action => {
           location.reload(); // 刷新浏览器
           // window.location.href = "http://www.ghjhhyuyuy.xin:8080/";
-          goto("http://software.sicau.edu.cn:8080/");
+          goto("https://software.sicau.edu.cn:8080/");
         }
       });
       data.status = 0;
