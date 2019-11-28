@@ -7,8 +7,8 @@
  -->
 <template>
   <div id="login" v-loading="isLoading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.5)">
-    <el-button class="back" type="text" icon="el-icon-back" @click="back">返回主页</el-button>
-    <el-button class="exit" type="text" @click="exit">登出系统</el-button>
+    <el-button class="back" icon="el-icon-back" @click="back"> 返回</el-button>
+    <el-button class="exit" icon="el-icon-switch-button" @click="exit"> 退出</el-button>
     <div class="content" v-if="!isLoading && !isErr">
       <div class="head">
         <i class="iconfont icon-denglu"></i>
@@ -21,7 +21,7 @@
       </div>
       <el-button @click="login" v-enter="this" class="btn" :loading="btnLoading">进入管理页面</el-button>
     </div>
-    <div v-if="!isLoading && isErr" class="content err">
+    <div v-show="!isLoading && isErr && one" class="content err">
       <h1>{{ errMsg }}</h1>
     </div>
   </div>
@@ -38,7 +38,8 @@ export default {
       isErr: false,
       roles: [],
       roleId: "",
-      btnLoading: false
+      btnLoading: false,
+      one: true
     };
   },
   directives: {
@@ -74,6 +75,8 @@ export default {
         this.errMsg = msg;
         // 登录无效时退出登录
         if (code === 1) {
+          // this.isErr = false;
+          this.one = false
           this.toLogin();
         }
       });
@@ -108,20 +111,22 @@ export default {
     },
     // 登录无效时退出登录
     toLogin() {
-      this.$alert("请重新登录！！！", "权限验证失败", {
+      this.$alert("请重新登录！", "权限验证失败", {
         confirmButtonText: "确定",
         showClose: false,
         center: true,
         roundButton: true,
         type: "error",
-        callback: action => {
+        callback: () => {
           // delCookie("JSESSIONID");
-          location.reload(); // 刷新浏览器
+          // location.reload(); // 刷新浏览器
           // window.location.href = "https://software.sicau.edu.cn:8080/";
           // goto("https://software.sicau.edu.cn:8080/");
           goto("https://software.sicau.edu.cn:8080/");
         }
       });
+
+      // goto("https://software.sicau.edu.cn:8080/");
     },
     exit() {
       this.$store.dispatch("loginout").then(() => {
@@ -193,18 +198,18 @@ export default {
   color: #fff;
   background-color: rgba(0, 204, 255, 0.808);
 }
-.back {
-  padding: 30px;
-  color: rgb(29, 10, 10);
-  font-size: 20px;
-  text-shadow: 0 0 2px #ccc;
-}
+.back,
 .exit {
   position: absolute;
+  border-radius: 0 2em 2em 0;
+}
+.back {
+  top: 20px;
+}
+.exit {
   right: 0;
-  padding: 30px;
-  color: rgb(29, 10, 10);
-  font-size: 20px;
-  text-shadow: 0 0 2px #ccc;
+  top: 20px;
+  color: rgb(231, 103, 71);
+  border-radius: 2em 0 0 2em;
 }
 </style>

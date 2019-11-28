@@ -7,13 +7,13 @@
         </span>
       </div>
       <!-- status-icon -->
-      <el-form ref="form" :rules="rules" :model="form" class="form-perm" label-position="top" onsubmit="return false">
+      <el-form ref="form" :rules="rules" :model="form" class="form-perm" label-position="top" @submit.native.prevent="search(form.studentId)">
         <el-form-item prop="studentId">
           <span slot="label">
             权限查询
             <span style="color:#f1d27b">（配置权限先查询）</span>
           </span>
-          <el-input v-model="form.studentId" placeholder="请输入学号" clearable @clear="resetForm" @input="init" @keyup.enter.native="search(form.studentId)">
+          <el-input v-model="form.studentId" placeholder="请输入学号" clearable @clear="resetForm" @input="init">
             <el-button slot="append" icon="el-icon-search" @click="search(form.studentId)" :loading="btnLoading"></el-button>
           </el-input>
         </el-form-item>
@@ -27,7 +27,7 @@
           </template>
         </el-form-item>
         <el-form-item align="center">
-          <el-button type="primary" :loading="btnLoading" round @click="change" :disabled="check || !selectedRole || !isChange">设置权限</el-button>
+          <el-button type="primary" :loading="setLoading" round @click="change" :disabled="check || !selectedRole || !isChange">设置权限</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -58,7 +58,7 @@ export default {
       rules: {
         studentId: [{ required: true, message: "不能为空", trigger: "blur" }]
       },
-      btnLoading: false
+      setLoading: false
     };
   },
   computed: {
@@ -110,37 +110,39 @@ export default {
     },
     // 查询学生的权限信息
     search(studentId) {
-      this.$refs.form.validate(vali => vali);
-      if (studentId) {
-        this.btnLoading = true;
-        // 获取用户信息
-        getUserId(studentId)
-          .then(res => {
-            if (res.status == 0) {
-              let userId = res.data;
-              this.userId = userId;
-              // 获取角色权限信息
-              getRole(studentId)
-                .then(res => {
-                  if (res.status == 0) {
-                    let roles = res.data.map(item => item.identityId);
-                    this.roleTag = roles;
-                    // 拷贝一份原始权限信息,以后用于判断
-                    this.originRole = [...roles];
+      this.$refs.form.validate(valid => {
+        if (!valid) return false;
+        if (studentId) {
+          this.btnLoading = true;
+          // 获取用户信息
+          getUserId(studentId)
+            .then(res => {
+              if (res.status == 0) {
+                let userId = res.data;
+                this.userId = userId;
+                // 获取角色权限信息
+                getRole(studentId)
+                  .then(res => {
+                    if (res.status == 0) {
+                      let roles = res.data.map(item => item.identityId);
+                      this.roleTag = roles;
+                      // 拷贝一份原始权限信息,以后用于判断
+                      this.originRole = [...roles];
+                      this.btnLoading = false;
+                    } else throw res;
+                  })
+                  .catch(err => {
                     this.btnLoading = false;
-                  } else throw res.msg;
-                })
-                .catch(err => {
-                  this.btnLoading = false;
-                  this.$message.warning("用户无任何权限");
-                });
-            } else throw res.msg;
-          })
-          .catch(err => {
-            this.btnLoading = false;
-            this.$message.error(err);
-          });
-      }
+                    this.$message.warning("用户无任何权限");
+                  });
+              } else throw res;
+            })
+            .catch(err => {
+              this.btnLoading = false;
+              this.$message.error(err.msg);
+            });
+        }
+      });
     },
     change() {
       this.$confirm(`是否分配权限给 ${this.form.studentId} ？`, "提示", {
@@ -152,18 +154,18 @@ export default {
             userId: this.userId,
             roleId: this.selectedRole
           };
-          this.btnLoading = true;
+          this.setLoading = true;
           changeRole(formData)
             .then(res => {
               // 项目发布成功。等待管理员审核
               if (res.status == 0) {
                 this.$message.success("设置成功");
-                this.btnLoading = false;
-              } else throw res.msg;
+                this.setLoading = false;
+              } else throw res;
             })
             .catch(err => {
               this.$message.error("权限设置失败")
-              this.btnLoading = false;
+              this.setLoading = false;
             });
         })
         .catch(() => this.$message.info("已取消权限设置"));

@@ -63,9 +63,9 @@ router.beforeEach((to, from, next) => {
 
                 next({ ...to, replace: true });
               })
-              .catch(err => {});
+              .catch(() => {});
           })
-          .catch(err => {
+          .catch(() => {
             delRole();
             store
               .dispatch("Logout")
@@ -73,7 +73,7 @@ router.beforeEach((to, from, next) => {
                 //登录成功之后重定向到登录页
                 next("/login");
               })
-              .catch(err => {});
+              .catch(() => {});
           });
       } else {
         //当有用户权限的时候，说明所有可访问路由已生成 如访问没权限的全面会自动进入404页面

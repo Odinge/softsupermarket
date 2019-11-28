@@ -8,19 +8,19 @@
 import axios from "axios";
 import { MessageBox } from "element-ui";
 import { goto } from "./../utils/goto";
-import {
-  getToken,
-  setCookie,
-  getCookie,
-  delCookie,
-  proxyUrl,
-  roles
-} from "./../utils/auth";
+// import {
+//   getToken,
+//   setCookie,
+//   getCookie,
+//   delCookie,
+//   proxyUrl,
+//   roles
+// } from "./../utils/auth";
 
 // 设置默认服务器地址
 axios.defaults.withCredentials = true; //让ajax携带cookie
 
-// setCookie("JSESSIONID", "14DD9F2380FFF0C5154E87D82A80FE98", { path: "/" });
+// setCookie("JSESSIONID", "B7E9B9D4B025C612C54A5438DDB0523B", { path: "/" });
 
 // const baseURL = "http://www.ghjhhyuyuy.xin:8080";
 // const baseURL = "http://software.sicau.edu.cn:8082";
@@ -46,13 +46,13 @@ axios.interceptors.response.use(
     const { data } = res;
 
     if (typeof data === "string" && data.includes("authserver")) {
-      MessageBox.alert("请重新登录！！！", "权限过期", {
+      MessageBox.alert("请重新登录！", "权限过期", {
         confirmButtonText: "确定",
         showClose: false,
         center: true,
         roundButton: true,
         type: "error",
-        callback: action => {
+        callback: () => {
           location.reload(); // 刷新浏览器
           // window.location.href = "http://www.ghjhhyuyuy.xin:8080/";
           goto("https://software.sicau.edu.cn:8080/");
