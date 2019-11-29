@@ -107,7 +107,8 @@ export default {
     // 返回到首页
     back() {
       // window.location.href = "https://software.sicau.edu.cn/";
-      goto("https://software.sicau.edu.cn/");
+      // goto("https://software.sicau.edu.cn/");
+      goto.home();
     },
     // 登录无效时退出登录
     toLogin() {
@@ -122,7 +123,8 @@ export default {
           // location.reload(); // 刷新浏览器
           // window.location.href = "https://software.sicau.edu.cn:8080/";
           // goto("https://software.sicau.edu.cn:8080/");
-          goto("https://software.sicau.edu.cn:8080/");
+          // goto("https://software.sicau.edu.cn:8080/");
+          goto.login();
         }
       });
 
@@ -132,10 +134,12 @@ export default {
       this.$store.dispatch("loginout").then(() => {
         location.reload(); // 刷新浏览器
         // window.location.href = "https://software.sicau.edu.cn:8080/";
-        goto("https://software.sicau.edu.cn:8080/");
+        // goto("https://software.sicau.edu.cn:8080/");
+        goto.login();
       }).catch(err => {
         // window.location.href = "https://software.sicau.edu.cn:8080/";
-        goto("https://software.sicau.edu.cn:8080/");
+        // goto("https://software.sicau.edu.cn:8080/");
+        goto.login();
       })
     }
   },

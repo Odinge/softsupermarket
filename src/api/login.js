@@ -55,7 +55,8 @@ axios.interceptors.response.use(
         callback: () => {
           location.reload(); // 刷新浏览器
           // window.location.href = "http://www.ghjhhyuyuy.xin:8080/";
-          goto("https://software.sicau.edu.cn:8080/");
+          // goto("https://software.sicau.edu.cn:8080/");
+          goto.login();
         }
       });
       data.status = 0;

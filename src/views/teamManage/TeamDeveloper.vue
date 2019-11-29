@@ -122,7 +122,8 @@ export default {
                 message: '解散团队成功，即将跳转至首页！'
               });
               window.localStorage.clear();
-              goto('https://software.sicau.edu.cn/')
+              // goto('https://software.sicau.edu.cn/')
+              goto.home()
             }
             else {
               console.log(res);

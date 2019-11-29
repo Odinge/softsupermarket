@@ -7,8 +7,13 @@
  * @FilePath: \softsupermarket - v2\src\utils\goto.js
  */
 
+const HOME_URL = "https://software.sicau.edu.cn/";
+const LOGIN_URL = "https://software.sicau.edu.cn:8080/";
+
 export const goto = url => {
   const link = document.createElement("a");
   link.href = url;
   link.click();
 };
+goto.home = () => goto(HOME_URL);
+goto.login = () => goto(LOGIN_URL);
