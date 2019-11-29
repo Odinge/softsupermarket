@@ -8,7 +8,7 @@
  */
 
 const HOME_URL = "https://software.sicau.edu.cn/";
-const LOGIN_URL = "https://software.sicau.edu.cn:8080/";
+const LOGIN_URL = "http://software.sicau.edu.cn:8080/";
 
 export const goto = url => {
   const link = document.createElement("a");
