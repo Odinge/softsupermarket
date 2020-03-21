@@ -20,7 +20,7 @@ import { goto } from "./../utils/goto";
 // 设置默认服务器地址
 axios.defaults.withCredentials = true; //让ajax携带cookie
 
-// setCookie("JSESSIONID", "137D2737E2E2C724B4751FE233C53C01", { path: "/" });
+// setCookie("JSESSIONID", "F6F0DA47E40CFEDF7C55B82F9C5CD7D2", { path: "/" });
 
 // const baseURL = "http://www.ghjhhyuyuy.xin:8080";
 // const baseURL = "http://software.sicau.edu.cn:8082";

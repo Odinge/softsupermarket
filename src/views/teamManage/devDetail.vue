@@ -517,10 +517,13 @@
         }
       },
       handleGetWork(teamId){
+        if(!teamId){
+          this.$message.error('缺少必要参数：teamId');
+          return false
+        }
         getTeamWork(teamId).then(res=>{
           if(res.status===0){
             this.works=res.data;
-            console.log(this.works)
           }
           else{
             this.$message.error('获取团队作品失败'+(res.msg||''));

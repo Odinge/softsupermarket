@@ -78,9 +78,9 @@ export default {
       let that = this;
       getTeam(this.teamId).then(function (res) {
         if (res.status === 0) {
-          that.detail_info = res.data;
-          that.teamInfo.name = res.data[0].teamName;
-          that.teamInfo.direction = res.data[0].direction || '暂无';
+          that.detail_info = res.data&&res.data[0];
+          that.teamInfo.name =  that.detail_info[0].teamName;
+          that.teamInfo.direction =  that.detail_info[0].direction;
           if (bool === true) {
             that.show_if = [false, true];
           }
@@ -173,6 +173,7 @@ export default {
           this.$message.error('获取团队信息失败！');
           console.log(err)
         });
+        console.log(res);
         if (res.status === 0) {
           let data = res.data;
           for (let i = 0; i < data.length; i++) {
