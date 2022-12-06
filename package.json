@@ -12,7 +12,7 @@
   "dependencies": {
     "axios": "^0.18.1",
     "element-ui": "^2.11.1",
-    "qs": "^6.8.0",
+    "qs": "^6.8.3",
     "vue": "^2.6.10",
     "vue-cropper": "^0.4.9",
     "vue-router": "^3.1.2",
